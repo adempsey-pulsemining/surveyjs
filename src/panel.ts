@@ -51,6 +51,27 @@ export class QuestionRowModel extends Base {
   public set visible(val: boolean) {
     this.setPropertyValue("visible", val);
   }
+  public get css(): string {
+    let css = "";
+    let question = this.panel.questions[this.index];
+    if (question.pageBreakBefore) {
+      if (css) css += " ";
+      css += "page_break_before";
+    }
+    if (question.pageBreakAfter) {
+      if (css) css += " ";
+      css += "page_break_after";
+    }
+    if (question.hideInPdf) {
+      if (css) css += " ";
+      css += "hide_in_pdf";
+    }
+    if (this.index === this.panel.questions.length - 1 && !question.pageBreakAfter) {
+      if (css) css += " ";
+      css += "page_break_after";
+    }
+    return css;
+  }
   public updateVisible() {
     this.visible = this.calcVisible();
     this.setWidth();

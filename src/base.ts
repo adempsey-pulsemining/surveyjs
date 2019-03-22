@@ -154,6 +154,9 @@ export interface IElement extends IConditionRunner, ISurveyElement {
 
 export interface IQuestion extends IElement, ISurveyErrorOwner {
   hasTitle: boolean;
+  pageBreakBefore: boolean;
+  pageBreakAfter: boolean;
+  hideInPdf: boolean;
   isEmpty(): boolean;
   onSurveyValueChanged(newValue: any): any;
   updateValueFromSurvey(newValue: any): any;

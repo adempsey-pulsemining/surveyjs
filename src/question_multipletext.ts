@@ -459,6 +459,7 @@ JsonObject.metaData.addClass(
     "name",
     "isRequired:boolean",
     { name: "placeHolder", serializationProperty: "locPlaceHolder" },
+    { name: "replace:string", choices: [] },
     {
       name: "inputType",
       default: "text",

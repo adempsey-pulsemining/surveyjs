@@ -12,5 +12,5 @@
     "jsx": "react"
   },
   "exclude": ["src/entries/**/*.ts"],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/*.ts"]
 }

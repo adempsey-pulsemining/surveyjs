@@ -122,7 +122,8 @@ JsonObject.metaData.addClass(
     },
     { name: "size:number", default: 25 },
     { name: "maxLength:number", default: -1 },
-    { name: "placeHolder", serializationProperty: "locPlaceHolder" }
+    { name: "placeHolder", serializationProperty: "locPlaceHolder" },
+    { name: "replace:string", choices: [] }
   ],
   function() {
     return new QuestionTextModel("");

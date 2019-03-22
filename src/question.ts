@@ -491,7 +491,6 @@ export class Question extends SurveyElement
     if (this.errors.length > 0) {
       res += " " + classes.hasError;
     }
-
     return res;
   }
   protected getRootCss(classes: any) {
@@ -616,6 +615,24 @@ export class Question extends SurveyElement
   }
   public supportOther(): boolean {
     return false;
+  }
+  public get pageBreakBefore(): boolean {
+    return this.getPropertyValue("pageBreakBefore", false);
+  }
+  public set pageBreakBefore(val: boolean) {
+    this.setPropertyValue("pageBreakBefore", val);
+  }
+  public get pageBreakAfter(): boolean {
+    return this.getPropertyValue("pageBreakAfter", false);
+  }
+  public set pageBreakAfter(val: boolean) {
+    this.setPropertyValue("pageBreakAfter", val);
+  }
+  public get hideInPdf(): boolean {
+    return this.getPropertyValue("hideInPdf", false);
+  }
+  public set hideInPdf(val: boolean) {
+    this.setPropertyValue("hideInPdf", val);
   }
   /**
    * Set this property to true, to make the question a required. If a user doesn't answer the question then a validation error will be generated.
@@ -1147,6 +1164,9 @@ JsonObject.metaData.addClass("question", [
   "visibleIf:condition",
   { name: "width" },
   { name: "startWithNewLine:boolean", default: true, layout: "row" },
+  { name: "pageBreakBefore:boolean", default: false, layout: "row" },
+  { name: "pageBreakAfter:boolean", default: false, layout: "row" },
+  { name: "hideInPdf:boolean", default: false, layout: "row" },
   { name: "indent:number", default: 0, choices: [0, 1, 2, 3], layout: "row" },
   {
     name: "page",
