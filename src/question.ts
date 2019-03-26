@@ -620,19 +620,35 @@ export class Question extends SurveyElement
     return this.getPropertyValue("pageBreakBefore", false);
   }
   public set pageBreakBefore(val: boolean) {
+    if (!!this.survey && this.survey.autoPageBreak) {
+      val = false;
+    }
     this.setPropertyValue("pageBreakBefore", val);
   }
   public get pageBreakAfter(): boolean {
     return this.getPropertyValue("pageBreakAfter", false);
   }
   public set pageBreakAfter(val: boolean) {
+    if (!!this.survey && this.survey.autoPageBreak) {
+      val = false;
+    }
     this.setPropertyValue("pageBreakAfter", val);
   }
   public get hideInPdf(): boolean {
     return this.getPropertyValue("hideInPdf", false);
   }
   public set hideInPdf(val: boolean) {
+    if (val) {
+      this.pageBreakAfter = false;
+      this.pageBreakBefore = false;
+    }
     this.setPropertyValue("hideInPdf", val);
+  }
+  public get hideInPdfIfEmpty(): boolean {
+    return this.getPropertyValue("hideInPdfIfEmpty", false);
+  }
+  public set hideInPdfIfEmpty(val: boolean) {
+    this.setPropertyValue("hideInPdfIfEmpty", val);
   }
   /**
    * Set this property to true, to make the question a required. If a user doesn't answer the question then a validation error will be generated.
@@ -756,7 +772,7 @@ export class Question extends SurveyElement
     this.conditionRequiredRunner.expression = this.requiredIf;
     this.isRequired = this.conditionRequiredRunner.run(values, properties);
   }
-  protected get no(): string {
+  public get no(): string {
     if (this.visibleIndex < 0) return "";
     var startIndex = 1;
     var isNumeric = true;
@@ -766,7 +782,9 @@ export class Question extends SurveyElement
       if (parseInt(str)) startIndex = parseInt(str);
       else if (str.length == 1) isNumeric = false;
     }
-    if (isNumeric) return (this.visibleIndex + startIndex).toString();
+    if (isNumeric) {
+      return (this.visibleIndex + startIndex).toString();
+    }
     return String.fromCharCode(str.charCodeAt(0) + this.visibleIndex);
   }
   public onSurveyLoad() {
@@ -1167,6 +1185,7 @@ JsonObject.metaData.addClass("question", [
   { name: "pageBreakBefore:boolean", default: false, layout: "row" },
   { name: "pageBreakAfter:boolean", default: false, layout: "row" },
   { name: "hideInPdf:boolean", default: false, layout: "row" },
+  { name: "hideInPdfIfEmpty:boolean", default: false, layout: "row" },
   { name: "indent:number", default: 0, choices: [0, 1, 2, 3], layout: "row" },
   {
     name: "page",

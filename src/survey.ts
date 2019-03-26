@@ -763,6 +763,9 @@ export class SurveyModel extends Base
         self.onFirstPageIsStartedChanged();
       }
     );
+    this.registerFunctionOnPropertyValueChanged("autoPageBreak", function() {
+      self.onAutoPageBreakChanged();
+    });
     this.registerFunctionOnPropertyValueChanged("isSinglePage", function() {
       self.onIsSinglePageChanged();
     });
@@ -1378,8 +1381,11 @@ export class SurveyModel extends Base
     this.getAllQuestions().forEach(question => {
       if (options.includeEmpty || data[question.name] !== undefined) {
         var resultItem: any = {
+          type: question.getType(),
+          sequence: question.no,
           name: question.name,
           title: (<Question>question).title,
+          description: (<Question>question).description,
           value: question.value,
           displayValue: (<Question>question).displayValue,
           isNode:
@@ -1883,6 +1889,18 @@ export class SurveyModel extends Base
   public set isSinglePage(val: boolean) {
     this.setPropertyValue("isSinglePage", val);
   }
+  public get autoPageBreak(): boolean {
+    return this.getPropertyValue("autoPageBreak", false);
+  }
+  public set autoPageBreak(val: boolean) {
+    this.setPropertyValue("autoPageBreak", val);
+  }
+  public get breakAfterPage(): boolean {
+    return this.getPropertyValue("breakAfterPage", true);
+  }
+  public set breakAfterPage(val: boolean) {
+    this.setPropertyValue("breakAfterPage", val);
+  }
   /**
    * Set this property to true, to make the first page your starting page. The end-user could not comeback to the start page and it is not count in the progress.
    */
@@ -1927,6 +1945,9 @@ export class SurveyModel extends Base
       this.doElementsOnLoad();
     }
     this.updateVisibleIndexes();
+  }
+  protected onAutoPageBreakChanged() {
+
   }
   private createSinglePage(startIndex: number): PageModel {
     var single = this.createNewPage("all");
@@ -3140,10 +3161,14 @@ export class SurveyModel extends Base
     rootPanel: any
   ) {
     if (!question.name) {
-      question.name = this.generateNewName(
-        this.getAllQuestions(false, true),
-        "question"
-      );
+      if (question.getType() === "html") {
+        question.name = "html";
+      } else {
+        question.name = this.generateNewName(
+            this.getAllQuestions(false, true),
+            "question"
+        );
+      }
     }
     if (!!(<Question>question).page) {
       this.questionHashesAdded(<Question>question);
@@ -3702,6 +3727,8 @@ JsonObject.metaData.addClass("survey", [
   },
   { name: "firstPageIsStarted:boolean", default: false },
   { name: "isSinglePage:boolean", default: false },
+  { name: "autoPageBreak:boolean", default: false },
+  { name: "breakAfterPage:boolean", default: true },
   { name: "maxTimeToFinish:number", default: 0 },
   { name: "maxTimeToFinishPage:number", default: 0 },
   {

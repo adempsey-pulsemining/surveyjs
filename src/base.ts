@@ -24,6 +24,8 @@ export interface ISurveyErrorOwner extends ILocalizableOwner {
 }
 export interface ISurvey extends ITextProcessor, ISurveyErrorOwner {
   currentPage: IPage;
+  autoPageBreak: boolean;
+  breakAfterPage: boolean;
   pages: Array<IPage>;
   isPageStarted(page: IPage): boolean;
   pageVisibilityChanged(page: IPage, newValue: boolean): any;
@@ -157,6 +159,8 @@ export interface IQuestion extends IElement, ISurveyErrorOwner {
   pageBreakBefore: boolean;
   pageBreakAfter: boolean;
   hideInPdf: boolean;
+  hideInPdfIfEmpty: boolean;
+  no: string;
   isEmpty(): boolean;
   onSurveyValueChanged(newValue: any): any;
   updateValueFromSurvey(newValue: any): any;

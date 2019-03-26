@@ -54,19 +54,20 @@ export class QuestionRowModel extends Base {
   public get css(): string {
     let css = "";
     let question = this.panel.questions[this.index];
-    if (question.pageBreakBefore) {
+    if (!question) return "";
+    if (question.pageBreakBefore && !!this.panel.survey && !this.panel.survey.autoPageBreak) {
       if (css) css += " ";
       css += "page_break_before";
     }
-    if (question.pageBreakAfter) {
+    if (question.pageBreakAfter && !!this.panel.survey && !this.panel.survey.autoPageBreak) {
       if (css) css += " ";
       css += "page_break_after";
     }
-    if (question.hideInPdf) {
+    if (question.hideInPdf || (question.hideInPdfIfEmpty && !question.value)) {
       if (css) css += " ";
       css += "hide_in_pdf";
     }
-    if (this.index === this.panel.questions.length - 1 && !question.pageBreakAfter) {
+    if (this.index === this.panel.questions.length - 1 && !question.pageBreakAfter && !!this.panel.survey && this.panel.survey.breakAfterPage) {
       if (css) css += " ";
       css += "page_break_after";
     }
