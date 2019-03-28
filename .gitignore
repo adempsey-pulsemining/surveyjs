@@ -1,6 +1,7 @@
 .git/*
 .vs/*
 node_modules/*
+copy_packages.sh
 src/**/*.js
 doc_generator/**/*.js
 doc_generator/**/*.json

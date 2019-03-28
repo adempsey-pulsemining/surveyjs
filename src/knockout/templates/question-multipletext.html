@@ -1,7 +1,12 @@
 ﻿<script type="text/html" id="survey-question-multipletext">
-    <table data-bind="css: question.koCss().root, foreach: { data:  question.koRows, as: 'row' }">
+    <table class="multipletext_table" data-bind="css: question.koCss().root, foreach: { data:  question.koRows, as: 'row' }">
         <tr data-bind="foreach: { data: row, as: 'item' }, css: question.koCss().row">
-            <td data-bind="css: question.koCss().itemTitle"><!-- ko template: { name: 'survey-string', data: item.locTitle } --><!-- /ko --></td>
+            <td data-bind="css: question.koCss().itemTitle">
+                <div style="display: flex">
+                    <span data-bind="text: item.sequence + '. ', attr: { 'style': question.sequenceStyle }"></span>
+                    <!-- ko template: { name: 'survey-string', data: item.locTitle } --><!-- /ko -->
+                </div>
+            </td>
             <td>
                 <!-- ko template: { name: 'survey-question-errors', data: item.editor } -->
                 <!-- /ko -->

@@ -50,8 +50,12 @@ export class QuestionMatrixBaseModel<TRow, TColumn> extends Question {
     this.setPropertyValue("columns", newValue);
   }
   public get visibleColumns(): Array<any> {
+    return this.calculateIndex(this.getVisibleColumns());
+  }
+  public getVisibleColumns(): Array<any> {
     return !!this.filteredColumns ? this.filteredColumns : this.columns;
   }
+
   /**
    * The list of rows. A row has a value and an optional text
    */
@@ -70,7 +74,15 @@ export class QuestionMatrixBaseModel<TRow, TColumn> extends Question {
    * @see rowsVisibleIf
    */
   public get visibleRows(): Array<TRow> {
-    return this.getVisibleRows();
+    return this.calculateIndex(this.getVisibleRows());
+  }
+  public calculateIndex(arr: Array<any>) {
+    let chars = "abcdefghijklmnopqrstuvwxyz";
+    for (let i = 0; i < (arr || []).length; ++i) {
+      arr[i].index = i;
+      arr[i].sequence = chars.charAt(i).toUpperCase();
+    }
+    return arr;
   }
 
   /**

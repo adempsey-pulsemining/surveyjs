@@ -63,15 +63,19 @@ export class QuestionRowModel extends Base {
       if (css) css += " ";
       css += "page_break_after";
     }
-    if (question.hideInPdf || (question.hideInPdfIfEmpty && !question.value)) {
+    if (question.hideInPdf || (question.hideInPdfIfEmpty && !this.isQuestionAnswered(question))) {
       if (css) css += " ";
       css += "hide_in_pdf";
     }
-    if (this.index === this.panel.questions.length - 1 && !question.pageBreakAfter && !!this.panel.survey && this.panel.survey.breakAfterPage) {
+    if (this.index === this.panel.questions.length - 1 && !question.pageBreakAfter && this.panel.survey && this.panel.survey.breakAfterPage) {
       if (css) css += " ";
       css += "page_break_after";
     }
     return css;
+  }
+  private isQuestionAnswered(question: Question) {
+    if (!question.value) return false;
+    return !(Array.isArray(question.value) && !question.value.length);
   }
   public updateVisible() {
     this.visible = this.calcVisible();

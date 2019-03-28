@@ -911,6 +911,12 @@ export class SurveyModel extends Base
   public set showTitle(val: boolean) {
     this.setPropertyValue("showTitle", val);
   }
+  public get isPdfRender(): boolean {
+    return this.getPropertyValue("isPdfRender", false);
+  }
+  public set isPdfRender(val: boolean) {
+    this.setPropertyValue("isPdfRender", val);
+  }
   /**
    * Set it to false to hide page titles.
    * @see PageModel.title
@@ -1352,7 +1358,7 @@ export class SurveyModel extends Base
         .split(",")
         .map((v: string) => v.trim());
     }
-    var valueKeys = Object.keys(question.createValueCopy());
+    var valueKeys = Object.keys(question.createValueCopy() || {});
     var displayValueKeys = Object.keys(question.displayValue);
     var isArray = Array.isArray(value);
     valueKeys.forEach((key, index) => {
@@ -1378,7 +1384,7 @@ export class SurveyModel extends Base
   ) {
     var result: Array<any> = [];
     var data = this.data;
-    this.getAllQuestions().forEach(question => {
+    this.getAllQuestions().filter(x => x.getType() !== "html").forEach(question => {
       if (options.includeEmpty || data[question.name] !== undefined) {
         var resultItem: any = {
           type: question.getType(),
@@ -3160,15 +3166,11 @@ export class SurveyModel extends Base
     parentPanel: any,
     rootPanel: any
   ) {
+    if (question.getType() === "html") {
+      question.name = "html";
+    }
     if (!question.name) {
-      if (question.getType() === "html") {
-        question.name = "html";
-      } else {
-        question.name = this.generateNewName(
-            this.getAllQuestions(false, true),
-            "question"
-        );
-      }
+      question.name = this.generateNewName(this.getAllQuestions(false, true),"question");
     }
     if (!!(<Question>question).page) {
       this.questionHashesAdded(<Question>question);

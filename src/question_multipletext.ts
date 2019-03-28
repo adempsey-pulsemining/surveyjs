@@ -30,7 +30,6 @@ export class MultipleTextItemModel extends Base
   implements IValidatorOwner, ISurveyData, ISurveyImpl {
   private editorValue: QuestionTextModel;
   private data: IMultipleTextData;
-
   valueChangedCallback: (newValue: any) => void;
   validators: Array<SurveyValidator> = new Array<SurveyValidator>();
 
@@ -44,6 +43,12 @@ export class MultipleTextItemModel extends Base
     if (title) {
       this.title = title;
     }
+  }
+  public set index(val: number) {
+    this.setPropertyValue("index", val);
+  }
+  public get index(): number {
+    return this.getPropertyValue("index", 0);
   }
   public getType(): string {
     return "multipletextitem";
@@ -104,6 +109,10 @@ export class MultipleTextItemModel extends Base
   }
   public set title(val: string) {
     this.editor.title = val;
+  }
+  public get sequence(): string {
+    let chars = "abcdefghijklmnopqrstuvwxyz";
+    return chars.charAt(this.index).toUpperCase();
   }
   get locTitle() {
     return this.editor.locTitle;
@@ -275,7 +284,11 @@ export class QuestionMultipleTextModel extends Question
    * The list of input items.
    */
   public get items(): Array<MultipleTextItemModel> {
-    return this.getPropertyValue("items");
+    let items = this.getPropertyValue("items");
+    for (let i = 0; i < (items || []).length; ++i) {
+      items[i].index = i;
+    }
+    return items;
   }
   public set items(val: Array<MultipleTextItemModel>) {
     this.setPropertyValue("items", val);

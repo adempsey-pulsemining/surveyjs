@@ -221,6 +221,9 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
   public get index() {
     return this.indexValue;
   }
+  public set index(val: number) {
+    this.setIndex(val);
+  }
   public setIndex(val: number) {
     this.indexValue = val;
   }

@@ -8,6 +8,7 @@
                     <td data-bind="visible: question.hasRows"></td>
                     <!-- ko foreach: question.koVisibleColumns -->
                     <th>
+                        <span data-bind="text: sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
                         <!-- ko template: { name: 'survey-string', data: locText } -->
                         <!-- /ko -->
                     </th>
@@ -19,6 +20,7 @@
               <!-- ko foreach: { data: question.koVisibleRows, as: 'row' } -->
               <tr data-bind="css: question.koCss().row">
                   <td data-bind="visible: question.hasRows">
+                      <span data-bind="text: row.sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
                       <!-- ko template: { name: 'survey-string', data: row.locText } -->
                       <!-- /ko -->
                   </td>

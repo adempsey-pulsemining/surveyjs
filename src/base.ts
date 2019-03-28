@@ -207,6 +207,9 @@ export class Base {
   protected IsPropertyEmpty(value: any): boolean {
     return value !== "" && this.isValueEmpty(value);
   }
+  public get sequenceStyle(): string {
+    return "word-break: initial; padding-right: 5px; width: 15px; display: inline-block";
+  }
 
   private propertyHash: { [index: string]: any } = {};
   private localizableStrings: { [index: string]: LocalizableString };

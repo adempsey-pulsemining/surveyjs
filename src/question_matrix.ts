@@ -1,3 +1,6 @@
+import {
+    Base,
+} from "./base";
 import { Helpers } from "./helpers";
 import { ItemValue } from "./itemvalue";
 import { QuestionMatrixBaseModel } from "./martixBase";
@@ -14,7 +17,7 @@ export interface IMatrixData {
   onMatrixRowChanged(row: MatrixRowModel): void;
 }
 
-export class MatrixRowModel {
+export class MatrixRowModel extends Base {
   private data: IMatrixData;
   private item: ItemValue;
   protected rowValue: any;
@@ -25,6 +28,7 @@ export class MatrixRowModel {
     data: IMatrixData,
     value: any
   ) {
+    super();
     this.item = item;
     this.data = data;
     this.rowValue = value;
@@ -270,9 +274,6 @@ export class QuestionMatrixModel
    * Returns the list of visible rows as model objects.
    * @see rowsVisibleIf
    */
-  public get visibleRows(): Array<MatrixRowModel> {
-    return this.getVisibleRows();
-  }
   public get cells(): MartrixCells {
     return this.cellsValue;
   }
