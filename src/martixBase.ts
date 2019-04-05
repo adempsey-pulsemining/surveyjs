@@ -55,6 +55,12 @@ export class QuestionMatrixBaseModel<TRow, TColumn> extends Question {
   public getVisibleColumns(): Array<any> {
     return !!this.filteredColumns ? this.filteredColumns : this.columns;
   }
+  public set showItemSequence(val: boolean) {
+    this.setPropertyValue("showItemSequence", val);
+  }
+  public get showItemSequence(): boolean {
+    return this.getPropertyValue("showItemSequence", true);
+  }
 
   /**
    * The list of rows. A row has a value and an optional text
@@ -208,7 +214,7 @@ export class QuestionMatrixBaseModel<TRow, TColumn> extends Question {
 JsonObject.metaData.addClass(
   "matrixbase",
   ["columnsVisibleIf:condition", "rowsVisibleIf:condition",
-  { name: "showHeader:boolean", default: true }],
+  { name: "showHeader:boolean", default: true }, { name: "showItemSequence:boolean", default: true, layout: "row" }],
   undefined,
   "question"
 );

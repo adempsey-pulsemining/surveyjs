@@ -53,29 +53,76 @@ export class QuestionRowModel extends Base {
   }
   public get css(): string {
     let css = "";
-    let question = this.panel.questions[this.index];
-    if (!question) return "";
-    if (question.pageBreakBefore && !!this.panel.survey && !this.panel.survey.autoPageBreak) {
+    let pageBreakBefore, pageBreakAfter;
+    let rows = this.panel.rows.filter(row => row.visible);
+    let row = rows[this.index];
+    let rowQuestions = row.elements;
+    let hasVisibleQuestion = false;
+
+    for (let i = 0; i < rowQuestions.length; ++i) {
+      if ((<Question>rowQuestions[i]) && typeof (<Question>rowQuestions[i]).isQuestionHidden !== 'function') {
+        continue;
+      }
+      hasVisibleQuestion = !(<Question>rowQuestions[i]).isQuestionHidden();
+      if ((<Question>rowQuestions[i]).pageBreakBefore && this.panel.survey && !this.panel.survey.autoPageBreak) {
+        pageBreakBefore = true;
+      }
+      if ((<Question>rowQuestions[i]).pageBreakAfter && this.panel.survey && !this.panel.survey.autoPageBreak) {
+        pageBreakAfter = true;
+      }
+    }
+
+    if (pageBreakBefore && hasVisibleQuestion) {
       if (css) css += " ";
       css += "page_break_before";
     }
-    if (question.pageBreakAfter && !!this.panel.survey && !this.panel.survey.autoPageBreak) {
+    if ((pageBreakAfter && hasVisibleQuestion) || this.isLastRowWithVisibleQuestions()) {
       if (css) css += " ";
       css += "page_break_after";
     }
-    if (question.hideInPdf || (question.hideInPdfIfEmpty && !this.isQuestionAnswered(question))) {
+    if (!this.hasVisibleQuestion()) {
       if (css) css += " ";
       css += "hide_in_pdf";
     }
-    if (this.index === this.panel.questions.length - 1 && !question.pageBreakAfter && this.panel.survey && this.panel.survey.breakAfterPage) {
-      if (css) css += " ";
-      css += "page_break_after";
-    }
     return css;
   }
-  private isQuestionAnswered(question: Question) {
-    if (!question.value) return false;
-    return !(Array.isArray(question.value) && !question.value.length);
+  private isLastRowWithVisibleQuestions(): boolean {
+    if (this.panel.survey && this.panel.survey.breakAfterPage) {
+      let rows = this.panel.rows.filter(row => row.visible);
+      for (let i = rows.length - 1; i >= 0; --i) {
+        if (this.index < i && this.rowHasVisibleQuestions(rows[i])) {
+          break;
+        } else if (this.index === i && this.rowHasVisibleQuestions(rows[i])) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  private rowHasVisibleQuestions(row: any): boolean {
+    let elements = row.elements;
+    for (let i = 0; i < elements.length; ++i) {
+      if ((<Question>elements[i]) && typeof (<Question>elements[i]).isQuestionHidden !== 'function') {
+        continue;
+      }
+      if (!(<Question>elements[i]).isQuestionHidden()) {
+        return true;
+      }
+    }
+    return false;
+  }
+  private hasVisibleQuestion(): boolean {
+    if (this.panel && this.panel.rows) {
+      let row = this.panel.rows[this.index];
+      let questions = row.elements;
+      for (let i = 0; i < questions.length; ++i) {
+        if ((<Question>questions[i]) && typeof (<Question>questions[i]).isQuestionHidden !== 'function') {
+          continue;
+        }
+        if (!(<Question>questions[i]).isQuestionHidden()) return true;
+      }
+    }
+    return false;
   }
   public updateVisible() {
     this.visible = this.calcVisible();

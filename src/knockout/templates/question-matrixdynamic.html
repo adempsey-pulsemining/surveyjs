@@ -12,7 +12,9 @@
                   <!-- ko if: question.hasRowText --><td></td><!-- /ko -->
                   <!-- ko foreach: question.koVisibleColumns -->
                   <th data-bind="style: { minWidth: question.getColumnWidth($data) }">
-                      <span data-bind="text: sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
+                      <!-- ko if: question.showItemSequence -->
+                        <span data-bind="text: sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
+                      <!-- /ko -->
                       <!-- ko template: { name: 'survey-string', data: locTitle } -->
                       <!-- /ko -->
                   </th>
@@ -27,8 +29,12 @@
               <tr>
                   <!-- ko if: question.hasRowText -->
                     <td>
-                        <span data-bind="text: row.sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
-                        <!-- ko template: { name: 'survey-string', data: row.locText } --><!-- /ko -->
+                        <div style="display: flex">
+                            <!-- ko if: question.showItemSequence -->
+                                <span data-bind="text: row.sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
+                            <!-- /ko -->
+                            <!-- ko template: { name: 'survey-string', data: row.locText } --><!-- /ko -->
+                        </div>
                     </td>
                   <!-- /ko -->
                   <!-- ko foreach: row.cells-->
@@ -55,8 +61,12 @@
                       <th data-bind="visible: question.showHeader"></th>
                       <!-- ko foreach: { data: question.koRows, as: 'row' } -->
                           <th>
-                              <span data-bind="text: row.sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
-                              <!-- ko template: { name: 'survey-string', data: row.locText } --><!-- /ko -->
+                              <div style="display: flex">
+                                  <!-- ko if: question.showItemSequence -->
+                                    <span data-bind="text: row.sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
+                                  <!-- /ko -->
+                                  <!-- ko template: { name: 'survey-string', data: row.locText } --><!-- /ko -->
+                              </div>
                           </th>
                       <!-- /ko -->
                   </tr>
@@ -66,7 +76,9 @@
               <!-- ko foreach: { data: question.koVisibleColumns, as: 'column' } -->
                   <tr>
                       <th data-bind="visible: question.showHeader, style: { minWidth: question.getColumnWidth($data) }">
-                          <span data-bind="text: column.sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
+                          <!-- ko if: question.showItemSequence -->
+                            <span data-bind="text: column.sequence + '.', attr: { 'style': question.sequenceStyle }"></span>
+                          <!-- /ko -->
                           <!-- ko template: { name: 'survey-string', data: locTitle } -->
                           <!-- /ko -->
                       </th>

@@ -59,7 +59,6 @@ export class SurveyModel extends Base
   public set commentPrefix(val: string) {
     Base.commentPrefix = val;
   }
-
   private pagesValue: Array<PageModel>;
   private triggersValue: Array<SurveyTrigger>;
   private get currentPageValue(): PageModel {
@@ -71,13 +70,10 @@ export class SurveyModel extends Base
 
   private valuesHash: HashTable<any> = {};
   private variablesHash: HashTable<any> = {};
-
   private localeValue: string = "";
-
   private textPreProcessor: TextPreProcessor;
   private completedStateValue: string = "";
   private completedStateTextValue: string = "";
-
   private isTimerStarted: boolean = false;
   /**
    * The event is fired before the survey is completed and onComplete event is fired. You may prevent the survey from completing by setting options.allowComplete to false
@@ -763,9 +759,6 @@ export class SurveyModel extends Base
         self.onFirstPageIsStartedChanged();
       }
     );
-    this.registerFunctionOnPropertyValueChanged("autoPageBreak", function() {
-      self.onAutoPageBreakChanged();
-    });
     this.registerFunctionOnPropertyValueChanged("isSinglePage", function() {
       self.onIsSinglePageChanged();
     });
@@ -910,12 +903,6 @@ export class SurveyModel extends Base
   }
   public set showTitle(val: boolean) {
     this.setPropertyValue("showTitle", val);
-  }
-  public get isPdfRender(): boolean {
-    return this.getPropertyValue("isPdfRender", false);
-  }
-  public set isPdfRender(val: boolean) {
-    this.setPropertyValue("isPdfRender", val);
   }
   /**
    * Set it to false to hide page titles.
@@ -1374,6 +1361,159 @@ export class SurveyModel extends Base
     });
     return result;
   }
+
+  public getCsvData(): string {
+    let data = this.getPlainDataTest();
+    let csvData: any = 'Question Type,Sequence,Question Title,Item Title,Question Description,Question Name,Item Name,Cell Type,' +
+                       'Row Number,Row Title,Column Number,Column Title,Answer Value,Display Value';
+    data.forEach(item => {
+      csvData += "\n";
+      csvData += item.type;
+      csvData += "," + item.sequence;
+      csvData += "," + item.questionTitle;
+      csvData += "," + item.itemTitle;
+      csvData += "," + item.description;
+      csvData += "," + item.questionName;
+      csvData += "," + item.itemName;
+      csvData += "," + item.cellType;
+      csvData += "," + item.rowNumber;
+      csvData += "," + item.rowTitle;
+      csvData += "," + item.columnNumber;
+      csvData += "," + item.columnTitle;
+      csvData += "," + item.value;
+      csvData += "," + item.displayValue;
+    });
+    return csvData;
+  }
+  /**
+   * custom pulse implementation
+   * @returns {Array<any>}
+   */
+  public getPlainDataTest(): Array<any> {
+    let questions = this.getAllQuestions().filter(x => this.isValidTableType(x.getType()) && x.visible && x.value);
+    return this.getTestData(questions);
+  }
+  private isValidTableType(type: string): boolean {
+    return type !== "html" && type !== "camera" && type !== "carousel";
+  }
+  private getTestData(questions: Array<any>): Array<any> {
+    let testData: any = [];
+    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    for (let i = 0; i < questions.length; ++i) {
+      let question = questions[i];
+      if (typeof question.value === "object" && question.getType() === "multipletext") {
+        question.items.forEach((item: any) => {
+          if (!item.value) return;
+          testData.push({
+            type: question.getType(),
+            sequence: question.no + item.sequence,
+            questionTitle: (<Question>question).title,
+            itemTitle: item.title,
+            description: (<Question>question).description,
+            questionName: question.name,
+            itemName: item.name,
+            cellType: "",
+            rowNumber: "",
+            rowTitle: "",
+            columnNumber: "",
+            columnTitle: "",
+            value: item.value,
+            displayValue: item.displayValue || item.value,
+            getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
+          });
+        });
+      } else if (typeof question.value === "object" && question.getType() === "matrix") {
+        question.rows.forEach((row: any, rowIndex: number) => {
+          let column = question.columns.find((col: any) => col.value === question.value[row.value]);
+          if (!column || !column.value) return;
+          testData.push({
+            type: question.getType(),
+            sequence: question.no,
+            questionTitle: (<Question>question).title,
+            itemTitle: "",
+            description: (<Question>question).description,
+            questionName: question.name,
+            itemName: "",
+            cellType: "",
+            rowNumber: question.showItemSequence ? chars.charAt(rowIndex) : (rowIndex + 1),
+            rowTitle: row.text,
+            columnNumber: "",
+            columnTitle: "",
+            value: column.value,
+            displayValue: column.text || column.value,
+            getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
+          });
+        });
+      } else if (typeof question.value === "object" && question.getType().startsWith("matrix") && !Array.isArray(question.value)) {
+        question.rows.forEach((row: any, rowIndex: number) => {
+          question.columns.forEach((column: any, colIndex: number) => {
+            if (!question.value || !question.value[row.value] || !question.value[row.value][column.name]) return;
+            testData.push({
+              type: question.getType(),
+              sequence: question.no,
+              questionTitle: (<Question>question).title,
+              itemTitle: "",
+              description: (<Question>question).description,
+              questionName: question.name,
+              itemName: "",
+              cellType: column.cellType === "default" ? question.cellType : column.cellType,
+              rowNumber: question.showItemSequence ? chars.charAt(rowIndex) : (rowIndex + 1),
+              rowTitle: row.text,
+              columnNumber: question.showItemSequence ? chars.charAt(colIndex) : (colIndex + 1),
+              columnTitle: column.title,
+              value: question.value[row.value][column.name],
+              displayValue: question.displayValue[row.value][column.name] || question.value[row.value][column.name],
+              getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
+            });
+          });
+        });
+      } else if (Array.isArray(question.value) && question.getType().startsWith("matrix")) {
+        for (let i = 0; i < question.rowCount; ++i) {
+          question.columns.forEach((column: any, index: number) => {
+            if (!question.value || !question.value[i] || !question.value[i][column.name]) return;
+            testData.push({
+              type: question.getType(),
+              sequence: question.no,
+              questionTitle: (<Question>question).title,
+              itemTitle: "",
+              description: (<Question>question).description,
+              questionName: question.name,
+              itemName: "",
+              cellType: column.cellType === "default" ? question.cellType : column.cellType,
+              rowNumber: (i + 1),
+              rowTitle: "",
+              columnNumber: question.showItemSequence ? chars.charAt(index) : (index + 1),
+              columnTitle: column.title,
+              value: question.value[i][column.name],
+              displayValue: question.displayValue[i][column.name] || question.value[i][column.name],
+              getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
+            });
+          });
+        }
+      } else {
+        testData.push({
+          type: question.getType(),
+          sequence: question.no,
+          questionTitle: (<Question>question).title,
+          itemTitle: "",
+          description: (<Question>question).description,
+          questionName: question.name,
+          itemName: "",
+          cellType: "",
+          rowNumber: "",
+          rowTitle: "",
+          columnNumber: "",
+          columnTitle: "",
+          value: question.value,
+          displayValue: (<Question>question).displayValue || question.value,
+          getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
+        });
+      }
+    }
+    return testData;
+  }
+
   /**
    * Returns survey result data as an array of plain objects: with question title, name, value and displayValue.
    * For complex questions (like matrix, etc.) isNode flag is set to true and data contains array of nested objects (rows)
@@ -1384,14 +1524,11 @@ export class SurveyModel extends Base
   ) {
     var result: Array<any> = [];
     var data = this.data;
-    this.getAllQuestions().filter(x => x.getType() !== "html").forEach(question => {
+    this.getAllQuestions().forEach(question => {
       if (options.includeEmpty || data[question.name] !== undefined) {
         var resultItem: any = {
-          type: question.getType(),
-          sequence: question.no,
           name: question.name,
           title: (<Question>question).title,
-          description: (<Question>question).description,
           value: question.value,
           displayValue: (<Question>question).displayValue,
           isNode:
@@ -1479,6 +1616,7 @@ export class SurveyModel extends Base
     }
     return result;
   }
+
   /**
    * Returns true if there is no any page in the survey. The survey is empty.
    */
@@ -1898,14 +2036,31 @@ export class SurveyModel extends Base
   public get autoPageBreak(): boolean {
     return this.getPropertyValue("autoPageBreak", false);
   }
+  // calculate page breaks for each question automatically
   public set autoPageBreak(val: boolean) {
     this.setPropertyValue("autoPageBreak", val);
   }
   public get breakAfterPage(): boolean {
     return this.getPropertyValue("breakAfterPage", true);
   }
+  // automatically break after every page
   public set breakAfterPage(val: boolean) {
     this.setPropertyValue("breakAfterPage", val);
+  }
+  public get isPdfRender(): boolean {
+    return this.getPropertyValue("isPdfRender", false);
+  }
+  // set to true if printing pdf
+  public set isPdfRender(val: boolean) {
+    this.setPropertyValue("isPdfRender", val);
+  }
+  public get showPageNavigation(): boolean {
+    if (this.isPdfRender) return false;
+    return this.getPropertyValue("showPageNavigation", true);
+  }
+  // set to true to show page navigation bar
+  public set showPageNavigation(val: boolean) {
+    this.setPropertyValue("showPageNavigation", val);
   }
   /**
    * Set this property to true, to make the first page your starting page. The end-user could not comeback to the start page and it is not count in the progress.
@@ -1951,9 +2106,6 @@ export class SurveyModel extends Base
       this.doElementsOnLoad();
     }
     this.updateVisibleIndexes();
-  }
-  protected onAutoPageBreakChanged() {
-
   }
   private createSinglePage(startIndex: number): PageModel {
     var single = this.createNewPage("all");
@@ -3166,6 +3318,7 @@ export class SurveyModel extends Base
     parentPanel: any,
     rootPanel: any
   ) {
+    // force all html questions to have html as name
     if (question.getType() === "html") {
       question.name = "html";
     }

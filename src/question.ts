@@ -491,6 +491,10 @@ export class Question extends SurveyElement
     if (this.errors.length > 0) {
       res += " " + classes.hasError;
     }
+    let pdfCss = this.pdfCss;
+    if (pdfCss) {
+      res += " " + pdfCss;
+    }
     return res;
   }
   protected getRootCss(classes: any) {
@@ -615,6 +619,20 @@ export class Question extends SurveyElement
   }
   public supportOther(): boolean {
     return false;
+  }
+  public get pdfCss(): string {
+    let css = "";
+    if (this.isQuestionHidden()) {
+      css = "hide_in_pdf";
+    }
+    return css;
+  }
+  private isQuestionAnswered() {
+    if (!this.value) return false;
+    return !(Array.isArray(this.value) && !this.value.length);
+  }
+  public isQuestionHidden(): boolean {
+    return this.hideInPdf || (this.hideInPdfIfEmpty && !this.isQuestionAnswered());
   }
   public get pageBreakBefore(): boolean {
     return this.getPropertyValue("pageBreakBefore", false);
@@ -782,9 +800,7 @@ export class Question extends SurveyElement
       if (parseInt(str)) startIndex = parseInt(str);
       else if (str.length == 1) isNumeric = false;
     }
-    if (isNumeric) {
-      return (this.visibleIndex + startIndex).toString();
-    }
+    if (isNumeric) return (this.visibleIndex + startIndex).toString();
     return String.fromCharCode(str.charCodeAt(0) + this.visibleIndex);
   }
   public onSurveyLoad() {

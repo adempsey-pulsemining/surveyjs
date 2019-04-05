@@ -30,6 +30,7 @@ export class MultipleTextItemModel extends Base
   implements IValidatorOwner, ISurveyData, ISurveyImpl {
   private editorValue: QuestionTextModel;
   private data: IMultipleTextData;
+
   valueChangedCallback: (newValue: any) => void;
   validators: Array<SurveyValidator> = new Array<SurveyValidator>();
 
@@ -49,6 +50,10 @@ export class MultipleTextItemModel extends Base
   }
   public get index(): number {
     return this.getPropertyValue("index", 0);
+  }
+  public get sequence(): string {
+    let chars = "abcdefghijklmnopqrstuvwxyz";
+    return chars.charAt(this.index).toUpperCase();
   }
   public getType(): string {
     return "multipletextitem";
@@ -109,10 +114,6 @@ export class MultipleTextItemModel extends Base
   }
   public set title(val: string) {
     this.editor.title = val;
-  }
-  public get sequence(): string {
-    let chars = "abcdefghijklmnopqrstuvwxyz";
-    return chars.charAt(this.index).toUpperCase();
   }
   get locTitle() {
     return this.editor.locTitle;
@@ -279,6 +280,12 @@ export class QuestionMultipleTextModel extends Question
         (<any>item).editor.onSurveyLoad();
       }
     }
+  }
+  public set showItemSequence(val: boolean) {
+    this.setPropertyValue("showItemSequence", val);
+  }
+  public get showItemSequence(): boolean {
+    return this.getPropertyValue("showItemSequence", true);
   }
   /**
    * The list of input items.
@@ -511,7 +518,8 @@ JsonObject.metaData.addClass(
   [
     { name: "!items:textitems", className: "multipletextitem" },
     { name: "itemSize:number", default: 25 },
-    { name: "colCount:number", default: 1, choices: [1, 2, 3, 4, 5] }
+    { name: "colCount:number", default: 1, choices: [1, 2, 3, 4, 5] },
+    { name: "showItemSequence:boolean", default: true, layout: "row" }
   ],
   function() {
     return new QuestionMultipleTextModel("");

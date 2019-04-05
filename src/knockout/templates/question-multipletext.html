@@ -3,7 +3,9 @@
         <tr data-bind="foreach: { data: row, as: 'item' }, css: question.koCss().row">
             <td data-bind="css: question.koCss().itemTitle">
                 <div style="display: flex">
-                    <span data-bind="text: item.sequence + '. ', attr: { 'style': question.sequenceStyle }"></span>
+                    <!-- ko if: question.showItemSequence -->
+                        <span data-bind="text: item.sequence + '. ', attr: { 'style': question.sequenceStyle }"></span>
+                    <!-- /ko -->
                     <!-- ko template: { name: 'survey-string', data: item.locTitle } --><!-- /ko -->
                 </div>
             </td>

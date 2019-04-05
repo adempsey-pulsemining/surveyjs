@@ -40,7 +40,8 @@ export class Survey extends SurveyModel {
   >();
   private isFirstRender: boolean = true;
   private mouseDownPage: any = null;
-
+  private selectedPage = ko.observable(0);
+  private page = ko.pureComputed(this.pageSelected);
   koCurrentPage: any;
   koIsFirstPage: any;
   koIsLastPage: any;
@@ -239,6 +240,7 @@ export class Survey extends SurveyModel {
   protected currentPageChanged(newValue: PageModel, oldValue: PageModel) {
     this.updateKoCurrentPage();
     super.currentPageChanged(newValue, oldValue);
+    this.selectedPage(this.currentPageNo);
     if (!this.isDesignMode) this.scrollToTopOnPageChange();
   }
   pageVisibilityChanged(page: IPage, newValue: boolean) {
@@ -300,6 +302,31 @@ export class Survey extends SurveyModel {
     for (var i = 0; i < questions.length; i++) {
       var q = questions[i];
       if (q.visible) q["updateQuestion"]();
+    }
+  }
+  private get pageSelected(): any {
+    return {
+      read: this.selectedPage,
+      write: (pageNo: any) => {
+        if (pageNo === "") return;
+        let pageWithError, currentPageHasErrors;
+        currentPageHasErrors = this.pages[this.currentPageNo].hasErrors(false);
+        for (let i = this.currentPageNo + 1; i < this.pages.length; ++i) {
+          if (this.pages[i].hasErrors(false)) {
+            pageWithError = i;
+            break;
+          }
+        }
+        if (currentPageHasErrors && pageNo > this.currentPageNo) {
+          this.pages[this.currentPageNo].hasErrors(true, true);
+        } else if (pageWithError && pageNo > pageWithError) {
+          this.currentPageNo = pageWithError;
+          this.pages[pageWithError].hasErrors(true, true);
+        } else {
+          this.currentPageNo = pageNo;
+        }
+        this.page.notifySubscribers(this.selectedPage());
+      }
     }
   }
 }
