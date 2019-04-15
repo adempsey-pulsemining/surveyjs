@@ -400,6 +400,9 @@ export class QuestionMatrixModel
     json["type"] = question.getType();
     return json;
   }
+  public isAnswered(): boolean {
+    return this.visibleRows.every(row => !!row.value);
+  }
   //IMatrixData
   onMatrixRowChanged(row: MatrixRowModel) {
     if (this.isRowChanging) return;

@@ -495,7 +495,7 @@ export class Question extends SurveyElement
     if (pdfCss) {
       res += " " + pdfCss;
     }
-    return res;
+    return res + " " + "sv_qstn_" + this.getType();
   }
   protected getRootCss(classes: any) {
     return classes.question.root;
@@ -583,11 +583,11 @@ export class Question extends SurveyElement
    * @param onError set this parameter to true, to focus the input with the first error, other wise the first input will be focused.
    */
   public focus(onError: boolean = false) {
-    SurveyElement.ScrollElementToTop(this.id);
+    SurveyElement.ScrollElementToTop(this.id, this.survey.rootElement);
     var id = !onError
       ? this.getFirstInputElementId()
       : this.getFirstErrorInputElementId();
-    if (SurveyElement.FocusElement(id)) {
+    if (SurveyElement.FocusElement(id, this.survey.rootElement)) {
       this.fireCallback(this.focusCallback);
     }
   }
@@ -1189,6 +1189,12 @@ export class Question extends SurveyElement
   }
   getAllValues(): any {
     return !!this.data ? this.data.getAllValues() : null;
+  }
+  public isAnswered(): boolean {
+    if (this.customWidget && this.customWidget.widgetJson && typeof this.customWidget.widgetJson.isAnswered == "function") {
+      return this.customWidget.widgetJson.isAnswered(this);
+    }
+    return !!this.value;
   }
 }
 JsonObject.metaData.addClass("question", [

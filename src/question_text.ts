@@ -16,6 +16,12 @@ export class QuestionTextModel extends Question {
   public getType(): string {
     return "text";
   }
+  public get readOnly(): boolean {
+    return this.getPropertyValue("readOnly", false);
+  }
+  public set readOnly(val: boolean) {
+    this.setPropertyValue("readOnly", val);
+  }
   /**
    * Use this property to change the default input type.
    */

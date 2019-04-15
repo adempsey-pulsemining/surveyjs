@@ -106,10 +106,16 @@ export class Panel extends PanelModel {
 }
 
 export class Page extends PageModel {
+  koHasError: any;
+  koIsFinished: any;
+  koProgress: any;
   constructor(name: string = "") {
     super(name);
     new ImplementorBase(this);
     this.onCreating();
+    this.koHasError = ko.observable(false);
+    this.koIsFinished = ko.observable(false);
+    this.koProgress = ko.observable("");
   }
   protected createRow(): QuestionRowModel {
     return new QuestionRow(this);
@@ -121,6 +127,25 @@ export class Page extends PageModel {
   protected onCreating() {}
   protected onNumChanged(value: number) {
     this.locTitle.onChanged();
+  }
+  public set isFinished(val: boolean) {
+    this.koIsFinished(val);
+  }
+  public get isFinished(): boolean {
+    return this.koIsFinished() && !this.hasError;
+  }
+  public set hasError(val: boolean) {
+    this.koHasError(val);
+  }
+  public get hasError(): boolean {
+    let questions = this.questions.filter(q => q.isVisible);
+    return questions.some((q: any) => this.hasErrors(false, false) && q.errors.length);
+  }
+  public get progress(): string {
+    return this.koProgress();
+  }
+  public set progress(val: string) {
+    this.koProgress(val);
   }
 }
 

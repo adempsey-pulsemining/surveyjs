@@ -155,7 +155,7 @@ export class PageModel extends PanelModelBase implements IPage {
    * Call it to scroll to the page top.
    */
   public scrollToTop() {
-    SurveyElement.ScrollElementToTop(this.id);
+    SurveyElement.ScrollElementToTop(this.id, this.rootElement);
   }
   /**
    * Time in seconds end-user spent on this page
@@ -365,6 +365,15 @@ export class PageModel extends PanelModelBase implements IPage {
 
   private dragDropIsSameElement(el1: IElement, el2: IElement) {
     return el1 == el2 || el1.name == el2.name;
+  }
+
+  public get hasUnansweredQuestions(): boolean {
+    return this.questions.filter(q => q.getType() !== "html").some(question => !question.isAnswered());
+  }
+  public getPageProgress(): string {
+    let questions = this.questions.filter(q => q.getType() !== "html");
+    let answeredQuestionsCount = questions.filter(q => q.isAnswered()).length;
+    return Math.floor(((answeredQuestionsCount / questions.length) * 100)) + "%";
   }
 }
 

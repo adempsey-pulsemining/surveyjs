@@ -56,12 +56,18 @@ export class Helpers {
     ignoreOrder: boolean = false
   ): boolean {
     if (x === y) return true;
+    if (Array.isArray(x) && x.length == 0 && y == null) {
+      return true;
+    } else if (Array.isArray(y) && y.length == 0 && x == null) {
+      return true;
+    }
     if ((x && !y) || (!x && y)) return false;
     if (!(x instanceof Object) && !(y instanceof Object)) return x == y;
     if (!(x instanceof Object) || !(y instanceof Object)) return false;
     if (x["equals"]) return x.equals(y);
-    if (Array.isArray(x) && Array.isArray(y))
+    if (Array.isArray(x) && Array.isArray(y)) {
       return Helpers.isArraysEqual(x, y, ignoreOrder);
+    }
     for (var p in x) {
       if (!x.hasOwnProperty(p)) continue;
       if (!y.hasOwnProperty(p)) return false;

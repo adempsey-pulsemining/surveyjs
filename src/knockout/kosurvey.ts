@@ -39,9 +39,9 @@ export class Survey extends SurveyModel {
     any
   >();
   private isFirstRender: boolean = true;
+  private useCustomNavigation: boolean = true;
+  private hasPageNavigation: boolean = false;
   private mouseDownPage: any = null;
-  private selectedPage = ko.observable(0);
-  private page = ko.pureComputed(this.pageSelected);
   koCurrentPage: any;
   koIsFirstPage: any;
   koIsLastPage: any;
@@ -86,7 +86,8 @@ export class Survey extends SurveyModel {
   constructor(
     jsonObj: any = null,
     renderedElement: any = null,
-    css: any = null
+    css: any = null,
+    options: any = null,
   ) {
     super(jsonObj);
     new ImplementorBase(this);
@@ -102,10 +103,35 @@ export class Survey extends SurveyModel {
     if (css) {
       this.css = css;
     }
+    if (options) {
+      this.mode = options.mode ? options.mode : "edit";
+      this.useCustomNavigation = options.useCustomNavigation != null ? options.useCustomNavigation : this.useCustomNavigation;
+      this.isPdfRender = options.isPdfRender != null ? options.isPdfRender : this.isPdfRender;
+      this.data = options.data ? options.data : this.data;
+      this.hasPageNavigation = options.hasPageNavigation != null ? options.hasPageNavigation : this.hasPageNavigation;
+      this.rootElement = options.rootElement ? options.rootElement : document;
+    }
     if (renderedElement) {
       this.renderedElement = renderedElement;
     }
     this.render(renderedElement);
+    this.onValueChanged.add((sender, options) => this.checkPageStatus(this.currentPage));
+    this.onMatrixRowAdded.add((sender, options) => this.checkPageStatus(this.currentPage));
+    this.onMatrixRowRemoved.add((sender, options) => this.checkPageStatus(this.currentPage));
+    this.onCurrentPageChanged.add((sender, options) => this.checkPageStatus(this.currentPage));
+    this.checkAllPageStatus();
+  }
+  public checkAllPageStatus() {
+    for (let i = 0; i < this.visiblePages.length; ++i) {
+      this.checkPageStatus(this.visiblePages[i]);
+    }
+  }
+  public checkPageStatus(page: any) {
+    page.isFinished = !page.hasUnansweredQuestions;
+    page.progress = page.getPageProgress();
+  }
+  public get surveyIsFinished(): boolean {
+    return this.visiblePages.every((page: Page) => page.isFinished);
   }
   public nextPageUIClick() {
     if (!!this.mouseDownPage && this.mouseDownPage !== this.currentPage) return;
@@ -240,7 +266,6 @@ export class Survey extends SurveyModel {
   protected currentPageChanged(newValue: PageModel, oldValue: PageModel) {
     this.updateKoCurrentPage();
     super.currentPageChanged(newValue, oldValue);
-    this.selectedPage(this.currentPageNo);
     if (!this.isDesignMode) this.scrollToTopOnPageChange();
   }
   pageVisibilityChanged(page: IPage, newValue: boolean) {
@@ -304,30 +329,8 @@ export class Survey extends SurveyModel {
       if (q.visible) q["updateQuestion"]();
     }
   }
-  private get pageSelected(): any {
-    return {
-      read: this.selectedPage,
-      write: (pageNo: any) => {
-        if (pageNo === "") return;
-        let pageWithError, currentPageHasErrors;
-        currentPageHasErrors = this.pages[this.currentPageNo].hasErrors(false);
-        for (let i = this.currentPageNo + 1; i < this.pages.length; ++i) {
-          if (this.pages[i].hasErrors(false)) {
-            pageWithError = i;
-            break;
-          }
-        }
-        if (currentPageHasErrors && pageNo > this.currentPageNo) {
-          this.pages[this.currentPageNo].hasErrors(true, true);
-        } else if (pageWithError && pageNo > pageWithError) {
-          this.currentPageNo = pageWithError;
-          this.pages[pageWithError].hasErrors(true, true);
-        } else {
-          this.currentPageNo = pageNo;
-        }
-        this.page.notifySubscribers(this.selectedPage());
-      }
-    }
+  private selectPage(index: number) {
+    this.currentPageNo = index;
   }
 }
 

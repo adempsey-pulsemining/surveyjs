@@ -2,6 +2,10 @@
 
   <div data-bind="css: css.root, afterRender: koEventAfterRender">
       <form onsubmit="return false;">
+          <!-- ko if: hasPageNavigation -->
+             <!-- ko template: { name: 'survey-page-select' } -->
+             <!-- /ko -->
+          <!-- /ko -->
           <div class="sv_custom_header"></div>
           <div class="sv_container">
               <!-- ko if: (title.length > 0) && showTitle && koState() == 'running' -->
@@ -37,13 +41,22 @@
                   <!-- /ko -->
                   <!-- /ko -->
                   <div data-bind="attr: { id: koCurrentPage().id }, template: { name: 'survey-page', data: koCurrentPage, afterRender: koAfterRenderPage }"></div>
+                  <div class="flex"></div>
+                  <!-- ko if: !isPdfRender -->
                   <div style="margin-top:1em" data-bind="visible: isShowProgressBarOnBottom, template: 'survey-progress'"></div>
+                  <!-- /ko -->
                   <!-- ko if: isTimerPanelShowingOnBottom -->
                   <!-- ko template: { name: 'survey-timerpanel'} -->
                   <!-- /ko -->
                   <!-- /ko -->
-                  <!-- ko if: isNavigationButtonsShowing === 'bottom' || isNavigationButtonsShowing === 'both' -->
+                  <!-- ko if: (isNavigationButtonsShowing === 'bottom' || isNavigationButtonsShowing === 'both') && !isPdfRender -->
+                  <!-- ko if: useCustomNavigation -->
+                  <!-- ko template: { name: 'pms-survey-navigation'} -->
+                  <!-- /ko -->
+                  <!-- /ko -->
+                  <!-- ko if: !useCustomNavigation -->
                   <!-- ko template: { name: 'survey-navigation'} -->
+                  <!-- /ko -->
                   <!-- /ko -->
                   <!-- /ko -->
               </div>
@@ -70,6 +83,34 @@
           </div>
       </form>
   </div>
+</script>
+<script type="text/html" id="survey-page-select">
+    <div data-bind="css: css.pageNavigation, attr: { id: 'sv_page_select' }">
+        <pms-widget-dropdown data-bind="attr: { 'selected-index': currentPageNo, 'selected-name': currentPageName, 'center-content': currentPageProgress }, css: { finished: isCurrentPageFinished, error: isCurrentPageError }">
+            <!-- ko foreach: { data: visiblePages, as: 'page' } -->
+                <div style="position: relative; display: flex; align-items: center" class="sv_select_option" data-bind="css: { finished: koIsFinished, error: hasError }, click: function(model, event) { $parent.selectPage($index()) }, attr: { 'selected': $parent.currentPageNo == $index() }">
+                    <span data-bind="text: page.title ? page.title : page.name"></span>
+                    <div class="flex"></div>
+                    <!-- ko if: koIsFinished -->
+                        <pms-widget-icon icon="icons:check" size="large" color="green" style="margin-right: 5px"></pms-widget-icon>
+                    <!-- /ko -->
+                    <!-- ko if: hasError -->
+                        <pms-widget-icon icon="icons:clear" size="large" color="red" style="margin-right: 5px"></pms-widget-icon>
+                    <!-- /ko -->
+                    <div style="position: absolute; left: 50%; transform: translateX(-50%)" data-bind="text: koProgress"></div>
+                </div>
+            <!-- /ko -->
+        </pms-widget-dropdown>
+    </div>
+</script>
+<script type="text/html" id="pms-survey-navigation">
+    <div data-bind="css: css.footer">
+        <pms-widget-button data-bind="attr: { id: 'pms-survey-prev-btn' }, value: pagePrevText, visible: !koIsFirstPage() && isShowPrevButton, css: cssNavigationPrev" apply-class="action" size="medium"></pms-widget-button>
+        <pms-widget-button data-bind="attr: { id: 'pms-survey-complete-btn' }, value: completeText, visible: koIsLastPage() && isEditMode, css: cssNavigationComplete" apply-class="action" icon="icons:check" size="medium"></pms-widget-button>
+        <pms-widget-button data-bind="attr: { id: 'pms-survey-next-btn' }, value: pageNextText, event: { mousedown: nextPageMouseDown }, visible: !koIsLastPage(), css: cssNavigationNext" apply-class="action" size="medium"></pms-widget-button>
+        <pms-widget-button data-bind="attr: { id: 'pms-survey-save-exit-btn' }, css: cssNavigationNext, visible: isEditMode" apply-class="success" value="Save & Exit" icon="icons:save" size="medium"></pms-widget-button>
+        <pms-widget-button data-bind="attr: { id: 'pms-survey-save-btn' }, css: cssNavigationNext, visible: isEditMode" apply-class="success" value="Save" icon="icons:save" size="medium"></pms-widget-button>
+    </div>
 </script>
 <script type="text/html" id="survey-navigation">
   <div data-bind="css: css.footer">

@@ -45,6 +45,17 @@ export class QuestionMatrixDropdownModel extends QuestionMatrixDropdownModelBase
       self.filterItems();
     });
   }
+  public isAnswered(): boolean {
+    if (!this.value) return false;
+    let totalCells = this.visibleRows.length * this.visibleColumns.length;
+    let count = 0;
+    Object.keys(this.value).forEach((row: any) => {
+      Object.keys(this.value[row]).forEach((col: any) => {
+        ++count;
+      });
+    });
+    return totalCells == count;
+  }
   public getType(): string {
     return "matrixdropdown";
   }

@@ -14,6 +14,7 @@ export var defaultStandardCss = {
   footer: "sv_nav",
   navigationButton: "",
   completedPage: "sv_completed_page",
+  pageNavigation: "sv_page_navigation",
   navigation: {
     complete: "sv_complete_btn",
     prev: "sv_prev_btn",

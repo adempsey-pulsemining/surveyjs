@@ -1994,6 +1994,20 @@ export class SurveyModel extends Base
     this.doNextPage();
     return true;
   }
+  public get isCurrentPageFinished(): boolean {
+    if (this.currentPage == null) return true;
+    return this.currentPage.isFinished;
+  }
+  public get isCurrentPageError(): boolean {
+    if (this.currentPage == null) return true;
+    return this.currentPage.hasError;
+  }
+  public get currentPageName(): string {
+    return this.currentPage.title ? this.currentPage.title : this.currentPage.name;
+  }
+  public get currentPageProgress(): string {
+    return this.currentPage.progress;
+  }
   /**
    * Returns true, if there is any error on the current page. For example, the required question is empty or a question validation is failed.
    * @see nextPage

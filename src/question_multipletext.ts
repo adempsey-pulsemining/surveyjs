@@ -45,6 +45,9 @@ export class MultipleTextItemModel extends Base
       this.title = title;
     }
   }
+  public set readOnly(val: boolean) {
+    this.editor.setPropertyValue("readOnly", val);
+  }
   public set index(val: number) {
     this.setPropertyValue("index", val);
   }
@@ -432,6 +435,9 @@ export class QuestionMultipleTextModel extends Question
       }
     }
   }
+  public isAnswered(): boolean {
+    return this.items.every(item => !!item.value);
+  }
   //IMultipleTextData
   getMultipleTextValue(name: string) {
     if (!this.value) return null;
@@ -478,6 +484,7 @@ JsonObject.metaData.addClass(
   [
     "name",
     "isRequired:boolean",
+    "readOnly:boolean",
     { name: "placeHolder", serializationProperty: "locPlaceHolder" },
     { name: "replace:string", choices: [] },
     {

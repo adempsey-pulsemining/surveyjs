@@ -1,5 +1,5 @@
 ﻿<script type="text/html" id="survey-question-multipletext">
-    <table class="multipletext_table" data-bind="css: question.koCss().root, foreach: { data:  question.koRows, as: 'row' }">
+    <table data-bind="css: question.koCss().root, foreach: { data:  question.koRows, as: 'row' }">
         <tr data-bind="foreach: { data: row, as: 'item' }, css: question.koCss().row">
             <td data-bind="css: question.koCss().itemTitle">
                 <div style="display: flex">

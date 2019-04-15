@@ -40,6 +40,15 @@ export class QuestionMatrixDynamicModel extends QuestionMatrixDropdownModelBase
     this.createLocalizableString("addRowText", this);
     this.createLocalizableString("removeRowText", this);
   }
+  public isAnswered(): boolean {
+    if (!this.value || this.value.length != this.rowCount) return false;
+    let cols = this.visibleColumns.length;
+    let count = 0;
+    this.value.forEach((row: any) => {
+      count += Object.keys(row).length;
+    });
+    return count == cols * this.value.length;
+  }
   public getType(): string {
     return "matrixdynamic";
   }
@@ -266,6 +275,7 @@ export class QuestionMatrixDynamicModel extends QuestionMatrixDropdownModelBase
   public removeRow(index: number) {
     if (!this.canRemoveRow) return;
     if (index < 0 || index >= this.rowCount) return;
+    this.rowCountValue--;
     if (this.survey) {
       var row = this.generatedVisibleRows
         ? this.generatedVisibleRows[index]
@@ -283,7 +293,6 @@ export class QuestionMatrixDynamicModel extends QuestionMatrixDropdownModelBase
       this.value = val;
       this.isRowChanging = false;
     }
-    this.rowCountValue--;
     this.fireCallback(this.visibleRowsChangedCallback);
   }
   /**
