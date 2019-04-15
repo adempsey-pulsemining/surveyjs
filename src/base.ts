@@ -23,6 +23,7 @@ export interface ISurveyErrorOwner extends ILocalizableOwner {
   getErrorCustomText(text: string, error: SurveyError): string;
 }
 export interface ISurvey extends ITextProcessor, ISurveyErrorOwner {
+  rootElement: any;
   currentPage: IPage;
   autoPageBreak: boolean;
   breakAfterPage: boolean;
@@ -210,7 +211,7 @@ export class Base {
   public get sequenceStyle(): string {
     return "word-break: initial; padding-right: 5px; width: 15px; display: inline-block";
   }
-
+  public rootElement: any;
   private propertyHash: { [index: string]: any } = {};
   private localizableStrings: { [index: string]: LocalizableString };
   private arraysInfo: { [index: string]: any };
@@ -603,9 +604,9 @@ export class SurveyElement extends Base implements ISurveyElement {
   private textProcessorValue: ITextProcessor;
   private selectedElementInDesignValue: SurveyElement = this;
 
-  public static ScrollElementToTop(elementId: string): boolean {
+  public static ScrollElementToTop(elementId: string, rootElement: any): boolean {
     if (!elementId) return false;
-    var el = document.getElementById(elementId);
+    var el = rootElement ? rootElement.querySelector("#" + elementId) : document.getElementById(elementId);
     if (!el || !el.scrollIntoView) return false;
     var elemTop = el.getBoundingClientRect().top;
     if (elemTop < 0) el.scrollIntoView();
@@ -619,9 +620,9 @@ export class SurveyElement extends Base implements ISurveyElement {
     }
     return null;
   }
-  public static FocusElement(elementId: string): boolean {
+  public static FocusElement(elementId: string, rootElement: any): boolean {
     if (!elementId) return false;
-    var el = document.getElementById(elementId);
+    var el = rootElement ? rootElement.querySelector("#" + elementId) : document.getElementById(elementId);
     if (el) {
       el.focus();
       return true;
