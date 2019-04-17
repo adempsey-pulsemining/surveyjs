@@ -491,9 +491,11 @@ export class Question extends SurveyElement
     if (this.errors.length > 0) {
       res += " " + classes.hasError;
     }
-    let pdfCss = this.pdfCss;
-    if (pdfCss) {
-      res += " " + pdfCss;
+    if (this.survey && this.survey.isDisplayMode) {
+      let pdfCss = this.pdfCss;
+      if (pdfCss) {
+        res += " " + pdfCss;
+      }
     }
     return res + " " + "sv_qstn_" + this.getType();
   }
@@ -667,6 +669,17 @@ export class Question extends SurveyElement
   }
   public set hideInPdfIfEmpty(val: boolean) {
     this.setPropertyValue("hideInPdfIfEmpty", val);
+  }
+  public isAnswered(): boolean {
+    if (this.customWidget && this.customWidget.widgetJson && typeof this.customWidget.widgetJson.isAnswered == "function") {
+      return this.customWidget.widgetJson.isAnswered(this);
+    }
+    return !!this.value;
+  }
+  public hasValue(): boolean {
+    if (Array.isArray(this.value)) return this.value.length > 0;
+    if (typeof this.value == "object") return Object.keys(this.value).length > 0;
+    return !!this.value;
   }
   /**
    * Set this property to true, to make the question a required. If a user doesn't answer the question then a validation error will be generated.
@@ -1189,12 +1202,6 @@ export class Question extends SurveyElement
   }
   getAllValues(): any {
     return !!this.data ? this.data.getAllValues() : null;
-  }
-  public isAnswered(): boolean {
-    if (this.customWidget && this.customWidget.widgetJson && typeof this.customWidget.widgetJson.isAnswered == "function") {
-      return this.customWidget.widgetJson.isAnswered(this);
-    }
-    return !!this.value;
   }
 }
 JsonObject.metaData.addClass("question", [

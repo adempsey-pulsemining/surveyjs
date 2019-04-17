@@ -52,10 +52,12 @@ export class QuestionRowModel extends Base {
     this.setPropertyValue("visible", val);
   }
   public get css(): string {
+    if (this.panel.survey && !this.panel.survey.isDisplayMode) return "";
     let css = "";
     let pageBreakBefore, pageBreakAfter;
     let rows = this.panel.rows.filter(row => row.visible);
-    let row = rows[this.index];
+    let index = rows.indexOf(this);
+    let row = rows[index];
     let rowQuestions = row.elements;
     let hasVisibleQuestion = false;
 
@@ -296,6 +298,13 @@ export class PanelModelBase extends SurveyElement
       this.survey.updatePanelCssClasses(this, classes);
     }
     return classes;
+  }
+  public get panelHasVisibleQuestions(): boolean {
+    return this.questions.some(q => this.isQuestionVisible(q));
+  }
+  public isQuestionVisible(question: any): boolean {
+    if (!question.isVisible) return false;
+    return !question.hideInPdf && !(question.hideInPdfIfEmpty && !question.hasValue());
   }
   private get css(): any {
     return surveyCss.getCss();

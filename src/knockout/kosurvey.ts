@@ -42,9 +42,13 @@ export class Survey extends SurveyModel {
   private useCustomNavigation: boolean = true;
   private hasPageNavigation: boolean = false;
   private mouseDownPage: any = null;
+
   koCurrentPage: any;
   koIsFirstPage: any;
   koIsLastPage: any;
+  koIsCurrentPageFinished: any;
+  koIsCurrentPageError: any;
+  koCurrentPageProgress: any;
   dummyObservable: any;
   koState: any;
   koProgress: any;
@@ -115,28 +119,23 @@ export class Survey extends SurveyModel {
       this.renderedElement = renderedElement;
     }
     this.render(renderedElement);
-    this.onValueChanged.add((sender, options) => this.checkPageStatus(this.currentPage));
-    this.onMatrixRowAdded.add((sender, options) => this.checkPageStatus(this.currentPage));
-    this.onMatrixRowRemoved.add((sender, options) => this.checkPageStatus(this.currentPage));
-    this.onCurrentPageChanged.add((sender, options) => this.checkPageStatus(this.currentPage));
-    this.checkAllPageStatus();
+    this.onValueChanged.add((sender, options) => this.updatePageStatus(this.currentPage));
+    this.onMatrixRowAdded.add((sender, options) => this.updatePageStatus(this.currentPage));
+    this.onMatrixRowRemoved.add((sender, options) => this.updatePageStatus(this.currentPage));
+    this.onCurrentPageChanged.add((sender, options) => this.updatePageStatus(this.currentPage));
+    this.updateAllPageStatus();
   }
-  public checkAllPageStatus() {
+  public updateAllPageStatus() {
     for (let i = 0; i < this.visiblePages.length; ++i) {
-      this.checkPageStatus(this.visiblePages[i]);
+      this.updatePageStatus(this.visiblePages[i]);
     }
-  }
-  public checkPageStatus(page: any) {
-    page.isFinished = !page.hasUnansweredQuestions;
-    page.progress = page.getPageProgress();
-  }
-  public get surveyIsFinished(): boolean {
-    return this.visiblePages.every((page: Page) => page.isFinished);
   }
   public nextPageUIClick() {
     if (!!this.mouseDownPage && this.mouseDownPage !== this.currentPage) return;
     this.mouseDownPage = null;
-    this.nextPage();
+    if (!this.nextPage()) {
+      this.updatePageStatus(this.currentPage);
+    }
   }
   public nextPageMouseDown() {
     this.mouseDownPage = this.currentPage;
@@ -237,6 +236,16 @@ export class Survey extends SurveyModel {
     var self = this;
     this.dummyObservable = ko.observable(0);
     this.koCurrentPage = ko.observable(this.currentPage);
+    // this.koIsCurrentPageFinished = ko.observable(false);
+    this.koIsCurrentPageError = ko.computed(() => {
+      return;
+    });
+    this.koCurrentPageProgress = ko.computed(() => {
+      return;
+    });
+    this.koIsCurrentPageFinished = ko.computed(() => {
+      return;
+    });
     this.koIsFirstPage = ko.computed(() => {
       this.dummyObservable();
       return this.isFirstPage;
@@ -267,6 +276,15 @@ export class Survey extends SurveyModel {
     this.updateKoCurrentPage();
     super.currentPageChanged(newValue, oldValue);
     if (!this.isDesignMode) this.scrollToTopOnPageChange();
+    this.koIsCurrentPageFinished = ko.computed(() => {
+      return this.currentPage.koIsFinished();
+    });
+    this.koIsCurrentPageError = ko.computed(() => {
+      return this.currentPage.koHasError();
+    });
+    this.koCurrentPageProgress = ko.computed(() => {
+      return this.currentPage.koProgress();
+    });
   }
   pageVisibilityChanged(page: IPage, newValue: boolean) {
     super.pageVisibilityChanged(page, newValue);
@@ -330,6 +348,17 @@ export class Survey extends SurveyModel {
     }
   }
   private selectPage(index: number) {
+    let pages = this.visiblePages;
+    if (index > this.currentPageNo && this.currentPage.hasErrors(true, true)) {
+      this.currentPage.koHasError(true);
+      return;
+    }
+    for (let i = this.currentPageNo + 1; i < pages.length; ++i) {
+      if (pages[i].hasErrors(false, false) && index > i) {
+        index = i;
+        pages[i].hasErrors(true);
+      }
+    }
     this.currentPageNo = index;
   }
 }

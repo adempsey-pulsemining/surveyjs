@@ -58,6 +58,12 @@ export class MultipleTextItemModel extends Base
     let chars = "abcdefghijklmnopqrstuvwxyz";
     return chars.charAt(this.index).toUpperCase();
   }
+  public set showItemSequence(val: boolean) {
+    this.setPropertyValue("showItemSequence", val);
+  }
+  public get showItemSequence(): boolean {
+    return this.getPropertyValue("showItemSequence", true);
+  }
   public getType(): string {
     return "multipletextitem";
   }
@@ -284,11 +290,8 @@ export class QuestionMultipleTextModel extends Question
       }
     }
   }
-  public set showItemSequence(val: boolean) {
-    this.setPropertyValue("showItemSequence", val);
-  }
-  public get showItemSequence(): boolean {
-    return this.getPropertyValue("showItemSequence", true);
+  public isAnswered(): boolean {
+    return this.items.every(item => !!item.value);
   }
   /**
    * The list of input items.
@@ -434,9 +437,6 @@ export class QuestionMultipleTextModel extends Question
         errors.push(new AnswerRequiredError(null, this));
       }
     }
-  }
-  public isAnswered(): boolean {
-    return this.items.every(item => !!item.value);
   }
   //IMultipleTextData
   getMultipleTextValue(name: string) {

@@ -31,6 +31,7 @@ import { SurveyTimer } from "./surveytimer";
 import { Question } from "./question";
 import { ItemValue } from "./itemvalue";
 import { PanelModelBase } from "./panel";
+import {Page} from "./knockout/kopage";
 
 /**
  * Survey object contains information about the survey. Pages, Questions, flow logic and etc.
@@ -59,6 +60,7 @@ export class SurveyModel extends Base
   public set commentPrefix(val: string) {
     Base.commentPrefix = val;
   }
+
   private pagesValue: Array<PageModel>;
   private triggersValue: Array<SurveyTrigger>;
   private get currentPageValue(): PageModel {
@@ -70,10 +72,13 @@ export class SurveyModel extends Base
 
   private valuesHash: HashTable<any> = {};
   private variablesHash: HashTable<any> = {};
+
   private localeValue: string = "";
+
   private textPreProcessor: TextPreProcessor;
   private completedStateValue: string = "";
   private completedStateTextValue: string = "";
+
   private isTimerStarted: boolean = false;
   /**
    * The event is fired before the survey is completed and onComplete event is fired. You may prevent the survey from completing by setting options.allowComplete to false
@@ -1513,7 +1518,60 @@ export class SurveyModel extends Base
     }
     return testData;
   }
-
+  public get surveyIsFinished(): boolean {
+    return this.visiblePages.every(page => page.isFinished);
+  }
+  public updatePageStatus(page: any) {
+    if (page == null) return;
+    page.updateStatus();
+  }
+  public get surveyIsFisnished(): boolean {
+    return this.visiblePages.every((page: any) => page.isFinished());
+  }
+  public isCurrentPageFinished(): boolean {
+    if (this.currentPage == null) return true;
+    return this.currentPage.isFinished;
+  }
+  public isCurrentPageError(): boolean {
+    if (this.currentPage == null) return true;
+    return this.currentPage.hasError();
+  }
+  public currentPageProgress(): string {
+    if (this.currentPage == null) return "";
+    return this.currentPage.progress;
+  }
+  public get currentPageName(): string {
+    return this.currentPage.title ? this.currentPage.title : this.currentPage.name;
+  }
+  public get autoPageBreak(): boolean {
+    return this.getPropertyValue("autoPageBreak", false);
+  }
+  // calculate page breaks for each question automatically
+  public set autoPageBreak(val: boolean) {
+    this.setPropertyValue("autoPageBreak", val);
+  }
+  public get breakAfterPage(): boolean {
+    return this.getPropertyValue("breakAfterPage", true);
+  }
+  // automatically break after every page
+  public set breakAfterPage(val: boolean) {
+    this.setPropertyValue("breakAfterPage", val);
+  }
+  public get isPdfRender(): boolean {
+    return this.getPropertyValue("isPdfRender", false);
+  }
+  // set to true if printing pdf
+  public set isPdfRender(val: boolean) {
+    this.setPropertyValue("isPdfRender", val);
+  }
+  public get showPageNasurvigation(): boolean {
+    if (this.isPdfRender) return false;
+    return this.getPropertyValue("showPageNavigation", true);
+  }
+  // set to true to show page navigation bar
+  public set showPageNavigation(val: boolean) {
+    this.setPropertyValue("showPageNavigation", val);
+  }
   /**
    * Returns survey result data as an array of plain objects: with question title, name, value and displayValue.
    * For complex questions (like matrix, etc.) isNode flag is set to true and data contains array of nested objects (rows)
@@ -1616,7 +1674,6 @@ export class SurveyModel extends Base
     }
     return result;
   }
-
   /**
    * Returns true if there is no any page in the survey. The survey is empty.
    */
@@ -1994,20 +2051,6 @@ export class SurveyModel extends Base
     this.doNextPage();
     return true;
   }
-  public get isCurrentPageFinished(): boolean {
-    if (this.currentPage == null) return true;
-    return this.currentPage.isFinished;
-  }
-  public get isCurrentPageError(): boolean {
-    if (this.currentPage == null) return true;
-    return this.currentPage.hasError;
-  }
-  public get currentPageName(): string {
-    return this.currentPage.title ? this.currentPage.title : this.currentPage.name;
-  }
-  public get currentPageProgress(): string {
-    return this.currentPage.progress;
-  }
   /**
    * Returns true, if there is any error on the current page. For example, the required question is empty or a question validation is failed.
    * @see nextPage
@@ -2046,35 +2089,6 @@ export class SurveyModel extends Base
   }
   public set isSinglePage(val: boolean) {
     this.setPropertyValue("isSinglePage", val);
-  }
-  public get autoPageBreak(): boolean {
-    return this.getPropertyValue("autoPageBreak", false);
-  }
-  // calculate page breaks for each question automatically
-  public set autoPageBreak(val: boolean) {
-    this.setPropertyValue("autoPageBreak", val);
-  }
-  public get breakAfterPage(): boolean {
-    return this.getPropertyValue("breakAfterPage", true);
-  }
-  // automatically break after every page
-  public set breakAfterPage(val: boolean) {
-    this.setPropertyValue("breakAfterPage", val);
-  }
-  public get isPdfRender(): boolean {
-    return this.getPropertyValue("isPdfRender", false);
-  }
-  // set to true if printing pdf
-  public set isPdfRender(val: boolean) {
-    this.setPropertyValue("isPdfRender", val);
-  }
-  public get showPageNavigation(): boolean {
-    if (this.isPdfRender) return false;
-    return this.getPropertyValue("showPageNavigation", true);
-  }
-  // set to true to show page navigation bar
-  public set showPageNavigation(val: boolean) {
-    this.setPropertyValue("showPageNavigation", val);
   }
   /**
    * Set this property to true, to make the first page your starting page. The end-user could not comeback to the start page and it is not count in the progress.
@@ -3337,7 +3351,10 @@ export class SurveyModel extends Base
       question.name = "html";
     }
     if (!question.name) {
-      question.name = this.generateNewName(this.getAllQuestions(false, true),"question");
+      question.name = this.generateNewName(
+        this.getAllQuestions(false, true),
+        "question"
+      );
     }
     if (!!(<Question>question).page) {
       this.questionHashesAdded(<Question>question);

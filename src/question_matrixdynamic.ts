@@ -40,15 +40,6 @@ export class QuestionMatrixDynamicModel extends QuestionMatrixDropdownModelBase
     this.createLocalizableString("addRowText", this);
     this.createLocalizableString("removeRowText", this);
   }
-  public isAnswered(): boolean {
-    if (!this.value || this.value.length != this.rowCount) return false;
-    let cols = this.visibleColumns.length;
-    let count = 0;
-    this.value.forEach((row: any) => {
-      count += Object.keys(row).length;
-    });
-    return count == cols * this.value.length;
-  }
   public getType(): string {
     return "matrixdynamic";
   }
@@ -267,6 +258,15 @@ export class QuestionMatrixDynamicModel extends QuestionMatrixDropdownModelBase
     if (!this.confirmDelete || confirm(this.confirmDeleteText)) {
       this.removeRow(value);
     }
+  }
+  public isAnswered(): boolean {
+    if (!this.value || this.value.length != this.rowCount) return false;
+    let cols = this.visibleColumns.length;
+    let count = 0;
+    this.value.forEach((row: any) => {
+      count += Object.keys(row).length;
+    });
+    return count == cols * this.value.length;
   }
   /**
    * Removes a row by it's index.

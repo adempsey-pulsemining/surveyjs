@@ -24,6 +24,42 @@ export class PageModel extends PanelModelBase implements IPage {
       return text;
     };
   }
+  public updateStatus() {
+    this.updateFinished();
+    this.updateProgress();
+    this.updateErrors();
+  }
+  public updateFinished() {
+    this.isFinished = !this.hasUnansweredQuestions && !this.hasError();
+  }
+  public updateProgress() {
+    this.progress = this.getPageProgress();
+  }
+  public updateErrors() {
+    this.errorsOnPage = this.hasError();
+  }
+  public get isFinished(): boolean {
+    return this.getPropertyValue("isFinished", false);
+  }
+  public set isFinished(val: boolean) {
+    this.setPropertyValue("isFinished", val);
+  }
+  public get progress(): string {
+    return this.getPropertyValue("progress", "");
+  }
+  public set progress(val: string) {
+    this.setPropertyValue("progress", val);
+  }
+  public set errorsOnPage(val: boolean) {
+    this.setPropertyValue("errorsOnPage", val);
+  }
+  public get errorsOnPage(): boolean {
+    return this.getPropertyValue("errorsOnPage", false);
+  }
+  public hasError(): boolean {
+    let questions = this.questions.filter(q => q.isVisible);
+    return questions.some((q: any) => this.hasErrors(false, false) && q.errors.length);
+  }
   public getType(): string {
     return "page";
   }

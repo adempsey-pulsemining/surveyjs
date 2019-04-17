@@ -214,7 +214,8 @@ export class QuestionMatrixBaseModel<TRow, TColumn> extends Question {
 JsonObject.metaData.addClass(
   "matrixbase",
   ["columnsVisibleIf:condition", "rowsVisibleIf:condition",
-  { name: "showHeader:boolean", default: true }, { name: "showItemSequence:boolean", default: true, layout: "row" }],
+  { name: "showHeader:boolean", default: true },
+  { name: "showItemSequence:boolean", default: true, layout: "row" }],
   undefined,
   "question"
 );

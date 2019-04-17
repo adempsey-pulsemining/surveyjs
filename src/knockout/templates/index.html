@@ -86,15 +86,15 @@
 </script>
 <script type="text/html" id="survey-page-select">
     <div data-bind="css: css.pageNavigation, attr: { id: 'sv_page_select' }">
-        <pms-widget-dropdown data-bind="attr: { 'selected-index': currentPageNo, 'selected-name': currentPageName, 'center-content': currentPageProgress }, css: { finished: isCurrentPageFinished, error: isCurrentPageError }">
+        <pms-widget-dropdown data-bind="attr: { 'selected-index': currentPageNo, 'selected-name': currentPageName, 'center-content': koCurrentPageProgress }, css: { finished: koIsCurrentPageFinished, error: koIsCurrentPageError }">
             <!-- ko foreach: { data: visiblePages, as: 'page' } -->
-                <div style="position: relative; display: flex; align-items: center" class="sv_select_option" data-bind="css: { finished: koIsFinished, error: hasError }, click: function(model, event) { $parent.selectPage($index()) }, attr: { 'selected': $parent.currentPageNo == $index() }">
+                <div style="position: relative; display: flex; align-items: center" class="sv_select_option" data-bind="css: { finished: koIsFinished, error: koHasError }, click: function(model, event) { $parent.selectPage($index()) }, attr: { 'selected': $parent.currentPageNo == $index() }">
                     <span data-bind="text: page.title ? page.title : page.name"></span>
                     <div class="flex"></div>
                     <!-- ko if: koIsFinished -->
                         <pms-widget-icon icon="icons:check" size="large" color="green" style="margin-right: 5px"></pms-widget-icon>
                     <!-- /ko -->
-                    <!-- ko if: hasError -->
+                    <!-- ko if: koHasError -->
                         <pms-widget-icon icon="icons:clear" size="large" color="red" style="margin-right: 5px"></pms-widget-icon>
                     <!-- /ko -->
                     <div style="position: absolute; left: 50%; transform: translateX(-50%)" data-bind="text: koProgress"></div>
