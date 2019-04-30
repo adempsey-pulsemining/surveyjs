@@ -1371,22 +1371,26 @@ export class SurveyModel extends Base
     let data = this.getPlainDataTest();
     let csvData: any = 'Question Type,Sequence,Question Title,Item Title,Question Description,Question Name,Item Name,Cell Type,' +
                        'Row Number,Row Title,Column Number,Column Title,Answer Value,Display Value';
+    let parse = (value: any) => {
+      if (!value) return "";
+      return JSON.stringify(value);
+    };
     data.forEach(item => {
       csvData += "\n";
-      csvData += item.type;
-      csvData += "," + item.sequence;
-      csvData += "," + item.questionTitle;
-      csvData += "," + item.itemTitle;
-      csvData += "," + item.description;
-      csvData += "," + item.questionName;
-      csvData += "," + item.itemName;
-      csvData += "," + item.cellType;
-      csvData += "," + item.rowNumber;
-      csvData += "," + item.rowTitle;
-      csvData += "," + item.columnNumber;
-      csvData += "," + item.columnTitle;
-      csvData += "," + item.value;
-      csvData += "," + item.displayValue;
+      csvData += parse(item.type);
+      csvData += "," + parse(item.sequence);
+      csvData += "," + parse(item.questionTitle);
+      csvData += "," + parse(item.itemTitle);
+      csvData += "," + parse(item.description);
+      csvData += "," + parse(item.questionName);
+      csvData += "," + parse(item.itemName);
+      csvData += "," + parse(item.cellType);
+      csvData += "," + parse(item.rowNumber);
+      csvData += "," + parse(item.rowTitle);
+      csvData += "," + parse(item.columnNumber);
+      csvData += "," + parse(item.columnTitle);
+      csvData += "," + parse(item.value);
+      csvData += "," + parse(item.displayValue);
     });
     return csvData;
   }
@@ -1433,7 +1437,7 @@ export class SurveyModel extends Base
           let column = question.columns.find((col: any) => col.value === question.value[row.value]);
           if (!column || !column.value) return;
           testData.push({
-            type: question.getType(),
+            type: question.getDisplayType(),
             sequence: question.no,
             questionTitle: (<Question>question).title,
             itemTitle: "",
@@ -1455,7 +1459,7 @@ export class SurveyModel extends Base
           question.columns.forEach((column: any, colIndex: number) => {
             if (!question.value || !question.value[row.value] || !question.value[row.value][column.name]) return;
             testData.push({
-              type: question.getType(),
+              type: question.getDisplayType(),
               sequence: question.no,
               questionTitle: (<Question>question).title,
               itemTitle: "",

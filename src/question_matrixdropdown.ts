@@ -59,6 +59,9 @@ export class QuestionMatrixDropdownModel extends QuestionMatrixDropdownModelBase
   public getType(): string {
     return "matrixdropdown";
   }
+  public getDisplayType(): string {
+    return "matrix (multiple choice)";
+  }
   protected getDisplayValueCore(keysAsText: boolean): any {
     var values = this.createValueCopy();
     if (!values) return values;

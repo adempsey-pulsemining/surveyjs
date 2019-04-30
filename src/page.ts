@@ -409,6 +409,7 @@ export class PageModel extends PanelModelBase implements IPage {
   public getPageProgress(): string {
     let questions = this.questions.filter(q => q.getType() !== "html");
     let answeredQuestionsCount = questions.filter(q => q.isAnswered()).length;
+    if (questions.length === 0) return "100%";
     return Math.floor(((answeredQuestionsCount / questions.length) * 100)) + "%";
   }
 }

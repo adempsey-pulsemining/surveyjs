@@ -200,6 +200,9 @@ export class QuestionMatrixModel
   public getType(): string {
     return "matrix";
   }
+  public getDisplayType(): string {
+    return "matrix (single choice)";
+  }
   /**
    * Set this property to true, if you want a user to answer all rows.
    */
