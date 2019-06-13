@@ -1403,7 +1403,7 @@ export class SurveyModel extends Base
     return this.getTestData(questions);
   }
   private isValidTableType(type: string): boolean {
-    return type !== "html" && type !== "camera" && type !== "carousel";
+    return type !== "html" && type !== "camera" && type !== "carousel" && type !== "signature";
   }
   private getTestData(questions: Array<any>): Array<any> {
     let testData: any = [];
