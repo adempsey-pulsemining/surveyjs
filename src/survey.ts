@@ -1367,8 +1367,8 @@ export class SurveyModel extends Base
     return result;
   }
 
-  public getCsvData(): string {
-    let data = this.getPlainDataTest();
+  public getCsvData(showBlankValues: boolean): string {
+    let data = this.getPlainDataTest(showBlankValues);
     let csvData: any = 'Question Type,Sequence,Question Title,Item Title,Question Description,Question Name,Item Name,Cell Type,' +
                        'Row Number,Row Title,Column Number,Column Title,Answer Value,Display Value';
     let parse = (value: any) => {
@@ -1398,22 +1398,23 @@ export class SurveyModel extends Base
    * custom pulse implementation
    * @returns {Array<any>}
    */
-  public getPlainDataTest(): Array<any> {
-    let questions = this.getAllQuestions().filter(x => this.isValidTableType(x.getType()) && x.visible && x.value);
-    return this.getTestData(questions);
+  public getPlainDataTest(showBlankValues: boolean): Array<any> {
+    let questions = this.getAllQuestions().filter(x => this.isValidTableType(x.getType()) && x.visible && (x.value || showBlankValues));
+    return this.getTestData(questions, showBlankValues);
   }
   private isValidTableType(type: string): boolean {
     return type !== "html" && type !== "camera" && type !== "carousel" && type !== "signature";
   }
-  private getTestData(questions: Array<any>): Array<any> {
+  private getTestData(questions: Array<any>, showBlankValues: boolean): Array<any> {
     let testData: any = [];
     let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     for (let i = 0; i < questions.length; ++i) {
       let question = questions[i];
-      if (typeof question.value === "object" && question.getType() === "multipletext") {
+      // multipletext question
+      if (question.getType() === "multipletext") {
         question.items.forEach((item: any) => {
-          if (!item.value) return;
+          if (!item.value && !showBlankValues) return;
           testData.push({
             type: question.getType(),
             sequence: question.no + item.sequence,
@@ -1427,15 +1428,18 @@ export class SurveyModel extends Base
             rowTitle: "",
             columnNumber: "",
             columnTitle: "",
-            value: item.value,
-            displayValue: item.displayValue || item.value,
+            value: item.value || "",
+            displayValue: item.displayValue || item.value || "",
             getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
           });
         });
-      } else if (typeof question.value === "object" && question.getType() === "matrix") {
+      // matrix single choice
+      } else if (question.getType() === "matrix") {
+        question.value = question.value || {};
         question.rows.forEach((row: any, rowIndex: number) => {
           let column = question.columns.find((col: any) => col.value === question.value[row.value]);
-          if (!column || !column.value) return;
+          column = column || {};
+          if (!column.value && !showBlankValues) return;
           testData.push({
             type: question.getDisplayType(),
             sequence: question.no,
@@ -1449,15 +1453,18 @@ export class SurveyModel extends Base
             rowTitle: row.text,
             columnNumber: "",
             columnTitle: "",
-            value: column.value,
-            displayValue: column.text || column.value,
+            value: column.value || "",
+            displayValue: column.text || column.value || "",
             getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
           });
         });
-      } else if (typeof question.value === "object" && question.getType().startsWith("matrix") && !Array.isArray(question.value)) {
+      // matrix multiple choice
+      } else if (question.getType() === "matrixdropdown") {
         question.rows.forEach((row: any, rowIndex: number) => {
           question.columns.forEach((column: any, colIndex: number) => {
-            if (!question.value || !question.value[row.value] || !question.value[row.value][column.name]) return;
+            question.value = question.value || {};
+            question.value[row.value] = question.value[row.value] || {};
+            if (!question.value[row.value][column.name] && !showBlankValues) return;
             testData.push({
               type: question.getDisplayType(),
               sequence: question.no,
@@ -1471,16 +1478,19 @@ export class SurveyModel extends Base
               rowTitle: row.text,
               columnNumber: question.showItemSequence ? chars.charAt(colIndex) : (colIndex + 1),
               columnTitle: column.title,
-              value: question.value[row.value][column.name],
-              displayValue: question.displayValue[row.value][column.name] || question.value[row.value][column.name],
+              value: question.value[row.value][column.name] || "",
+              displayValue: question.displayValue[row.value][column.name] || question.value[row.value][column.name] || "",
               getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
             });
           });
         });
-      } else if (Array.isArray(question.value) && question.getType().startsWith("matrix")) {
+      // matrix dynamic
+      } else if (question.getType() === "matrixdynamic") {
         for (let i = 0; i < question.rowCount; ++i) {
           question.columns.forEach((column: any, index: number) => {
-            if (!question.value || !question.value[i] || !question.value[i][column.name]) return;
+            question.value = question.value || {};
+            question.value[i] = question.value[i] || {};
+            if (!question.value[i][column.name] && !showBlankValues) return;
             testData.push({
               type: question.getType(),
               sequence: question.no,
@@ -1494,12 +1504,13 @@ export class SurveyModel extends Base
               rowTitle: "",
               columnNumber: question.showItemSequence ? chars.charAt(index) : (index + 1),
               columnTitle: column.title,
-              value: question.value[i][column.name],
-              displayValue: question.displayValue[i][column.name] || question.value[i][column.name],
+              value: question.value[i][column.name] || "",
+              displayValue: question.displayValue[i][column.name] || question.value[i][column.name] || "",
               getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
             });
           });
         }
+      // all other questions
       } else {
         testData.push({
           type: question.getType(),
@@ -1514,8 +1525,8 @@ export class SurveyModel extends Base
           rowTitle: "",
           columnNumber: "",
           columnTitle: "",
-          value: question.value,
-          displayValue: (<Question>question).displayValue || question.value,
+          value: question.value || "",
+          displayValue: (<Question>question).displayValue || question.value || "",
           getString: (val: any) => typeof val === "object" ? JSON.stringify(val) : val
         });
       }
