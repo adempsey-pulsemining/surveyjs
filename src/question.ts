@@ -83,6 +83,18 @@ export class Question extends SurveyElement
       }
     );
   }
+  public set questionId(val: string) {
+    this.setPropertyValue("questionId", val);
+  }
+  public get questionId(): string {
+    return this.getPropertyValue("questionId");
+  }
+  public set widgetId(val: string) {
+    this.setPropertyValue("widgetId", val);
+  }
+  public get widgetId(): string {
+    return this.getPropertyValue("widgetId");
+  }
   public getValueName(): string {
     if (!!this.valueName) return this.valueName.toString();
     return this.name;
@@ -1206,6 +1218,8 @@ export class Question extends SurveyElement
 }
 JsonObject.metaData.addClass("question", [
   "!name",
+  "!questionId",
+  "widgetId",
   { name: "visible:boolean", default: true },
   { name: "useDisplayValuesInTitle:boolean", default: true, layout: "row" },
   "visibleIf:condition",

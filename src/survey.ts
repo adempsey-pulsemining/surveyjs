@@ -3233,6 +3233,7 @@ export class SurveyModel extends Base
   protected doOnPageAdded(page: PageModel) {
     page.setSurveyImpl(this);
     if (!page.name) page.name = this.generateNewName(this.pages, "page");
+    if (!page.pageId) page.pageId = this.newGuid();
     this.questionHashesPanelAdded(page);
     var options = { page: page };
     this.onPageAdded.fire(this, options);
@@ -3371,6 +3372,9 @@ export class SurveyModel extends Base
         "question"
       );
     }
+    if (!question.questionId) {
+      question.questionId = this.newGuid();
+    }
     if (!!(<Question>question).page) {
       this.questionHashesAdded(<Question>question);
     }
@@ -3404,6 +3408,13 @@ export class SurveyModel extends Base
   ): any {
     this.questionHashesRemoved(<Question>question, oldName, oldValueName);
     this.questionHashesAdded(<Question>question);
+  }
+  private newGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0,
+          v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
   private questionHashes = {
     names: {},
