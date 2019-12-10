@@ -1391,3 +1391,4 @@ JsonObject.metaData.addClass(
 QuestionFactory.Instance.registerQuestion("paneldynamic", name => {
   return new QuestionPanelDynamicModel(name);
 });
+export { QuestionPanelDynamicModel as QuestionPanelDynamic }

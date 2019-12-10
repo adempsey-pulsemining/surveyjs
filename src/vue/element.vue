@@ -36,31 +36,35 @@ import { Component, Prop } from "vue-property-decorator";
 import { SurveyModel } from "../survey";
 import { IElement, IQuestion } from "../base";
 import { Question } from "../question";
+
 @Component
 export class SurveyElementVue extends Vue {
-  @Prop css: any;
-  @Prop survey: SurveyModel;
-  @Prop element: IElement;
+  @Prop() css: any;
+  @Prop() survey: SurveyModel;
+  @Prop() element: IElement;
+
   getWidgetComponentName(element: Question) {
     if (element.customWidget) {
       return "survey-customwidget";
     }
     return "survey-" + element.getTemplate();
   }
+
   getQuestionClass(element: Question) {
     if (!!element.cssMainRoot) {
       return element.cssMainRoot;
     }
     return "";
   }
+
   get hasErrorsOnTop() {
     return !this.element.isPanel && this.survey.questionErrorLocation === "top";
   }
+
   get hasErrorsOnBottom() {
-    return (
-      !this.element.isPanel && this.survey.questionErrorLocation === "bottom"
-    );
+    return (!this.element.isPanel && this.survey.questionErrorLocation === "bottom");
   }
+
   mounted() {
     if (this.survey && !this.element.isPanel) {
       this.survey.afterRenderQuestion(<IQuestion>this.element, this.$el);

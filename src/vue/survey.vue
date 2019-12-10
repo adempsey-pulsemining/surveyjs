@@ -37,7 +37,7 @@
           <div v-if="hasCompletedPage">
               <div v-html="survey.processedCompletedHtml" :class="getCompletedPageClasses()"></div>
               <div v-if="survey.completedState != ''" :class="css.saveData.root">
-                  <div :class="getCompletedStateClasses()"><span>{{survey.completedStateText}}</span>
+                <div :class="getCompletedStateClasses()"><span>{{survey.completedStateText}}</span>
                       <input type="button" v-if="survey.completedState == 'error'" :value="survey.getLocString('saveAgainButton')" @click="doTrySaveAgain" :class="css.saveData.saveAgainButton" />
                   </div>
               </div>
@@ -58,7 +58,7 @@ import { VueSurveyModel as SurveyModel } from "./surveyModel";
 
 @Component
 export class Survey extends Vue {
-  @Prop survey: SurveyModel;
+  @Prop() survey: SurveyModel;
 
   forceUpdate() {
     this.$forceUpdate();
@@ -74,6 +74,7 @@ export class Survey extends Vue {
     this.survey.renderCallback = this.forceUpdate;
     this.survey.startTimerFromUI();
   }
+
   beforeDestroy() {
     this.survey.stopTimer();
     this.survey.renderCallback = undefined;
@@ -82,35 +83,45 @@ export class Survey extends Vue {
   get hasTitle() {
     return !!this.survey.title && this.survey.showTitle;
   }
+
   get hasCompletedPage() {
     return this.survey.showCompletedPage && this.survey.state === "completed";
   }
+
   get css() {
     return this.survey.css;
   }
+
   getNavBtnClasses(btnType:any) {
     const btnClass = this.css.navigation[btnType];
     return this.css.navigationButton + " " + btnClass;
   }
+
   getCompletedPageClasses() {
     var css = this.css;
     return css.body + " " + css.completedPage;
   }
+
   getCompletedStateClasses() {
     return this.css.saveData[this.survey.completedState];
   }
+
   start() {
     this.survey.start();
   }
+
   prevPage() {
     this.survey.prevPage();
   }
+
   nextPage() {
     this.survey.nextPage();
   }
+
   completeLastPage() {
     this.survey.completeLastPage();
   }
+
   doTrySaveAgain() {
     this.survey.doComplete();
   }

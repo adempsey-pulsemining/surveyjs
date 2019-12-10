@@ -3,10 +3,7 @@
     <thead v-if="showHorizontalHeader">
       <tr>
         <td v-if="!isDynamic"></td>
-        <th
-          v-for="column in question.visibleColumns"
-          :style="{ minWidth: question.getColumnWidth(column) }"
-        >
+        <th v-for="column in question.visibleColumns" :style="{ minWidth: question.getColumnWidth(column) }">
           <survey-string :locString="column.locTitle"/>
         </th>
         <td v-if="question.canRemoveRow"></td>
@@ -25,18 +22,9 @@
         <td v-if="!isDynamic">
           <survey-string :locString="row.locText"/>
         </td>
-        <survey-matrixcell
-          :question="question"
-          :cell="cell"
-          v-for="cell in row.cells"
-          :key="rowIndex + '_' + cell.question.id"
-        />
+        <survey-matrixcell :question="question" :cell="cell" v-for="cell in row.cells" :key="rowIndex + '_' + cell.question.id"/>
         <td v-if="canRemoveRow">
-          <button
-            type="button"
-            :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove"
-            @click="removeRowClick(row)"
-          >
+          <button type="button" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove" @click="removeRowClick(row)">
             <span>{{question.removeRowText}}</span>
             <span :class="question.cssClasses.iconRemove"></span>
           </button>
@@ -44,28 +32,16 @@
       </tr>
     </tbody>
     <tbody v-if="!isColumnsHorizontal">
-      <tr
-        v-for="(column, columnIndex) in question.visibleColumns"
-        :key="question.inputId + '_' + columnIndex"
-      >
+      <tr v-for="(column, columnIndex) in question.visibleColumns" :key="question.inputId + '_' + columnIndex">
         <th v-if="question.showHeader">
           <survey-string :locString="column.locTitle"/>
         </th>
-        <survey-matrixcell
-          :question="question"
-          :cell="cell"
-          v-for="cell in getCellsByColumn(columnIndex)"
-          :key="columnIndex + '_' + cell.question.id"
-        />
+        <survey-matrixcell :question="question" :cell="cell" v-for="cell in getCellsByColumn(columnIndex)" :key="columnIndex + '_' + cell.question.id"/>
       </tr>
       <tr v-if="canRemoveRow">
         <td v-if="question.showHeader"></td>
         <td v-for="(row, rowIndex) in rows" :key="'removeRow' + rowIndex">
-          <button
-            type="button"
-            :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove"
-            @click="removeRowClick(row)"
-          >
+          <button type="button" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove" @click="removeRowClick(row)">
             <span>{{question.removeRowText}}</span>
             <span :class="question.cssClasses.iconRemove"></span>
           </button>
@@ -90,28 +66,36 @@ import { MatrixDropdownRowModel } from "../question_matrixdropdown";
 
 @Component
 export class MatrixTable extends Vue {
-  @Prop question: QuestionMatrixDropdownModelBase;
+  @Prop() question: QuestionMatrixDropdownModelBase;
+
   get matrixDynamic(): QuestionMatrixDynamicModel {
     return <QuestionMatrixDynamicModel>this.question;
   }
+
   get rows() {
     return this.question.visibleRows;
   }
+
   get isColumnsHorizontal() {
     return this.question.isColumnLayoutHorizontal;
   }
+
   get showHorizontalHeader() {
     return this.isColumnsHorizontal && this.question.showHeader;
   }
+
   get showVerticalHeader() {
     return !this.isColumnsHorizontal && !this.isDynamic;
   }
+
   get isDynamic() {
     return this.question.isRowsDynamic;
   }
+
   get canRemoveRow() {
     return this.isDynamic && this.matrixDynamic.canRemoveRow;
   }
+
   getCellsByColumn(columnIndex: number): Array<MatrixDropdownCell> {
     var res = [];
     var rows = this.rows;
@@ -120,6 +104,7 @@ export class MatrixTable extends Vue {
     }
     return res;
   }
+
   removeRowClick(row: any) {
     var rows = this.question.visibleRows;
     var index = rows.indexOf(row);

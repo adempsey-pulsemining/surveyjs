@@ -1,15 +1,15 @@
 <template>
-    <table :class="question.cssClasses.root">
-        <tr v-for="(row, rowindex) in question.getRows()" :key="question.inputId + 'rowkey' + rowindex" :class="question.cssClasses.row">
-            <template v-for="item in row">
-                <td :key="'label' + item.editor.id" :class="question.cssClasses.itemTitle"><survey-string :locString="item.locTitle"/></td>
-                <td :key="item.editor.id">
-                    <survey-errors :question="item.editor" />
-                    <component :is="getWidgetComponentName(item.editor)" :question="item.editor" />
-                </td>
-            </template>
-        </tr>
-    </table>
+  <table :class="question.cssClasses.root">
+    <tr v-for="(row, rowindex) in question.getRows()" :key="question.inputId + 'rowkey' + rowindex" :class="question.cssClasses.row">
+      <template v-for="item in row">
+        <td :key="'label' + item.editor.id" :class="question.cssClasses.itemTitle"><survey-string :locString="item.locTitle"/></td>
+        <td :key="item.editor.id">
+          <survey-errors :question="item.editor" />
+          <component :is="getWidgetComponentName(item.editor)" :question="item.editor" />
+        </td>
+      </template>
+    </tr>
+  </table>
 </template>
 
 <script lang="ts">

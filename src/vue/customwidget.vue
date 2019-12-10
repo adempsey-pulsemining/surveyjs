@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <div v-if="hasHtml" v-html="customHtml"></div>
-        <component v-if="hasDefaultRender" :is="componentName" :question="question" :css="css"/>
-    </div>
+  <div>
+    <div v-if="hasHtml" v-html="customHtml"></div>
+    <component v-if="hasDefaultRender" :is="componentName" :question="question" :css="css"/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -15,8 +15,8 @@ import { QuestionCustomWidget } from "../questionCustomWidgets";
 
 @Component
 export class CustomWidget extends Vue {
-  @Prop css: any;
-  @Prop question: Question;
+  @Prop() css: any;
+  @Prop() question: Question;
   get hasDefaultRender(): boolean {
     return this.question.customWidget.isDefaultRender || this.hasVueComponent;
   }
@@ -29,9 +29,7 @@ export class CustomWidget extends Vue {
   get hasVueComponent(): boolean {
     var options = (<any>Vue)["options"];
     if (!options) return false;
-    return (
-      options.components && options.components[this.question.customWidget.name]
-    );
+    return (options.components && options.components[this.question.customWidget.name]);
   }
   get componentName(): string {
     if (this.hasVueComponent) return this.question.customWidget.name;

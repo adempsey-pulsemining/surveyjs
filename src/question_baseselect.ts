@@ -8,8 +8,6 @@ import { OtherEmptyError } from "./error";
 import { ChoicesRestfull } from "./choicesRestfull";
 import { LocalizableString } from "./localizablestring";
 import { ConditionRunner } from "./conditions";
-import { turkishSurveyStrings } from "./localization/turkish";
-import { basename } from "path";
 
 /**
  * It is a base class for checkbox, dropdown and radiogroup questions.
@@ -46,8 +44,8 @@ export class QuestionSelectBase extends Question {
     this.choicesByUrl = this.createRestfull();
     this.choicesByUrl.owner = this;
     this.choicesByUrl.beforeSendRequestCallback = (_, __) => {
-      setTimeout(() => this.value = null, 1);
-    }
+      setTimeout(():void => this.value = null, 1);
+    };
     var locOtherText = this.createLocalizableString("otherText", this, true);
     this.createLocalizableString("otherErrorText", this, true);
     this.otherItemValue.locOwner = this;

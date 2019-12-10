@@ -1,10 +1,7 @@
 <template>
   <div role="alert" v-show="isShow" :class="classes">
     <div v-for="error in question.errors">
-      <span
-        :class="question.cssClasses ? question.cssClasses.error.icon : 'panel-error-icon'"
-        aria-hidden="true"
-      ></span>
+      <span :class="question.cssClasses ? question.cssClasses.error.icon : 'panel-error-icon'" aria-hidden="true"></span>
       <span :class="question.cssClasses ? question.cssClasses.error.item : 'panel-error-item'">
         <survey-string :locString="error.locText"/>
       </span>
@@ -20,20 +17,17 @@ import { SurveyError } from "../base";
 
 @Component
 export class Errors extends Vue {
-  @Prop question: Question;
-  @Prop location: String;
+  @Prop() question: Question;
+  @Prop() location: String;
 
   get isShow() {
     return !!this.question.errors && this.question.errors.length > 0
   }
 
   get classes() {
-    var question = this.question;
-    var classes = question.cssClasses
-      ? question.cssClasses.error.root
-      : "panel-error-root";
-
-    var additionalClasses = "";
+    let question = this.question;
+    let classes = question.cssClasses ? question.cssClasses.error.root : "panel-error-root";
+    let additionalClasses = "";
 
     if (this.location === "top") {
       additionalClasses = question.cssClasses.error.locationTop;
@@ -41,8 +35,9 @@ export class Errors extends Vue {
       additionalClasses = question.cssClasses.error.locationBottom;
     }
 
-    if (additionalClasses) classes += " " + additionalClasses;
-
+    if (additionalClasses) {
+      classes += " " + additionalClasses;
+    }
     return classes;
   }
 }

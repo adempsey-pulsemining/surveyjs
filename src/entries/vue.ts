@@ -19,8 +19,6 @@ export {
 
 import { VueSurveyModel } from "../vue/surveyModel";
 export { VueSurveyModel as Model };
-import { VueSurveyWindowModel } from "../vue/surveyModel";
-export { VueSurveyWindowModel as WindowModel };
 export { Survey } from "../vue/survey.vue";
 export { CustomWidget } from "../vue/customwidget.vue";
 export { SurveyString } from "../vue/string.vue";

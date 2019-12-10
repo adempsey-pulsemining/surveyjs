@@ -1,16 +1,16 @@
 <template>
-    <div :class="question.cssClasses.root">
-        <survey-paneldynamicprogress v-if="question.isProgressTopShowing" :question="question" />
-        <div v-for="panel in renderedPanels" :key="panel.id">
-            <survey-panel :question="panel" :css="css"/>
-            <div v-if="!question.isReadOnly && !panel.isCollapsed">
-                <input type="button" v-if="question.canRemovePanel" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove" :value="question.panelRemoveText" @click="removePanelClick(panel)" />
-            </div>
-            <hr/>
-        </div>
-        <survey-paneldynamicprogress v-if="question.isProgressBottomShowing" :question="question" />
-        <input type="button" v-if="question.isRenderModeList && question.canAddPanel" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonAdd" :value="question.panelAddText" @click="addPanelClick"/>
+  <div :class="question.cssClasses.root">
+    <survey-paneldynamicprogress v-if="question.isProgressTopShowing" :question="question" />
+    <div v-for="panel in renderedPanels" :key="panel.id">
+      <survey-panel :question="panel" :css="css"/>
+      <div v-if="!question.isReadOnly && !panel.isCollapsed">
+        <input type="button" v-if="question.canRemovePanel" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove" :value="question.panelRemoveText" @click="removePanelClick(panel)" />
+      </div>
+      <hr/>
     </div>
+    <survey-paneldynamicprogress v-if="question.isProgressBottomShowing" :question="question" />
+    <input type="button" v-if="question.isRenderModeList && question.canAddPanel" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonAdd" :value="question.panelAddText" @click="addPanelClick"/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -30,9 +30,11 @@ export class PanelDynamic extends QuestionVue<QuestionPanelDynamicModel> {
     }
     return panels;
   }
+
   removePanelClick(panel: any) {
     this.question.removePanelUI(panel);
   }
+
   addPanelClick() {
     this.question.addPanel();
   }

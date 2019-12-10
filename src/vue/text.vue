@@ -1,16 +1,5 @@
 <template>
-  <input
-    :disabled="question.isReadOnly"
-    :class="question.cssClasses.root"
-    :type="question.inputType"
-    :maxlength="question.getMaxLength()"
-    :size="question.size"
-    :id="question.inputId"
-    :placeholder="question.placeHolder"
-    :value="question.value"
-    @change="change"
-    v-bind:aria-label="question.locTitle.renderedHtml"
-  >
+  <input :disabled="question.isReadOnly" :class="question.cssClasses.root" :type="question.inputType" :maxlength="question.getMaxLength()" :size="question.size" :id="question.inputId" :placeholder="question.placeHolder" :value="question.value" @change="change" v-bind:aria-label="question.locTitle.renderedHtml">
 </template>
 
 <script lang="ts">

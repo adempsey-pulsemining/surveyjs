@@ -21,8 +21,7 @@ import { QuestionFactory } from "./questionfactory";
 import { ILocalizableOwner, LocalizableString } from "./localizablestring";
 import { surveyCss } from "./defaultCss/cssstandard";
 import { OneAnswerRequiredError } from "./error";
-import { QuestionPanelDynamic } from "./knockout/koquestion_paneldynamic";
-import { timingSafeEqual } from "crypto";
+import { QuestionPanelDynamic } from "./question_paneldynamic";
 import { PageModel } from "./page";
 
 export class DragDropInfo {

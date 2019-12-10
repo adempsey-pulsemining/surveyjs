@@ -31,7 +31,6 @@ import { SurveyTimer } from "./surveytimer";
 import { Question } from "./question";
 import { ItemValue } from "./itemvalue";
 import { PanelModelBase } from "./panel";
-import {Page} from "./knockout/kopage";
 
 /**
  * Survey object contains information about the survey. Pages, Questions, flow logic and etc.

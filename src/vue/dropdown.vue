@@ -1,24 +1,12 @@
 <template>
   <div :class="question.cssClasses.root">
     <div v-if="!question.isReadOnly" :class="question.cssClasses.selectWrapper">
-      <select
-        :id="question.inputId"
-        v-model="value"
-        :class="question.cssClasses.control"
-        v-bind:aria-label="question.locTitle.renderedHtml"
-      >
+      <select :id="question.inputId" v-model="value" :class="question.cssClasses.control" v-bind:aria-label="question.locTitle.renderedHtml">
         <option v-if="question.showOptionsCaption" value>{{question.optionsCaption}}</option>
-        <option
-          v-for="item in question.visibleChoices"
-          :value="item.value"
-          :disabled="!item.isEnabled"
-        >{{item.text}}</option>
+        <option v-for="item in question.visibleChoices" :value="item.value" :disabled="!item.isEnabled">{{item.text}}</option>
       </select>
     </div>
-    <div
-      v-else
-      :class="question.cssClasses.control"
-    >{{isOtherSelected ? question.otherText : question.displayValue}}</div>
+    <div v-else :class="question.cssClasses.control">{{isOtherSelected ? question.otherText : question.displayValue}}</div>
     <survey-other-choice v-show="isOtherSelected" :question="question"/>
   </div>
 </template>
@@ -34,6 +22,7 @@ export class Dropdown extends QuestionVue<QuestionDropdownModel> {
   get value() {
     return !this.question.isEmpty() ? this.question.renderedValue : "";
   }
+
   set value(newVal) {
     this.question.renderedValue = newVal === "" ? undefined : newVal;
   }

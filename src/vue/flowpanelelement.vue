@@ -1,24 +1,11 @@
 <template>
   <span :style="style">
     <component v-if="!question" :is="tagName">
-      <survey-flowpanelelement
-        v-for="elNode in nodes"
-        :key="elNode.elementId"
-        :node="elNode"
-        :panel="panel"
-        css="css"
-      />
+      <survey-flowpanelelement v-for="elNode in nodes" :key="elNode.elementId" :node="elNode" :panel="panel" css="css"/>
       {{text}}
     </component>
     <span v-if="!!question">
-      <survey-element
-        :key="question.idValue"
-        :id="question.id"
-        :style="{ width: question.renderWidth }"
-        :element="question"
-        :survey="survey"
-        :css="css"
-      />
+      <survey-element :key="question.idValue" :id="question.id" :style="{ width: question.renderWidth }" :element="question" :survey="survey" :css="css"/>
     </span>
   </span>
 </template>
@@ -33,9 +20,9 @@ import { FlowPanelModel } from "../flowpanel";
 @Component
 export class FlowPanelElement extends Vue {
   static idValue: number;
-  @Prop node: Node;
-  @Prop panel: FlowPanelModel;
-  @Prop css: any;
+  @Prop() node: Node;
+  @Prop() panel: FlowPanelModel;
+  @Prop() css: any;
   private elementIdValue: string;
   public question: Question = null;
   public tagName: string = "span";
@@ -56,19 +43,20 @@ export class FlowPanelElement extends Vue {
     }
     return style;
   }
+
   public get elementId(): string {
     if (!this.elementIdValue) {
-      if (!FlowPanelElement.idValue) {
-        FlowPanelElement.idValue = 0;
-      }
+      FlowPanelElement.idValue = FlowPanelElement.idValue || 0;
       FlowPanelElement.idValue++;
       this.elementIdValue = "fp_el" + FlowPanelElement.idValue;
     }
     return this.elementIdValue;
   }
+
   public get survey(): SurveyModel {
     return <SurveyModel>this.panel.survey;
   }
+
   beforeMount() {
     if (!this.panel || !this.node) return;
     var nodeType = this.node.nodeName.toLowerCase();
@@ -86,6 +74,7 @@ export class FlowPanelElement extends Vue {
     }
     this.style = this.getStyle(nodeType);
   }
+
   //duplicated code from element.vue
   getWidgetComponentName(element: Question) {
     if (element.customWidget) {
@@ -93,6 +82,7 @@ export class FlowPanelElement extends Vue {
     }
     return "survey-" + element.getTemplate();
   }
+
   // duplicated code from reactpages.tsx
   private hasTextChildNodesOnly(node: Node): boolean {
     var nodes = node.childNodes;
@@ -101,6 +91,7 @@ export class FlowPanelElement extends Vue {
     }
     return true;
   }
+
   private getChildDomNodes(node: Node): Array<Node> {
     var domNodes = [];
     for (var i = 0; i < node.childNodes.length; i++) {
