@@ -1,5 +1,5 @@
 <template>
-  <table :class="question.cssClasses.root">
+  <table class="sv_q_matrix">
     <thead v-if="showHorizontalHeader">
       <tr>
         <td v-if="!isDynamic"></td>
@@ -24,9 +24,9 @@
         </td>
         <survey-matrixcell :question="question" :cell="cell" v-for="cell in row.cells" :key="rowIndex + '_' + cell.question.id"/>
         <td v-if="canRemoveRow">
-          <button type="button" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove" @click="removeRowClick(row)">
+          <button type="button" class="sv_matrix_dynamic_button" @click="removeRowClick(row)">
             <span>{{question.removeRowText}}</span>
-            <span :class="question.cssClasses.iconRemove"></span>
+            <span></span>
           </button>
         </td>
       </tr>
@@ -41,9 +41,9 @@
       <tr v-if="canRemoveRow">
         <td v-if="question.showHeader"></td>
         <td v-for="(row, rowIndex) in rows" :key="'removeRow' + rowIndex">
-          <button type="button" :class="question.cssClasses.button + ' ' + question.cssClasses.buttonRemove" @click="removeRowClick(row)">
+          <button type="button" class="sv_matrix_dynamic_button" @click="removeRowClick(row)">
             <span>{{question.removeRowText}}</span>
-            <span :class="question.cssClasses.iconRemove"></span>
+            <span></span>
           </button>
         </td>
       </tr>
@@ -54,7 +54,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { surveyCss } from "../defaultCss/cssstandard";
+// import { surveyCss } from "../defaultCss/cssstandard";
 import { Question } from "../question";
 import {
   QuestionMatrixDropdownModelBase,

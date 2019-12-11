@@ -1,9 +1,9 @@
 <template>
-  <div :class="css.page.root">
-    <h4 v-if="hasTitle" :class="css.pageTitle"><survey-string :locString="page.locTitle"/></h4>
-    <div :class="css.pageDescription"><survey-string :locString="page.locDescription"/></div>
-    <div v-for="(row, index) in rows" v-if="row.visible" :key="page.id + '_' + index" :class="css.row">
-      <survey-row :row="row" :survey="survey" :css="css"></survey-row>
+  <div class="sv_p_root">
+    <h4 v-if="hasTitle" class="sv_page_title"><survey-string :locString="page.locTitle"/></h4>
+    <div class="sv_page_description"><survey-string :locString="page.locDescription"/></div>
+    <div v-for="(row, index) in rows" v-if="row.visible" :key="page.id + '_' + index" class="sv_row">
+      <survey-row :row="row" :survey="survey"></survey-row>
     </div>
   </div>
 </template>
@@ -11,7 +11,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { surveyCss } from "../defaultCss/cssstandard";
 import { SurveyModel } from "../survey";
 import { PageModel } from "../page";
 import { PanelModelBase, PanelModel, QuestionRowModel } from "../panel";
@@ -20,7 +19,6 @@ import { PanelModelBase, PanelModel, QuestionRowModel } from "../panel";
 export class Page extends Vue {
   @Prop() survey: SurveyModel;
   @Prop() page: PageModel;
-  @Prop() css: Object;
 
   isCurrentPageChanged: boolean = false;
 

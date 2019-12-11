@@ -1,8 +1,8 @@
 <template>
   <div role="alert" v-show="isShow" :class="classes">
     <div v-for="error in question.errors">
-      <span :class="question.cssClasses ? question.cssClasses.error.icon : 'panel-error-icon'" aria-hidden="true"></span>
-      <span :class="question.cssClasses ? question.cssClasses.error.item : 'panel-error-item'">
+      <span class="panel-error-icon" aria-hidden="true"></span>
+      <span class="panel-error-item">
         <survey-string :locString="error.locText"/>
       </span>
     </div>
@@ -25,18 +25,11 @@ export class Errors extends Vue {
   }
 
   get classes() {
-    let question = this.question;
-    let classes = question.cssClasses ? question.cssClasses.error.root : "panel-error-root";
-    let additionalClasses = "";
-
+    let classes = "sv_q_erbox";
     if (this.location === "top") {
-      additionalClasses = question.cssClasses.error.locationTop;
+      classes += " sv_qstn_error_top";
     } else if (this.location === "bottom") {
-      additionalClasses = question.cssClasses.error.locationBottom;
-    }
-
-    if (additionalClasses) {
-      classes += " " + additionalClasses;
+      classes += " sv_qstn_error_bottom";
     }
     return classes;
   }

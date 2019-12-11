@@ -18,7 +18,6 @@ import { TextPreProcessor, TextPreProcessorValue } from "./textPreProcessor";
 import { ILocalizableOwner, LocalizableString } from "./localizablestring";
 import { ConditionRunner } from "./conditions";
 import { QuestionCustomWidget } from "./questionCustomWidgets";
-import { surveyCss } from "./defaultCss/cssstandard";
 import { CustomWidgetCollection } from "./questionCustomWidgets";
 
 export interface IConditionObject {
@@ -477,66 +476,6 @@ export class Question extends SurveyElement
     this.setPropertyValue("startWithNewLine", val);
   }
   /**
-   * Returns all css classes that used for rendering the question. You may use survey.updateQuestionCssClasses event to override css classes for a question.
-   * @see SurveyModel.updateQuestionCssClasses
-   */
-  public get cssClasses(): any {
-    var surveyCss = this.css;
-    var classes = { error: {} };
-    this.copyCssClasses(classes, surveyCss.question);
-    this.copyCssClasses(classes.error, surveyCss.error);
-    this.updateCssClasses(classes, surveyCss);
-    if (this.survey) {
-      this.survey.updateQuestionCssClasses(this, classes);
-    }
-    return classes;
-  }
-  public get cssMainRoot(): any {
-    var classes = this.cssClasses;
-    var res =
-      this.isFlowLayout && !this.isDesignMode
-        ? classes.flowRoot
-        : classes.mainRoot;
-    if (!this.isFlowLayout && this.getTitleLocation() == "left") {
-      res += " " + classes.titleLeftRoot;
-    }
-    if (this.errors.length > 0) {
-      res += " " + classes.hasError;
-    }
-    if (this.survey && this.survey.isDisplayMode) {
-      let pdfCss = this.pdfCss;
-      if (pdfCss) {
-        res += " " + pdfCss;
-      }
-    }
-    return res + " " + "sv_qstn_" + this.getType();
-  }
-  protected getRootCss(classes: any) {
-    return classes.question.root;
-  }
-  protected updateCssClasses(res: any, surveyCss: any) {
-    if (this.isRequired) {
-      if (surveyCss.question.required) {
-        res.root += " " + surveyCss.question.required;
-      }
-      if (surveyCss.question.titleRequired) {
-        res.title += " " + surveyCss.question.titleRequired;
-      }
-    }
-    var objCss = surveyCss[this.getType()];
-    if (objCss === undefined || objCss === null) return;
-    if (typeof objCss === "string" || objCss instanceof String) {
-      res.root = objCss;
-    } else {
-      for (var key in objCss) {
-        res[key] = objCss[key];
-      }
-    }
-  }
-  private get css(): any {
-    return surveyCss.getCss();
-  }
-  /**
    * Use it to set the specific width to the question.
    */
   public get width(): string {
@@ -590,7 +529,7 @@ export class Question extends SurveyElement
   }
   private getIndentSize(indent: number): string {
     if (indent < 1) return "";
-    return indent * this.cssClasses.indent + "px";
+    return indent * 20 + "px";
   }
   /**
    * Move the focus to the input of this question.

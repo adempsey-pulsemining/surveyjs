@@ -3,7 +3,7 @@ import { SurveyModel } from "../survey";
 import { SurveyWindowModel } from "../surveyWindow";
 import { PageModel } from "../page";
 import { IQuestion, IElement } from "../base";
-import { surveyCss } from "../defaultCss/cssstandard";
+// import { surveyCss } from "../defaultCss/cssstandard";
 
 export class VueSurveyModel extends SurveyModel {
   public static updatePropertiesHash(obj: any) {
@@ -27,9 +27,9 @@ export class VueSurveyModel extends SurveyModel {
   protected onLoadingSurveyFromService() {
     this.render();
   }
-  get css() {
-    return surveyCss.getCss();
-  }
+  // get css() {
+  //   return surveyCss.getCss();
+  // }
   set css(value: any) {
     this.mergeValues(value, this.css);
   }

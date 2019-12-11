@@ -1,5 +1,5 @@
 <template>
-  <td :class="getQuestionClass(cell.question)" :headers="cell.question.isVisible ? cell.column.locTitle.renderedHtml : ''">
+  <td :headers="cell.question.isVisible ? cell.column.locTitle.renderedHtml : ''">
     <survey-errors v-if="hasErrorsOnTop" :question="cell.question" :location="'top'"/>
     <component v-show="isVisible" :is="getWidgetComponentName(cell.question)" :question="cell.question"/>
     <survey-errors v-if="hasErrorsOnBottom" :question="cell.question" :location="'bottom'"/>
@@ -9,7 +9,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { surveyCss } from "../defaultCss/cssstandard";
+// import { surveyCss } from "../defaultCss/cssstandard";
 import { Question } from "../question";
 import { MatrixDropdownCell } from "../question_matrixdropdownbase";
 
@@ -32,15 +32,6 @@ export class MatrixCell extends Vue {
 
   get hasErrorsOnBottom() {
     return this.cell.question.survey.questionErrorLocation === "bottom";
-  }
-
-  getQuestionClass(element: Question) {
-    var classes = element.cssClasses.itemValue;
-    if (!!element.errors && element.errors.length > 0) {
-      classes += " " + element.cssClasses.hasError;
-    }
-
-    return classes;
   }
 
   mounted() {

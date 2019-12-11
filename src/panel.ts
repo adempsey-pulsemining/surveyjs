@@ -19,7 +19,6 @@ import { Question } from "./question";
 import { ConditionRunner } from "./conditions";
 import { QuestionFactory } from "./questionfactory";
 import { ILocalizableOwner, LocalizableString } from "./localizablestring";
-import { surveyCss } from "./defaultCss/cssstandard";
 import { OneAnswerRequiredError } from "./error";
 import { QuestionPanelDynamic } from "./question_paneldynamic";
 import { PageModel } from "./page";
@@ -289,24 +288,12 @@ export class PanelModelBase extends SurveyElement
   public set visibleIf(val: string) {
     this.setPropertyValue("visibleIf", val);
   }
-  public get cssClasses(): any {
-    var classes = { error: {} };
-    this.copyCssClasses(classes, this.css);
-    this.copyCssClasses(classes.error, this.css.error);
-    if (this.survey) {
-      this.survey.updatePanelCssClasses(this, classes);
-    }
-    return classes;
-  }
   public get panelHasVisibleQuestions(): boolean {
     return this.questions.some(q => this.isQuestionVisible(q));
   }
   public isQuestionVisible(question: any): boolean {
     if (!question.isVisible) return false;
     return !question.hideInPdf && !(question.hideInPdfIfEmpty && !question.hasValue());
-  }
-  private get css(): any {
-    return surveyCss.getCss();
   }
   /**
    * A unique element identificator. It is generated automatically.

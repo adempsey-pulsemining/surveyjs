@@ -1,5 +1,5 @@
 // styles
-import "../../main.scss";
+// import "../../main.scss";
 
 export let Version: string;
 Version = `${process.env.VERSION}`;
@@ -117,7 +117,7 @@ export {
   CustomWidgetCollection
 } from "../../questionCustomWidgets";
 
-export { StylesManager } from "../../stylesmanager";
+// export { StylesManager } from "../../stylesmanager";
 
 //Uncomment to include the "date" question type.
 //export {default as QuestionDateModel} from "../../plugins/question_date";

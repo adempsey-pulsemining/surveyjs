@@ -7,16 +7,6 @@ import "./chunks/localization";
 // helpers
 export * from "./chunks/helpers";
 
-export { surveyCss } from "../defaultCss/cssstandard";
-// css standard
-export { defaultStandardCss } from "../defaultCss/cssstandard";
-// css bootstrap
-export { defaultBootstrapCss } from "../defaultCss/cssbootstrap";
-// css bootstrap + material
-export {
-  defaultBootstrapMaterialCss
-} from "../defaultCss/cssbootstrapmaterial";
-
 import { VueSurveyModel } from "../vue/surveyModel";
 export { VueSurveyModel as Model };
 export { Survey } from "../vue/survey.vue";
@@ -30,7 +20,7 @@ export { OtherChoice } from "../vue/otherChoice.vue";
 export { Rating } from "../vue/rating.vue";
 export { Comment } from "../vue/comment.vue";
 export { Checkbox } from "../vue/checkbox.vue";
-export { Text } from "../vue/text.vue";
+export { SurveyText } from "../vue/text.vue";
 export { Boolean } from "../vue/boolean.vue";
 export { Empty } from "../vue/empty.vue";
 export { MultipleText } from "../vue/multipletext.vue";

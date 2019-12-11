@@ -1,6 +1,6 @@
 <template>
-  <div :class="css.progress">
-    <div :class="css.progressBar" :style="{width: progress}" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+  <div class="sv_progress">
+    <div class="sv_progress_bar" :style="{width: progress}" role="progressbar" aria-valuemin="0" aria-valuemax="100">
       <span>{{survey.progressText}}</span>
     </div>
   </div>
@@ -14,7 +14,6 @@ import {SurveyModel} from '../survey'
 @Component
 export class Progress extends Vue {
   @Prop() survey: SurveyModel;
-  @Prop() css: any;
 
   get progress() {
     return this.survey.getProgress() + '%';

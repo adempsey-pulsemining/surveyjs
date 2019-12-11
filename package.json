@@ -3,7 +3,7 @@
     "build_dev": "webpack --mode=development",
     "build_prod": "webpack --mode=production",
     "lint": "tslint ./src/**/*.ts -t verbose",
-    "watch_vue_dev": "webpack --env.buildType dev --env.platform vue --watch"
+    "watch_dev": "webpack --env.buildType dev --env.platform vue --watch"
   },
   "version": "1.0.74",
   "name": "surveyjs",
@@ -27,6 +27,7 @@
     "vue-class-component": "^7.1.0",
     "vue-loader": "^15.7.2",
     "vue-property-decorator": "^8.3.0",
+    "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"

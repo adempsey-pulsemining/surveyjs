@@ -1,16 +1,16 @@
 <template>
-  <div :class="question.cssClasses.root">
-    <input :class="question.cssClasses.fileInput" v-if="!question.isReadOnly" type="file" :id="question.inputId" @change="doChange" v-bind:aria-label="question.locTitle.renderedHtml" :multiple="question.allowMultiple ? 'multiple' : undefined" v-bind:title="question.inputTitle" v-bind:accept="question.acceptedTypes" />
-    <button type="button" v-if="!question.isReadOnly && !question.isEmpty()" :class="question.cssClasses.removeButton" @click="doClean">{{question.cleanButtonCaption}}</button>
+  <div class="sv_q_file">
+    <input class="sv_q_file_input" v-if="!question.isReadOnly" type="file" :id="question.inputId" @change="doChange" v-bind:aria-label="question.locTitle.renderedHtml" :multiple="question.allowMultiple ? 'multiple' : undefined" v-bind:title="question.inputTitle" v-bind:accept="question.acceptedTypes" />
+    <button type="button" v-if="!question.isReadOnly && !question.isEmpty()" class="sv_q_file_remove_button" @click="doClean">{{question.cleanButtonCaption}}</button>
     <input v-if="question.isReadOnly" type="file" disabled :class="getPlaceholderClass()" :placeholder="question.title" style="color: transparent;"/>
     <div v-if="!question.isEmpty()">
-      <span v-for="(val, index) in question.previewValue" :key="question.inputId + '_' + index" v-show="val" :class="question.cssClasses.preview">
+      <span v-for="(val, index) in question.previewValue" :key="question.inputId + '_' + index" v-show="val" class="sv_q_file_preview">
         <div v-if="val.name">
           <a :href="val.content" :title="val.name" :download="val.name" :width="question.imageWidth">{{val.name}}</a>
         </div>
         <img v-if="question.canPreviewImage(val)" :src="val.content" :height="question.imageHeight" :width="question.imageWidth" alt="File preview">
         <div v-if="val.name">
-          <span v-if="!question.isReadOnly" @click="doRemoveFile(val)" :class="question.cssClasses.removeFile">{{question.removeFileCaption}}</span>
+          <span v-if="!question.isReadOnly" @click="doRemoveFile(val)" class="sv_q_file_remove">{{question.removeFileCaption}}</span>
         </div>
       </span>
     </div>
@@ -48,7 +48,7 @@ export class File extends QuestionVue<QuestionFileModel> {
   }
 
   getPlaceholderClass() {
-    return "form-control " + this.question.cssClasses.placeholderInput;
+    return "form-control " + "sv_q_file_placeholder";
   }
 }
 Vue.component("survey-file", File);

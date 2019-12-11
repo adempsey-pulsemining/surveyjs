@@ -9,13 +9,12 @@ import {SurveyModel} from '../survey'
 
 @Component
 export class TimerPanel extends Vue {
-  @Prop() survey: SurveyModel
-  @Prop() css: any
+  @Prop() survey: SurveyModel;
 
   get text() {
     return this.survey.timerInfoText;
   }
 }
-Vue.component("survey-timerpanel", TimerPanel)
+Vue.component("survey-timerpanel", TimerPanel);
 export default TimerPanel;
 </script>

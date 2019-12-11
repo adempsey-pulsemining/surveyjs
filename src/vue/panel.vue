@@ -1,14 +1,14 @@
 <template>
-  <div v-if="question.isVisible" :class="question.cssClasses.panel.container" :style="rootStyle">
+  <div v-if="question.isVisible" class="sv_p_container" :style="rootStyle">
     <h4 v-show="hasTitle" :class="getTitleStyle()" v-on:click="changeExpanded">
       <survey-string :locString="question.locTitle"/>
       <span v-show="showIcon" :class="iconCss"></span>
     </h4>
-    <div :class="question.cssClasses.panel.description"><survey-string :locString="question.locDescription"/></div>
+    <div class="sv_p_description"><survey-string :locString="question.locDescription"/></div>
     <survey-errors :question="question"/>
     <div :style="{ paddingLeft: question.innerPaddingLeft }" v-show="!isCollapsed">
-      <div v-for="(row, index) in rows" :key="question.id + '_' + index" v-if="row.visible" :class="css.row">
-        <survey-row :row="row" :survey="survey" :css="css"></survey-row>
+      <div v-for="(row, index) in rows" :key="question.id + '_' + index" v-if="row.visible" class="sv_row">
+        <survey-row :row="row" :survey="survey"></survey-row>
       </div>
     </div>
   </div>
@@ -24,7 +24,6 @@ import { ISurvey } from "../base";
 export class Panel extends Vue {
   @Prop() question: PanelModel;
   @Prop() isEditMode: Boolean;
-  @Prop() css: any;
   private isCollapsedValue: boolean = false;
 
   mounted() {
@@ -85,7 +84,7 @@ export class Panel extends Vue {
   }
 
   getTitleStyle() {
-    var result = this.css.panel.title;
+    var result = "sv_p_title";
     if (this.question.isCollapsed || this.question.isExpanded) {
       result += " sv_p_title_expandable";
     }

@@ -1,11 +1,11 @@
 <template>
   <span :style="style">
     <component v-if="!question" :is="tagName">
-      <survey-flowpanelelement v-for="elNode in nodes" :key="elNode.elementId" :node="elNode" :panel="panel" css="css"/>
+      <survey-flowpanelelement v-for="elNode in nodes" :key="elNode.elementId" :node="elNode" :panel="panel"/>
       {{text}}
     </component>
     <span v-if="!!question">
-      <survey-element :key="question.idValue" :id="question.id" :style="{ width: question.renderWidth }" :element="question" :survey="survey" :css="css"/>
+      <survey-element :key="question.idValue" :id="question.id" :style="{ width: question.renderWidth }" :element="question" :survey="survey"/>
     </span>
   </span>
 </template>
@@ -22,7 +22,6 @@ export class FlowPanelElement extends Vue {
   static idValue: number;
   @Prop() node: Node;
   @Prop() panel: FlowPanelModel;
-  @Prop() css: any;
   private elementIdValue: string;
   public question: Question = null;
   public tagName: string = "span";

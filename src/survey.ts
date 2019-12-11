@@ -26,7 +26,6 @@ import { JsonError } from "./jsonobject";
 import { surveyLocalization } from "./surveyStrings";
 import { CustomError } from "./error";
 import { ILocalizableOwner, LocalizableString } from "./localizablestring";
-import { StylesManager } from "./stylesmanager";
 import { SurveyTimer } from "./surveytimer";
 import { Question } from "./question";
 import { ItemValue } from "./itemvalue";
@@ -44,7 +43,6 @@ export class SurveyModel extends Base
     ISurveyErrorOwner,
     ILocalizableOwner {
   [index: string]: any;
-  private static stylesManager = new StylesManager();
   public static platform: string = "unknown";
   public get platformName(): string {
     return SurveyModel.platform;
