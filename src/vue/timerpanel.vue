@@ -3,18 +3,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import {Component, Prop} from 'vue-property-decorator'
-import {SurveyModel} from '../survey'
 
-@Component
-export class TimerPanel extends Vue {
-  @Prop() survey: SurveyModel;
-
-  get text() {
-    return this.survey.timerInfoText;
+export default {
+  props: {
+    survey: <any>null
+  },
+  computed: {
+    text: {
+      get() {
+        return this.survey.timerInfoText;
+      }
+    }
   }
 }
-Vue.component("survey-timerpanel", TimerPanel);
-export default TimerPanel;
 </script>

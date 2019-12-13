@@ -18,39 +18,33 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionFileModel } from "../question_file";
+import { default as Question } from "./question";
 
-@Component
-export class File extends QuestionVue<QuestionFileModel> {
-  doChange(e:any) {
-    var src = e.target || e.srcElement;
-    if (!(<any>window)["FileReader"]) return;
-    if (!src || !src.files || src.files.length < 1) return;
-    let files = [];
-    for (let i = 0; i < src.files.length; i++) {
-      files.push(src.files[i]);
+export default {
+  mixins: [Question],
+  methods: {
+    doChange(e: any) {
+      var src = e.target || e.srcElement;
+      if (!(<any>window)["FileReader"]) return;
+      if (!src || !src.files || src.files.length < 1) return;
+      let files = [];
+      for (let i = 0; i < src.files.length; i++) {
+        files.push(src.files[i]);
+      }
+      src.value = "";
+      this.question.loadFiles(files);
+    },
+    doClean(event: any) {
+      var src = event.target || event.srcElement;
+      this.question.clear();
+      src.parentElement.querySelectorAll("input")[0].value = "";
+    },
+    doRemoveFile(data: any) {
+      this.question.removeFile(data);
+    },
+    getPlaceholderClass() {
+      return "form-control " + "sv_q_file_placeholder";
     }
-    src.value = "";
-    this.question.loadFiles(files);
-  }
-
-  doClean(event: any) {
-    var src = event.target || event.srcElement;
-    this.question.clear();
-    src.parentElement.querySelectorAll("input")[0].value = "";
-  }
-
-  doRemoveFile(data:any) {
-    this.question.removeFile(data);
-  }
-
-  getPlaceholderClass() {
-    return "form-control " + "sv_q_file_placeholder";
   }
 }
-Vue.component("survey-file", File);
-export default File;
 </script>

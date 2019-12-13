@@ -11,52 +11,80 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
 import { Question } from "../question";
 import { SurveyModel } from "../survey";
 import { FlowPanelModel } from "../flowpanel";
 
-@Component
-export class FlowPanelElement extends Vue {
-  static idValue: number;
-  @Prop() node: Node;
-  @Prop() panel: FlowPanelModel;
-  private elementIdValue: string;
-  public question: Question = null;
-  public tagName: string = "span";
-  public nodes: Array<Node> = [];
-  public text: string = "";
-  public style: any = {};
+(<any>FlowPanelModel).idValue = 0;
 
-  private getStyle(nodeType: string) {
-    var style: any = {};
-    if (nodeType.toLowerCase() === "b") {
-      style.fontWeight = "bold";
+export default {
+  props: {
+    node: <any>null,
+    panel: <any>null
+  },
+  data() {
+    return {
+      elementIdValue: <string>"",
+      question: <Question>null,
+      tagName: <string>"span",
+      nodes: <Array<Node>>[],
+      text: <string>"",
+      style: <any>{}
     }
-    if (nodeType.toLowerCase() === "i") {
-      style.fontStyle = "italic";
+  },
+  methods: {
+    getStyle(nodeType: string) {
+      var style: any = {};
+      if (nodeType.toLowerCase() === "b") {
+        style.fontWeight = "bold";
+      }
+      if (nodeType.toLowerCase() === "i") {
+        style.fontStyle = "italic";
+      }
+      if (nodeType.toLowerCase() === "u") {
+        style.textDecoration = "underline";
+      }
+      return style;
+    },
+    getWidgetComponentName(element: Question) {
+      if (element.customWidget) {
+        return "survey-customwidget";
+      }
+      return "survey-" + element.getTemplate();
+    },
+    hasTextChildNodesOnly(node: Node) {
+      var nodes = node.childNodes;
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].nodeName.toLowerCase() !== "#text") return false;
+      }
+      return true;
+    },
+    getChildDomNodes(node: Node) {
+      var domNodes = [];
+      for (var i = 0; i < node.childNodes.length; i++) {
+        domNodes.push(node.childNodes[i]);
+      }
+      return domNodes;
     }
-    if (nodeType.toLowerCase() === "u") {
-      style.textDecoration = "underline";
+  },
+  computed: {
+    elementId: {
+      get() {
+        if (!this.elementIdValue) {
+          (<any>FlowPanelModel).idValue = (<any>FlowPanelModel).idValue || 0;
+          (<any>FlowPanelModel).idValue++;
+          this.elementIdValue = "fp_el" + (<any>FlowPanelModel).idValue;
+        }
+        return this.elementIdValue;
+      }
+    },
+    survey: {
+      get() {
+        return <SurveyModel>this.panel.survey;
+      }
     }
-    return style;
-  }
-
-  public get elementId(): string {
-    if (!this.elementIdValue) {
-      FlowPanelElement.idValue = FlowPanelElement.idValue || 0;
-      FlowPanelElement.idValue++;
-      this.elementIdValue = "fp_el" + FlowPanelElement.idValue;
-    }
-    return this.elementIdValue;
-  }
-
-  public get survey(): SurveyModel {
-    return <SurveyModel>this.panel.survey;
-  }
-
-  beforeMount() {
+  },
+  beforeMount(): void {
     if (!this.panel || !this.node) return;
     var nodeType = this.node.nodeName.toLowerCase();
     if (!this.hasTextChildNodesOnly(this.node)) {
@@ -73,33 +101,5 @@ export class FlowPanelElement extends Vue {
     }
     this.style = this.getStyle(nodeType);
   }
-
-  //duplicated code from element.vue
-  getWidgetComponentName(element: Question) {
-    if (element.customWidget) {
-      return "survey-customwidget";
-    }
-    return "survey-" + element.getTemplate();
-  }
-
-  // duplicated code from reactpages.tsx
-  private hasTextChildNodesOnly(node: Node): boolean {
-    var nodes = node.childNodes;
-    for (var i = 0; i < nodes.length; i++) {
-      if (nodes[i].nodeName.toLowerCase() !== "#text") return false;
-    }
-    return true;
-  }
-
-  private getChildDomNodes(node: Node): Array<Node> {
-    var domNodes = [];
-    for (var i = 0; i < node.childNodes.length; i++) {
-      domNodes.push(node.childNodes[i]);
-    }
-    return domNodes;
-  }
 }
-
-Vue.component("survey-flowpanelelement", FlowPanelElement);
-export default FlowPanelElement;
 </script>

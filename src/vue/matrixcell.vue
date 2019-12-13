@@ -7,34 +7,43 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-// import { surveyCss } from "../defaultCss/cssstandard";
-import { Question } from "../question";
-import { MatrixDropdownCell } from "../question_matrixdropdownbase";
+import { default as Question } from "./question";
+import { Question as QuestionModel } from "../question"
 
-@Component
-export class MatrixCell extends Vue {
-  @Prop() question: Question;
-  @Prop() cell: MatrixDropdownCell;
-  isVisible: boolean = false;
-
-  getWidgetComponentName(element: Question) {
-    if (element.customWidget) {
-      return "survey-customwidget";
+export default {
+  props: {
+    cell: Object
+  },
+  mixins: [Question],
+  data() {
+    return {
+      isVisible: <boolean>false,
     }
-    return "survey-" + element.getType();
-  }
-
-  get hasErrorsOnTop() {
-    return this.cell.question.survey.questionErrorLocation === "top";
-  }
-
-  get hasErrorsOnBottom() {
-    return this.cell.question.survey.questionErrorLocation === "bottom";
-  }
-
-  mounted() {
+  },
+  methods: {
+    getWidgetComponentName(element: QuestionModel) {
+      if (element.customWidget) {
+        return "survey-customwidget";
+      }
+      return "survey-" + element.getType();
+    },
+    onVisibilityChanged() {
+      this.isVisible = this.cell.question.isVisible;
+    }
+  },
+  computed: {
+    hasErrorsOnTop: {
+      get() {
+        return this.cell.question.survey.questionErrorLocation === "top";
+      }
+    },
+    hasErrorsOnBottom: {
+      get() {
+        return this.cell.question.survey.questionErrorLocation === "bottom";
+      }
+    }
+  },
+  mounted(): void {
     if (!this.cell || !this.cell.question || !this.cell.question.survey) return;
     this.onVisibilityChanged();
     var self = this;
@@ -50,12 +59,5 @@ export class MatrixCell extends Vue {
     };
     this.cell.question.survey.matrixAfterCellRender(this.cell.question, options);
   }
-
-  private onVisibilityChanged() {
-    this.isVisible = this.cell.question.isVisible;
-  }
 }
-
-Vue.component("survey-matrixcell", MatrixCell);
-export default MatrixCell;
 </script>

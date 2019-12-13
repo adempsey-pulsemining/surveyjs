@@ -17,23 +17,22 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-// import { surveyCss } from "../defaultCss/cssstandard";
-import { SurveyModel } from "../survey";
-import { SurveyWindowModel } from "../surveyWindow";
 import { VueSurveyWindowModel } from "./surveyModel";
 
-@Component
-export class Window extends Vue {
-  @Prop() window: SurveyWindowModel;
-  @Prop() survey: SurveyModel;
-  @Prop() isExpanded: boolean;
-  @Prop() isexpanded: boolean;
-  @Prop() closeOnCompleteTimeout: number;
-
-  surveyWindow: SurveyWindowModel;
-  constructor() {
-    super();
+export default {
+  props: {
+    window: Object,
+    survey: Object,
+    isExpanded: Boolean,
+    isexpanded: Boolean,
+    closeOnCompleteTimeout: Object
+  },
+  data() {
+    return {
+      surveyWindow: <any>null
+    }
+  },
+  created(): void {
     if (this.window) {
       this.surveyWindow = this.window;
     } else {
@@ -53,28 +52,29 @@ export class Window extends Vue {
     this.surveyWindow.closeWindowOnCompleteCallback = function() {
       self.doHide();
     };
-  }
-
-  get windowSurvey(): SurveyModel {
-    return this.surveyWindow.survey;
-  }
-
-  get isExpandedSurvey(): boolean {
-    return this.surveyWindow.isExpanded;
-  }
-
-  set isExpandedSurvey(val: boolean) {
-    this.surveyWindow.isExpanded = val;
-  }
-
-  doExpand() {
-    this.surveyWindow.isExpanded = !this.surveyWindow.isExpanded;
-  }
-
-  doHide() {
-    Vue.set(this.surveyWindow, "isShowing", false);
+  },
+  computed: {
+    windowSurvey: {
+      get() {
+        return this.surveyWindow.survey;
+      }
+    },
+    isExpandedSurvey: {
+      get() {
+        return this.surveyWindow.isExpanded;
+      },
+      set(val: boolean) {
+        this.surveyWindow.isExpanded = val;
+      }
+    }
+  },
+  methods: {
+    doExpand() {
+      this.surveyWindow.isExpanded = !this.surveyWindow.isExpanded;
+    },
+    doHide() {
+      Vue.set(this.surveyWindow, "isShowing", false);
+    }
   }
 }
-Vue.component("survey-window", Window);
-export default Window;
 </script>

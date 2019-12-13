@@ -3,7 +3,7 @@
     <legend v-bind:aria-label="question.locTitle.renderedHtml"></legend>
     <div v-for="(item, index) in question.visibleChoices" :key="item.value" :class="getItemClass(item)">
       <label class="sv_q_radiogroup_label">
-        <input type="radio" :name="question.name + '_' + question.id" :value="item.value" :id="question.inputId + '_' + index" v-model="question.renderedValue" :disabled="question.isReadOnly || !item.isEnabled" v-bind:aria-label="item.locText.renderedHtml" :class="question.cssClasses.itemControl">
+        <input type="radio" :name="question.name + '_' + question.id" :value="item.value" :id="question.inputId + '_' + index" v-model="question.renderedValue" :disabled="question.isReadOnly || !item.isEnabled" v-bind:aria-label="item.locText.renderedHtml" class="sv_q_radiogroup_control_item">
         <span class="circle"></span>
         <span class="check"></span>
         <span>
@@ -19,23 +19,23 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionRadiogroupModel } from "../question_radiogroup";
+import { default as Question } from "./question";
 
-@Component
-export class Radiogroup extends QuestionVue<QuestionRadiogroupModel> {
-  get choicesCount() {
-    return this.question.visibleChoices.length - 1;
-  }
-
-  getItemClass(item: any) {
-    var itemClass = "sv_q_radiogroup" + (this.question.colCount === 0 ? " sv_q_radiogroup_inline" : " sv-q-col-" + this.question.colCount);
-    if (item.value === this.question.renderedValue) itemClass += " checked";
-    return itemClass;
+export default {
+  mixins: [Question],
+  computed: {
+    choicesCount: {
+      get() {
+        return this.question.visibleChoices.length - 1;
+      }
+    }
+  },
+  methods: {
+    getItemClass(item: any) {
+      var itemClass = "sv_q_radiogroup" + (this.question.colCount === 0 ? " sv_q_radiogroup_inline" : " sv-q-col-" + this.question.colCount);
+      if (item.value === this.question.renderedValue) itemClass += " checked";
+      return itemClass;
+    }
   }
 }
-Vue.component("survey-radiogroup", Radiogroup);
-export default Radiogroup;
 </script>

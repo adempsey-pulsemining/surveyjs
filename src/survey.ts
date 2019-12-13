@@ -1576,7 +1576,7 @@ export class SurveyModel extends Base
   public set isPdfRender(val: boolean) {
     this.setPropertyValue("isPdfRender", val);
   }
-  public get showPageNasurvigation(): boolean {
+  public get showPageNavigation(): boolean {
     if (this.isPdfRender) return false;
     return this.getPropertyValue("showPageNavigation", true);
   }

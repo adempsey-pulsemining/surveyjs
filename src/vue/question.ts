@@ -1,19 +1,18 @@
-import Vue from "vue";
-import { Question } from "../question";
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { Question as QuestionModel } from "../question";
 
-@Component
-export class QuestionVue<T extends Question> extends Vue {
-  public innerValue:any = null;
-
-  @Prop() question: T;
-  // css prop need only for panel. When panel will have cssClasses property this prop will need to remove
-  @Prop() css: any;
-
-  @Watch("question")
-  changeQuestion(new_val: T, old_val: T) {
-    this.innerValue = null;
+export default {
+  props: {
+    question: Object,
+    css: Object
+  },
+  data() {
+    return {
+      innerValue: <any>null
+    }
+  },
+  watch: {
+    question(newVal: QuestionModel, oldVal: QuestionModel) {
+      this.innerValue = null;
+    }
   }
 }
-
-export default QuestionVue;

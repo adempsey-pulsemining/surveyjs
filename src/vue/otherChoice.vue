@@ -6,15 +6,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-// import { surveyCss } from "../defaultCss/cssstandard";
-import { Question } from "../question";
+import { default as Question } from "./question";
 
-@Component
-export class OtherChoice extends Vue {
-  @Prop() question: Question;
+export default {
+  mixins: [Question]
 }
-Vue.component("survey-other-choice", OtherChoice);
-export default OtherChoice;
 </script>

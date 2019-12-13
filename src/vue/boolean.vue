@@ -1,7 +1,14 @@
 <template>
-  <div class="sv_qcbc sv_qbln">
+  <div class="sv_q_boolean">
     <label :class="itemClass">
-      <input type="checkbox" :name="question.name" :value="question.checkedValue" v-model="question.checkedValue" :id="question.inputId"  :indeterminate.prop="question.isIndeterminate" :disabled="question.isReadOnly" v-bind:aria-label="question.locTitle.renderedHtml"/>
+      <input v-model="question.checkedValue"
+             v-bind:aria-label="question.locTitle.renderedHtml"
+             type="checkbox"
+             :name="question.name"
+             :value="question.checkedValue"
+             :id="question.inputId"
+             :indeterminate.prop="question.isIndeterminate"
+             :disabled="question.isReadOnly"/>
       <span class="checkbox-material"><span class="check"></span></span>
       <span><survey-string :locString="question.locDisplayLabel"/></span>
     </label>
@@ -9,19 +16,16 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionBooleanModel } from "../question_boolean";
+import { default as Question } from "./question";
 
-@Component
-export class Boolean extends QuestionVue<QuestionBooleanModel> {
-  get itemClass() {
-    let isChecked = this.question.checkedValue;
-    let itemClass = "sv_q_checkbox" + (isChecked ? " checked" : "");
-    return itemClass;
+export default {
+  mixins: [Question],
+  computed: {
+    itemClass: {
+      get() {
+        return "sv_q_checkbox" + (this.question.checkedValue ? " checked" : "");
+      }
+    }
   }
 }
-Vue.component("survey-boolean", Boolean);
-export default Boolean;
 </script>

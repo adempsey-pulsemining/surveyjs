@@ -8,36 +8,31 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { PanelModel } from "../panel";
-import { QuestionPanelDynamicModel } from "../question_paneldynamic";
 
-@Component
-export class PanelDynamicProgress extends Vue {
-  @Prop() question: QuestionPanelDynamicModel;
-
-  get rangeMax() {
-    return this.question.panelCount - 1;
-  }
-
-  addPanelClick() {
-    this.question.addPanelUI();
-  }
-
-  prevPanelClick() {
-    this.question.goToPrevPanel();
-  }
-
-  nextPanelClick() {
-    this.question.goToNextPanel();
-  }
-
-  changeRange(event: any) {
-    this.question.currentIndex = event.target.value;
+export default {
+  props: {
+    question: Object
+  },
+  computed: {
+    rangeMax: {
+      get() {
+        return this.question.panelCount - 1;
+      }
+    }
+  },
+  methods: {
+    addPanelClick() {
+      this.question.addPanelUI();
+    },
+    prevPanelClick() {
+      this.question.goToPrevPanel();
+    },
+    nextPanelClick() {
+      this.question.goToNextPanel();
+    },
+    changeRange(event: any) {
+      this.question.currentIndex = event.target.value;
+    }
   }
 }
-
-Vue.component("survey-paneldynamicprogress", PanelDynamicProgress);
-export default PanelDynamicProgress;
 </script>

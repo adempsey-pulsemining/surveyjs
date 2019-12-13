@@ -1,16 +1,11 @@
 <template>
-  <div v-html="question.locHtml.renderedHtml"></div>
+  <div v-html="question.locHtml.renderedHtml" class="sv_q_html"></div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { QuestionHtmlModel } from "../question_html";
+import { default as Question } from "./question"
 
-@Component
-export class Html extends Vue {
-  @Prop() question: QuestionHtmlModel;
+export default {
+  mixins: [Question]
 }
-Vue.component("survey-html", Html);
-export default Html;
 </script>

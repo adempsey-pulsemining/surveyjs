@@ -9,28 +9,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { SurveyModel } from "../survey";
-import { PageModel } from "../page";
-import { PanelModelBase, PanelModel, QuestionRowModel } from "../panel";
 
-@Component
-export class Page extends Vue {
-  @Prop() survey: SurveyModel;
-  @Prop() page: PageModel;
-
-  isCurrentPageChanged: boolean = false;
-
-  mounted() {
+export default {
+  props: {
+    survey: Object,
+    page: Object
+  },
+  data() {
+    return {
+      isCurrentPageChanged: false
+    }
+  },
+  mounted(): void {
     if (!this.survey) return;
     this.survey.afterRenderPage(this.$el);
-    this.survey.onCurrentPageChanged.add((sender, options) => {
+    this.survey.onCurrentPageChanged.add((sender: any, options: any) => {
       this.isCurrentPageChanged = true;
     });
-  }
-
-  updated() {
+  },
+  updated(): void {
     var self = this;
     self.survey.afterRenderPage(this.$el);
     this.$nextTick(function() {
@@ -39,20 +36,23 @@ export class Page extends Vue {
         self.survey.scrollToTopOnPageChange();
       }
     });
-  }
-
-  get hasTitle() {
-    return !!this.page.title && this.survey.showPageTitles;
-  }
-
-  get num() {
-    return this.page.num > 0 ? this.page.num + ". " : "";
-  }
-
-  get rows() {
-    return this.page.rows;
+  },
+  computed: {
+    hasTitle: {
+      get() {
+        return !!this.page.title && this.survey.showPageTitles;
+      }
+    },
+    num: {
+      get() {
+        return this.page.num > 0 ? this.page.num + ". " : "";
+      }
+    },
+    rows: {
+      get() {
+        return this.page.rows;
+      }
+    }
   }
 }
-Vue.component("survey-page", Page);
-export default Page;
 </script>

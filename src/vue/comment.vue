@@ -1,18 +1,27 @@
 <template>
   <div class="sv_q_comment">
-    <textarea type="text" :readonly="question.isReadOnly" v-model="question.value" :id="question.inputId" :maxlength="question.getMaxLength()" :cols="question.cols" v-bind:aria-label="question.locTitle.renderedHtml"
-              :rows="question.rows" :placeholder="question.placeHolder" class="panel-comment-root"></textarea>
+    <textarea v-bind:aria-label="question.locTitle.renderedHtml"
+              v-model="question.value"
+              :readonly="question.isReadOnly"
+              :id="question.inputId"
+              :maxlength="question.getMaxLength()"
+              :cols="question.cols"
+              :rows="question.rows"
+              :placeholder="question.placeHolder"
+              class="panel-comment-root"></textarea>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionCommentModel } from "../question_comment";
+import { default as Question } from "./question";
 
-@Component
-export class Comment extends QuestionVue<QuestionCommentModel> {}
-Vue.component("survey-comment", Comment);
-export default Comment;
+export default {
+  mixins: [Question]
+}
 </script>
+
+<style scoped>
+  textarea {
+    width: 100%;
+  }
+</style>

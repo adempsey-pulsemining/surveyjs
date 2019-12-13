@@ -3,14 +3,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import {Component, Prop} from 'vue-property-decorator'
-import {default as QuestionVue} from './question'
-import {QuestionExpressionModel} from '../question_expression'
+import { default as Question } from './question'
 
-@Component
-export class Expression extends QuestionVue<QuestionExpressionModel> {
+export default {
+  mixins: [Question]
 }
-Vue.component("survey-expression", Expression);
-export default Expression;
 </script>

@@ -3,14 +3,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import {Component, Prop, Watch} from 'vue-property-decorator'
-import {default as QuestionVue} from './question'
-import {QuestionEmptyModel} from '../question_empty'
+import { default as Question } from './question'
 
-@Component
-export class Empty extends QuestionVue<QuestionEmptyModel> {
+export default {
+  mixins: [Question]
 }
-Vue.component("survey-empty", Empty);
-export default Empty;
 </script>

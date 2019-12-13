@@ -5,15 +5,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionMatrixDropdownModel } from "../question_matrixdropdown";
-import { MatrixDropdownRowModelBase } from "../question_matrixdropdownbase";
+import { default as Question } from "./question";
 
-@Component
-export class MatrixDropdown extends QuestionVue<QuestionMatrixDropdownModel> {}
-
-Vue.component("survey-matrixdropdown", MatrixDropdown);
-export default MatrixDropdown;
+export default {
+  mixins: [Question]
+}
 </script>

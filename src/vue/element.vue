@@ -31,38 +31,44 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { SurveyModel } from "../survey";
-import { IElement, IQuestion } from "../base";
+import { IQuestion } from "../base";
 import { Question } from "../question";
 
-@Component
-export class SurveyElementVue extends Vue {
-  @Prop() survey: SurveyModel;
-  @Prop() element: IElement;
-
-  getWidgetComponentName(element: Question) {
-    if (element.customWidget) {
-      return "survey-customwidget";
+export default {
+  props: {
+    survey: Object,
+    element: Object,
+  },
+  computed: {
+    hasErrorsOnTop: {
+      get() {
+        return !this.element.isPanel && this.survey.questionErrorLocation === "top";
+      }
+    },
+    hasErrorsOnBottom: {
+      get() {
+        return (!this.element.isPanel && this.survey.questionErrorLocation === "bottom");
+      }
     }
-    return "survey-" + element.getTemplate();
-  }
-
-  get hasErrorsOnTop() {
-    return !this.element.isPanel && this.survey.questionErrorLocation === "top";
-  }
-
-  get hasErrorsOnBottom() {
-    return (!this.element.isPanel && this.survey.questionErrorLocation === "bottom");
-  }
-
+  },
   mounted() {
     if (this.survey && !this.element.isPanel) {
       this.survey.afterRenderQuestion(<IQuestion>this.element, this.$el);
     }
+  },
+  methods: {
+    getWidgetComponentName(element: Question) {
+      if (element.customWidget) {
+        return "survey-customwidget";
+      }
+      return "survey-" + element.getTemplate();
+    }
   }
 }
-Vue.component("survey-element", SurveyElementVue);
-export default SurveyElementVue;
 </script>
+
+<style scoped>
+  .sv_q_title {
+    margin: 10px 0;
+  }
+</style>

@@ -14,31 +14,29 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { PanelModel } from "../panel";
-import { QuestionPanelDynamicModel } from "../question_paneldynamic";
+import { default as Question } from "./question";
 
-@Component
-export class PanelDynamic extends QuestionVue<QuestionPanelDynamicModel> {
-  get renderedPanels() {
-    if (this.question.isRenderModeList) return this.question.panels;
-    var panels = [];
-    if (this.question.currentPanel) {
-      panels.push(this.question.currentPanel);
+export default {
+  mixins: [Question],
+  computed: {
+    renderedPanels: {
+      get() {
+        if (this.question.isRenderModeList) return this.question.panels;
+        var panels = [];
+        if (this.question.currentPanel) {
+          panels.push(this.question.currentPanel);
+        }
+        return panels;
+      }
     }
-    return panels;
-  }
-
-  removePanelClick(panel: any) {
-    this.question.removePanelUI(panel);
-  }
-
-  addPanelClick() {
-    this.question.addPanel();
+  },
+  methods: {
+    removePanelClick(panel: any) {
+      this.question.removePanelUI(panel);
+    },
+    addPanelClick() {
+      this.question.addPanel();
+    }
   }
 }
-Vue.component("survey-paneldynamic", PanelDynamic);
-export default PanelDynamic;
 </script>

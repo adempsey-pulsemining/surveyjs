@@ -7,18 +7,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import {Component, Prop} from 'vue-property-decorator'
-import {SurveyModel} from '../survey'
 
-@Component
-export class Progress extends Vue {
-  @Prop() survey: SurveyModel;
-
-  get progress() {
-    return this.survey.getProgress() + '%';
+export default {
+  props: {
+    survey: null,
+  },
+  computed: {
+    progress: {
+      get() {
+        return this.survey.getProgress() + '%';
+      }
+    }
   }
 }
-Vue.component("survey-progress", Progress);
-export default Progress;
 </script>

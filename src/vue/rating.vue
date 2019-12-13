@@ -13,25 +13,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
+import { default as Question } from "./question";
 import { QuestionRatingModel } from "../question_rating";
 
-@Component
-export class Rating extends QuestionVue<QuestionRatingModel> {
-  getCss(question: QuestionRatingModel, item:any) {
-    let css = "sv_q_rating_item";
-    if (question.value == item.value) {
-      css = css + " " + "active";
+export default {
+  mixins: [Question],
+  methods: {
+    getCss(question: QuestionRatingModel, item:any) {
+      let css = "sv_q_rating_item";
+      if (question.value == item.value) {
+        css = css + " " + "active";
+      }
+      return css;
+    },
+    change(e:any) {
+      this.question.value = e.target.value;
     }
-    return css;
-  }
-
-  change(e:any) {
-    this.question.value = e.target.value;
   }
 }
-Vue.component("survey-rating", Rating);
-export default Rating;
 </script>

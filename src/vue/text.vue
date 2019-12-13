@@ -3,17 +3,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionTextModel } from "../question_text";
+import { default as Question } from "./question";
 
-@Component
-export class SurveyText extends QuestionVue<QuestionTextModel> {
-  change(event: any) {
-    this.question.value = event.target.value;
+export default {
+  mixins: [Question],
+  methods: {
+    change(event: any) {
+      this.question.value = event.target.value
+    }
   }
 }
-Vue.component("survey-text", SurveyText);
-export default SurveyText;
 </script>

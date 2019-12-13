@@ -1,10 +1,26 @@
 <template>
-  <fieldset class="sv_qcbc sv_qcbx">
+  <fieldset class="sv_q_checkbox">
     <legend v-bind:aria-label="question.locTitle.renderedHtml"></legend>
     <div v-for="(item, index) in question.visibleChoices" :key="item.value" :class="getItemClass(item)">
       <label class="sv_q_checkbox_label">
-        <input v-if="item == question.selectAllItem" type="checkbox" :name="question.name" :value="isAllSelected" v-model="isAllSelected" :id="question.inputId + '_' + index" :disabled="question.isReadOnly" v-bind:aria-label="item.locText.renderedHtml" class="sv_q_checkbox_control_item">
-        <input v-if="item != question.selectAllItem" type="checkbox" :name="question.name" :value="item.value" v-model="question.renderedValue" :id="question.inputId + '_' + index" :disabled="question.isReadOnly || !item.isEnabled" v-bind:aria-label="item.locText.renderedHtml" class="sv_q_checkbox_control_item">
+        <input v-if="item == question.selectAllItem"
+               v-bind:aria-label="item.locText.renderedHtml"
+               v-model="isAllSelected"
+               type="checkbox"
+               :name="question.name"
+               :value="isAllSelected"
+               :id="question.inputId + '_' + index"
+               :disabled="question.isReadOnly"
+               class="sv_q_checkbox_control_item">
+        <input v-if="item != question.selectAllItem"
+               v-bind:aria-label="item.locText.renderedHtml"
+               v-model="question.renderedValue"
+               type="checkbox"
+               :name="question.name"
+               :value="item.value"
+               :id="question.inputId + '_' + index"
+               :disabled="question.isReadOnly || !item.isEnabled"
+               class="sv_q_checkbox_control_item">
         <span class="checkbox-material">
           <span class="check"></span>
         </span>
@@ -18,26 +34,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionCheckboxModel } from "../question_checkbox";
+import { default as Question } from "./question";
 
-@Component
-export class Checkbox extends QuestionVue<QuestionCheckboxModel> {
-  getItemClass(item: any) {
-    var itemClass = "sv_q_checkbox" + (this.question.colCount === 0 ? " sv_q_checkbox_inline" : " sv-q-col-" + this.question.colCount);
-    return (this.question.isItemSelected(item)) ? (itemClass + " checked") : itemClass;
-  }
-
-  get isAllSelected() {
-    return this.question.isAllSelected;
-  }
-
-  set isAllSelected(val: boolean) {
-    this.question.isAllSelected = val;
+export default {
+  mixins: [Question],
+  methods: {
+    getItemClass(item: any) {
+      let itemClass = "sv_q_checkbox" + (this.question.colCount === 0 ? " sv_q_checkbox_inline" : " sv-q-col-" + this.question.colCount);
+      return (this.question.isItemSelected(item)) ? (itemClass + " checked") : itemClass;
+    }
+  },
+  computed: {
+    isAllSelected: {
+      get() {
+        return this.question.isAllSelected;
+      },
+      set(val: boolean) {
+        this.question.isAllSelected = val;
+      }
+    }
   }
 }
-Vue.component("survey-checkbox", Checkbox);
-export default Checkbox;
 </script>

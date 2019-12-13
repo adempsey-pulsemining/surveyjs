@@ -30,26 +30,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionMatrixModel } from "../question_matrix";
+import { default as Question } from "./question";
 
-@Component
-export class Matrix extends QuestionVue<QuestionMatrixModel> {
-  getItemClass(row:any, column:any) {
-    var isChecked = row.value == column.value;
-    var cellSelectedClass = this.question.hasCellText ? "sv_q_m_cell_selected" : "checked";
-    var cellClass = this.question.hasCellText ? "sv_q_m_cell_text" : "sv_q_m_label";
-    let itemClass = cellClass + (isChecked ? " " + cellSelectedClass : "");
-    return itemClass;
-  }
-
-  cellClick(row:any, column:any) {
-    if (this.question.isReadOnly) return;
-    row.value = column.value;
+export default {
+  mixins: [Question],
+  methods: {
+    getItemClass(row: any, column: any) {
+      var isChecked = row.value == column.value;
+      var cellSelectedClass = this.question.hasCellText ? "sv_q_m_cell_selected" : "checked";
+      var cellClass = this.question.hasCellText ? "sv_q_m_cell_text" : "sv_q_m_label";
+      let itemClass = cellClass + (isChecked ? " " + cellSelectedClass : "");
+      return itemClass;
+    },
+    cellClick(row: any, column: any) {
+      if (this.question.isReadOnly) return;
+      row.value = column.value;
+    }
   }
 }
-Vue.component("survey-matrix", Matrix);
-export default Matrix;
 </script>

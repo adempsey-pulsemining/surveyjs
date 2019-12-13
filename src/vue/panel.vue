@@ -15,18 +15,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { PanelModelBase, PanelModel, QuestionRowModel } from "../panel";
-import { ISurvey } from "../base";
 
-@Component
-export class Panel extends Vue {
-  @Prop() question: PanelModel;
-  @Prop() isEditMode: Boolean;
-  private isCollapsedValue: boolean = false;
-
-  mounted() {
+export default {
+  props: {
+    question: Object,
+    isEditMode: Boolean,
+    isCollapsedValue: Boolean
+  },
+  mounted(): void {
     if (this.question.survey) {
       this.question.survey.afterRenderPanel(this.question, this.$el);
     }
@@ -35,62 +31,68 @@ export class Panel extends Vue {
     this.question.registerFunctionOnPropertyValueChanged("state", function(val: any) {
       self.isCollapsed = self.question.isCollapsed;
     });
-  }
-
-  get rootStyle() {
-    var result = {};
-    if (this.question.renderWidth) {
-      (<any>result)["width"] = this.question.renderWidth;
+  },
+  computed: {
+    rootStyle: {
+      get() {
+        var result = {};
+        if (this.question.renderWidth) {
+          (<any>result)["width"] = this.question.renderWidth;
+        }
+        return result;
+      }
+    },
+    showIcon: {
+      get() {
+        return (this.question && (this.question.isExpanded || this.question.isCollapsed));
+      }
+    },
+    rows: {
+      get() {
+        return this.question.rows;
+      }
+    },
+    hasTitle: {
+      get() {
+        return this.question.title.length > 0;
+      }
+    },
+    survey: {
+      get() {
+        return this.question.survey;
+      }
+    },
+    iconCss: {
+      get() {
+        var result = "sv_panel_icon";
+        if (!this.isCollapsed) result += " sv_expanded";
+        return result;
+      }
+    },
+    isCollapsed: {
+      get() {
+        return this.isCollapsedValue;
+      },
+      set(val: boolean) {
+        this.isCollapsedValue = val;
+      }
     }
-    return result;
-  }
-
-  get showIcon() {
-    return (this.question && (this.question.isExpanded || this.question.isCollapsed));
-  }
-
-  get rows() {
-    return this.question.rows;
-  }
-
-  get hasTitle() {
-    return this.question.title.length > 0;
-  }
-
-  get survey() {
-    return this.question.survey;
-  }
-
-  get iconCss() {
-    var result = "sv_panel_icon";
-    if (!this.isCollapsed) result += " sv_expanded";
-    return result;
-  }
-
-  get isCollapsed() {
-    return this.isCollapsedValue;
-  }
-
-  set isCollapsed(val: boolean) {
-    this.isCollapsedValue = val;
-  }
-
-  changeExpanded() {
-    if (this.question.isExpanded && !this.question.isCollapsed) {
-      this.question.collapse();
-    } else if (this.question.isCollapsed) {
-      this.question.expand();
+  },
+  methods: {
+    changeExpanded() {
+      if (this.question.isExpanded && !this.question.isCollapsed) {
+        this.question.collapse();
+      } else if (this.question.isCollapsed) {
+        this.question.expand();
+      }
+    },
+    getTitleStyle() {
+      var result = "sv_p_title";
+      if (this.question.isCollapsed || this.question.isExpanded) {
+        result += " sv_p_title_expandable";
+      }
+      return result;
     }
-  }
-
-  getTitleStyle() {
-    var result = "sv_p_title";
-    if (this.question.isCollapsed || this.question.isExpanded) {
-      result += " sv_p_title_expandable";
-    }
-    return result;
   }
 }
-Vue.component("survey-panel", Panel);
-export default Panel;
 </script>

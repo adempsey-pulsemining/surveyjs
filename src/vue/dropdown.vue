@@ -12,26 +12,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionDropdownModel } from "../question_dropdown";
+import { default as Question } from "./question";
 
-@Component
-export class Dropdown extends QuestionVue<QuestionDropdownModel> {
-  get value() {
-    return !this.question.isEmpty() ? this.question.renderedValue : "";
-  }
-
-  set value(newVal) {
-    this.question.renderedValue = newVal === "" ? undefined : newVal;
-  }
-
-  get isOtherSelected() {
-    const question = this.question;
-    return question.hasOther && question.isOtherSelected;
+export default {
+  mixins: [Question],
+  computed: {
+    value: {
+      get() {
+        return !this.question.isEmpty() ? this.question.renderedValue : "";
+      },
+      set(newVal: any) {
+        this.question.renderedValue = newVal === "" ? undefined : newVal;
+      }
+    },
+    isOtherSelected: {
+      get() {
+        const question = this.question;
+        return question.hasOther && question.isOtherSelected;
+      }
+    }
   }
 }
-Vue.component("survey-dropdown", Dropdown);
-export default Dropdown;
 </script>

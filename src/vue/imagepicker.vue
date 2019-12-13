@@ -16,21 +16,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionImagePickerModel } from "../question_imagepicker";
+import { default as Question } from "./question";
 
-@Component
-export class ImagePicker extends QuestionVue<QuestionImagePickerModel> {
-  getItemClass(item: any) {
-    var itemClass = "sv_q_imgsel" + (this.question.colCount === 0 ? " sv_q_imagepicker_inline" : " sv-q-col-" + this.question.colCount);
-    if ((this.question.multiSelect && this.question.value.indexOf(item.value) !== -1) || item.value === this.question.value) {
-      itemClass += " checked";
+export default {
+  mixins: [Question],
+  methods: {
+    getItemClass(item: any) {
+      var itemClass = "sv_q_imgsel" + (this.question.colCount === 0 ? " sv_q_imagepicker_inline" : " sv-q-col-" + this.question.colCount);
+      if ((this.question.multiSelect && this.question.value.indexOf(item.value) !== -1) || item.value === this.question.value) {
+        itemClass += " checked";
+      }
+      return itemClass;
     }
-    return itemClass;
   }
 }
-Vue.component("survey-imagepicker", ImagePicker);
-export default ImagePicker;
 </script>

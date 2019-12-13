@@ -5,24 +5,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { SurveyModel } from "../survey";
-import { PanelModelBase, PanelModel, QuestionRowModel } from "../panel";
 import { VueSurveyModel } from "./surveyModel";
 
-@Component
-export class Row extends Vue {
-  @Prop() row: any;
-  @Prop() css: any;
-  @Prop() survey: SurveyModel;
-
-  mounted() {
+export default {
+  props: {
+    row: <any>null,
+    css: <any>null,
+    survey: <any>null
+  },
+  mounted(): void {
     if (!!this.row) {
       VueSurveyModel.updatePropertiesHash(this.row);
     }
   }
 }
-Vue.component("survey-row", Row);
-export default Row;
 </script>

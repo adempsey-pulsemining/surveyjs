@@ -17,18 +17,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { default as QuestionVue } from "./question";
-import { QuestionMatrixDynamicModel } from "../question_matrixdynamic";
-import { MatrixDropdownRowModelBase } from "../question_matrixdropdownbase";
+import { default as Question } from "./question";
 
-@Component
-export class MatrixDynamic extends QuestionVue<QuestionMatrixDynamicModel> {
-  addRowClick() {
-    this.question.addRow();
+export default {
+  mixins: [Question],
+  methods: {
+    addRowClick() {
+      this.question.addRow();
+    }
   }
 }
-Vue.component("survey-matrixdynamic", MatrixDynamic);
-export default MatrixDynamic;
 </script>
