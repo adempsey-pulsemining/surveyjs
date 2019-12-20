@@ -1,5 +1,5 @@
 <template>
-  <pms-grid-layout class="sv_q_multipletext">
+  <div class="sv_q_multipletext" :style="{ 'display': 'grid', 'grid-template-columns': 'repeat(auto-fit, minmax(200px, 1fr))' }">
     <div v-for="(item, index) in question.items" class="sv_q_multipletext_item" :key="question.inputId + '_' + index">
       <survey-string :locString="item.locTitle" />
       <div :key="item.editor.id">
@@ -7,7 +7,7 @@
         <component :is="getWidgetComponentName(item.editor)" :question="item.editor" />
       </div>
     </div>
-  </pms-grid-layout>
+  </div>
 </template>
 
 <script lang="ts">
