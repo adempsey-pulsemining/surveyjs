@@ -2,36 +2,26 @@
   <div role="alert" v-show="isShow" :class="classes">
     <div v-for="error in question.errors">
       <span class="panel-error-icon" aria-hidden="true"></span>
-      <span class="panel-error-item">
-        <survey-string :locString="error.locText"/>
-      </span>
+      <span class="panel-error-item"><survey-string :locString="error.locText"/></span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { Question } from "../question"
 
 export default {
   props: {
-    question: null,
-    location: null
+    question: Object as () => Question,
+    location: String
   },
   computed: {
-    isShow: {
-      get() {
-        return !!this.question.errors && this.question.errors.length > 0;
-      }
+    isShow() {
+      return !!this.question.errors && this.question.errors.length > 0;
     },
-    classes: {
-      get() {
-        let classes = "sv_q_erbox";
-        if (this.location === "top") {
-          classes += " sv_qstn_error_top";
-        } else if (this.location === "bottom") {
-          classes += " sv_qstn_error_bottom";
-        }
-        return classes;
-      }
+    classes() {
+      let classes = "sv_q_erbox";
+      return (this.location === "top" || this.location === "bottom") ? classes + " sv_qstn_error_" + this.location : classes;
     }
   }
 }

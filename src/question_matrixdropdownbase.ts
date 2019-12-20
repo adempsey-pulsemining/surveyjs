@@ -3,7 +3,7 @@ import {
   CustomPropertiesCollection,
   JsonObjectProperty
 } from "./jsonobject";
-import { QuestionMatrixBaseModel } from "./martixBase";
+import { QuestionMatrixBaseModel } from "./matrixBase";
 import { Question } from "./question";
 import { HashTable, Helpers } from "./helpers";
 import {

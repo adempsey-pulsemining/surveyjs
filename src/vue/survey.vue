@@ -13,10 +13,11 @@
 </template>
 
 <script lang="ts">
+import { VueSurveyModel } from "./surveyModel"
 
 export default {
   props: {
-    survey: Object
+    survey: Object as () => VueSurveyModel
   },
   methods: {
     forceUpdate() {
@@ -49,23 +50,9 @@ export default {
     this.survey.renderCallback = undefined;
   },
   computed: {
-    hasTitle: {
-      get() {
-        return !!this.survey.title && this.survey.locTitle && this.survey.showTitle;
-      }
-    },
-    hasCompletedPage: {
-      get() {
-        return this.survey.showCompletedPage && this.survey.state === "completed";
-      }
+    hasTitle() {
+      return !!this.survey.title && this.survey.locTitle && this.survey.showTitle;
     }
   }
 }
 </script>
-
-<style scoped>
-  .sv_main {
-    background-color: white;
-    padding: 20px;
-  }
-</style>

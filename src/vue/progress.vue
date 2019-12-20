@@ -7,16 +7,15 @@
 </template>
 
 <script lang="ts">
+import { VueSurveyModel } from "./surveyModel"
 
 export default {
   props: {
-    survey: null,
+    survey: Object as () => VueSurveyModel
   },
   computed: {
-    progress: {
-      get() {
-        return this.survey.getProgress() + '%';
-      }
+    progress() {
+      return this.survey.getProgress() + '%';
     }
   }
 }

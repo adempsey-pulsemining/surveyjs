@@ -1,5 +1,5 @@
 <template>
-  <div class="sv_q sv_qstn">
+  <div class="sv_element">
     <div v-if="element.hasTitleOnLeftTop" :class="element.hasTitleOnLeft ? 'title-left' : ''">
       <h5 v-if="element.hasTitle" class="sv_q_title">
         <span v-if="element.no" style="position: static;" class="sv_q_num">{{element.no}}</span>
@@ -40,35 +40,22 @@ export default {
     element: Object,
   },
   computed: {
-    hasErrorsOnTop: {
-      get() {
-        return !this.element.isPanel && this.survey.questionErrorLocation === "top";
-      }
+    hasErrorsOnTop() {
+      return !this.element.isPanel && this.survey.questionErrorLocation === "top";
     },
-    hasErrorsOnBottom: {
-      get() {
-        return (!this.element.isPanel && this.survey.questionErrorLocation === "bottom");
-      }
+    hasErrorsOnBottom() {
+      return (!this.element.isPanel && this.survey.questionErrorLocation === "bottom");
+    }
+  },
+  methods: {
+    getWidgetComponentName(element: Question) {
+      return element.customWidget ? "survey-customwidget" : "survey-" + element.getTemplate();
     }
   },
   mounted() {
     if (this.survey && !this.element.isPanel) {
       this.survey.afterRenderQuestion(<IQuestion>this.element, this.$el);
     }
-  },
-  methods: {
-    getWidgetComponentName(element: Question) {
-      if (element.customWidget) {
-        return "survey-customwidget";
-      }
-      return "survey-" + element.getTemplate();
-    }
   }
 }
 </script>
-
-<style scoped>
-  .sv_q_title {
-    margin: 10px 0;
-  }
-</style>

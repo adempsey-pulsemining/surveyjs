@@ -1,18 +1,19 @@
 <template>
-  <div class="sv_p_root">
+  <div class="sv_page">
     <h4 v-if="hasTitle" class="sv_page_title"><survey-string :locString="page.locTitle"/></h4>
-    <div class="sv_page_description"><survey-string :locString="page.locDescription"/></div>
-    <div v-for="(row, index) in rows" v-if="row.visible" :key="page.id + '_' + index" class="sv_row">
+    <div v-if="page.locDescription && page.locDescription.renderedHtml" class="sv_page_description"><survey-string :locString="page.locDescription"/></div>
+    <div v-for="(row, index) in rows" v-if="row.visible" :key="page.id + '_' + index" class="sv_page_row">
       <survey-row :row="row" :survey="survey"></survey-row>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { VueSurveyModel } from "./surveyModel"
 
 export default {
   props: {
-    survey: Object,
+    survey: Object as () => VueSurveyModel,
     page: Object
   },
   data() {
@@ -38,20 +39,14 @@ export default {
     });
   },
   computed: {
-    hasTitle: {
-      get() {
-        return !!this.page.title && this.survey.showPageTitles;
-      }
+    hasTitle() {
+      return !!this.page.title && this.survey.showPageTitles;
     },
-    num: {
-      get() {
-        return this.page.num > 0 ? this.page.num + ". " : "";
-      }
+    num() {
+      return this.page.num > 0 ? this.page.num + ". " : "";
     },
-    rows: {
-      get() {
-        return this.page.rows;
-      }
+    rows() {
+      return this.page.rows;
     }
   }
 }

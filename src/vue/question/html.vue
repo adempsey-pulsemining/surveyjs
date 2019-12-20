@@ -3,9 +3,11 @@
 </template>
 
 <script lang="ts">
-import { default as Question } from "./question"
+import { QuestionHtmlModel } from "../../question_html"
 
 export default {
-  mixins: [Question]
+  props: {
+    question: Object as () => QuestionHtmlModel
+  }
 }
 </script>

@@ -1,13 +1,13 @@
 <template>
-  <div v-if="question.isVisible" class="sv_p_container" :style="rootStyle">
+  <div v-if="question.isVisible" class="sv_panel" :style="rootStyle">
     <h4 v-show="hasTitle" :class="getTitleStyle()" v-on:click="changeExpanded">
       <survey-string :locString="question.locTitle"/>
       <span v-show="showIcon" :class="iconCss"></span>
     </h4>
-    <div class="sv_p_description"><survey-string :locString="question.locDescription"/></div>
+    <div class="sv_panel_description"><survey-string :locString="question.locDescription"/></div>
     <survey-errors :question="question"/>
     <div :style="{ paddingLeft: question.innerPaddingLeft }" v-show="!isCollapsed">
-      <div v-for="(row, index) in rows" :key="question.id + '_' + index" v-if="row.visible" class="sv_row">
+      <div v-for="(row, index) in rows" :key="question.id + '_' + index" v-if="row.visible" class="sv_panel_row">
         <survey-row :row="row" :survey="survey"></survey-row>
       </div>
     </div>
@@ -15,10 +15,11 @@
 </template>
 
 <script lang="ts">
+import { Question } from "../question"
 
 export default {
   props: {
-    question: Object,
+    question: Object as () => Question,
     isEditMode: Boolean,
     isCollapsedValue: Boolean
   },
@@ -33,41 +34,29 @@ export default {
     });
   },
   computed: {
-    rootStyle: {
-      get() {
-        var result = {};
-        if (this.question.renderWidth) {
-          (<any>result)["width"] = this.question.renderWidth;
-        }
-        return result;
+    rootStyle() {
+      var result = {};
+      if (this.question.renderWidth) {
+        (<any>result)["width"] = this.question.renderWidth;
       }
+      return result;
     },
-    showIcon: {
-      get() {
-        return (this.question && (this.question.isExpanded || this.question.isCollapsed));
-      }
+    showIcon() {
+      return (this.question && (this.question.isExpanded || this.question.isCollapsed));
     },
-    rows: {
-      get() {
-        return this.question.rows;
-      }
+    rows() {
+      return this.question.rows;
     },
-    hasTitle: {
-      get() {
-        return this.question.title.length > 0;
-      }
+    hasTitle() {
+      return this.question.title.length > 0;
     },
-    survey: {
-      get() {
-        return this.question.survey;
-      }
+    survey() {
+      return this.question.survey;
     },
-    iconCss: {
-      get() {
-        var result = "sv_panel_icon";
-        if (!this.isCollapsed) result += " sv_expanded";
-        return result;
-      }
+    iconCss() {
+      var result = "sv_panel_icon";
+      if (!this.isCollapsed) result += " sv_expanded";
+      return result;
     },
     isCollapsed: {
       get() {

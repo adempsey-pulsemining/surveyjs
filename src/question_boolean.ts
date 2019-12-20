@@ -24,9 +24,6 @@ export class QuestionBooleanModel extends Question {
   public get isIndeterminate(): boolean {
     return this.isEmpty();
   }
-  public get hasTitle(): boolean {
-    return this.showTitle;
-  }
   supportGoNextPageAutomatic() {
     return true;
   }

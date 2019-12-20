@@ -8,16 +8,15 @@
 </template>
 
 <script lang="ts">
+import { QuestionPanelDynamic } from "../question_paneldynamic"
 
 export default {
   props: {
-    question: Object
+    question: Object as () => QuestionPanelDynamic
   },
   computed: {
-    rangeMax: {
-      get() {
-        return this.question.panelCount - 1;
-      }
+    rangeMax() {
+      return this.question.panelCount - 1;
     }
   },
   methods: {

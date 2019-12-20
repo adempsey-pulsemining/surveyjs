@@ -3,16 +3,15 @@
 </template>
 
 <script lang="ts">
+import { VueSurveyModel } from "./surveyModel"
 
 export default {
   props: {
-    survey: <any>null
+    survey: Object as () => VueSurveyModel
   },
   computed: {
-    text: {
-      get() {
-        return this.survey.timerInfoText;
-      }
+    text() {
+      return this.survey.timerInfoText;
     }
   }
 }

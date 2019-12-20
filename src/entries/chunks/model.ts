@@ -72,7 +72,6 @@ export {
   QuestionMultipleTextModel
 } from "../../question_multipletext";
 export { PanelModel, PanelModelBase, QuestionRowModel } from "../../panel";
-export { FlowPanelModel } from "../../flowpanel";
 export { PageModel } from "../../page";
 export { Question } from "../../question";
 export { QuestionNonValue } from "../../questionnonvalue";
@@ -85,14 +84,12 @@ export { QuestionCheckboxModel } from "../../question_checkbox";
 export { QuestionCommentModel } from "../../question_comment";
 export { QuestionDropdownModel } from "../../question_dropdown";
 export { QuestionFactory, ElementFactory } from "../../questionfactory";
-export { QuestionFileModel } from "../../question_file";
 export { QuestionHtmlModel } from "../../question_html";
 export { QuestionRadiogroupModel } from "../../question_radiogroup";
 export { QuestionRatingModel } from "../../question_rating";
 export { QuestionExpressionModel } from "../../question_expression";
 export { QuestionTextModel } from "../../question_text";
 export { QuestionBooleanModel } from "../../question_boolean";
-export { QuestionImagePickerModel } from "../../question_imagepicker";
 export {
   QuestionPanelDynamicModel,
   QuestionPanelDynamicItem

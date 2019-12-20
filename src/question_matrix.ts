@@ -3,7 +3,7 @@ import {
 } from "./base";
 import { Helpers } from "./helpers";
 import { ItemValue } from "./itemvalue";
-import { QuestionMatrixBaseModel } from "./martixBase";
+import { QuestionMatrixBaseModel } from "./matrixBase";
 import { JsonObject } from "./jsonobject";
 import { SurveyError } from "./base";
 import { surveyLocalization } from "./surveyStrings";

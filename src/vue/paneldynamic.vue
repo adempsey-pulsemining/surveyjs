@@ -14,20 +14,16 @@
 </template>
 
 <script lang="ts">
-import { default as Question } from "./question";
+import { QuestionPanelDynamic } from "../question_paneldynamic";
 
 export default {
-  mixins: [Question],
+  props: {
+    question: Object as () => QuestionPanelDynamic
+  },
   computed: {
-    renderedPanels: {
-      get() {
-        if (this.question.isRenderModeList) return this.question.panels;
-        var panels = [];
-        if (this.question.currentPanel) {
-          panels.push(this.question.currentPanel);
-        }
-        return panels;
-      }
+    renderedPanels() {
+      if (this.question.isRenderModeList) return this.question.panels;
+      return this.question.currentPanel ? [this.question.currentPanel] : [];
     }
   },
   methods: {

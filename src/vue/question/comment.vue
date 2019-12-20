@@ -7,21 +7,17 @@
               :maxlength="question.getMaxLength()"
               :cols="question.cols"
               :rows="question.rows"
-              :placeholder="question.placeHolder"
-              class="panel-comment-root"></textarea>
+              :placeholder="question.placeHolder">
+    </textarea>
   </div>
 </template>
 
 <script lang="ts">
-import { default as Question } from "./question";
+import { QuestionCommentModel } from "../../question_comment";
 
 export default {
-  mixins: [Question]
+  props: {
+    question: Object as () => QuestionCommentModel
+  }
 }
 </script>
-
-<style scoped>
-  textarea {
-    width: 100%;
-  }
-</style>

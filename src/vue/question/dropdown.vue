@@ -1,21 +1,23 @@
 <template>
   <div class="sv_q_dropdown">
-    <div v-if="!question.isReadOnly" class="sv_select_wrapper">
-      <select :id="question.inputId" v-model="value" class="sv_q_dropdown_control" v-bind:aria-label="question.locTitle.renderedHtml">
+    <div v-if="!question.isReadOnly">
+      <select :id="question.inputId" v-model="value" class="sv_q_dropdown_select" v-bind:aria-label="question.locTitle.renderedHtml">
         <option v-if="question.showOptionsCaption" value>{{question.optionsCaption}}</option>
         <option v-for="item in question.visibleChoices" :value="item.value" :disabled="!item.isEnabled">{{item.text}}</option>
       </select>
     </div>
-    <div v-else class="sv_q_dropdown_control">{{isOtherSelected ? question.otherText : question.displayValue}}</div>
-    <survey-other-choice v-show="isOtherSelected" :question="question"/>
+    <div v-else class="readonly">{{isOtherSelected ? question.otherText : question.displayValue}}</div>
+    <survey-other-choice v-show="isOtherSelected" :question="question"></survey-other-choice>
   </div>
 </template>
 
 <script lang="ts">
-import { default as Question } from "./question";
+import { QuestionDropdownModel } from "../../question_dropdown";
 
 export default {
-  mixins: [Question],
+  props: {
+    question: Object as () => QuestionDropdownModel
+  },
   computed: {
     value: {
       get() {
@@ -25,11 +27,8 @@ export default {
         this.question.renderedValue = newVal === "" ? undefined : newVal;
       }
     },
-    isOtherSelected: {
-      get() {
-        const question = this.question;
-        return question.hasOther && question.isOtherSelected;
-      }
+    isOtherSelected() {
+      return this.question.hasOther && this.question.isOtherSelected;
     }
   }
 }
