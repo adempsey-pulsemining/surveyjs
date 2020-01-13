@@ -1,5 +1,5 @@
 <template>
-  <div id="sv_table" :style="{ 'display': 'grid', 'grid-auto-rows': 'max-content' }">
+  <div class="sv_table" :style="{ 'display': 'grid', 'grid-auto-rows': 'max-content' }">
     <div v-if="showHeader" class="sv_trow" :style="{ 'display': 'grid', 'grid-template-columns': 'repeat(' + getColumnsLength() + ', minmax(0, 1fr))' }">
       <div v-if="!isDynamic"></div>
       <div v-for="column in question.visibleColumns">

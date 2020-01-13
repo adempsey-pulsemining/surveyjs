@@ -4,7 +4,9 @@
       <survey-string :locString="question.locTitle"/>
       <span v-show="showIcon" :class="iconCss"></span>
     </h4>
-    <div class="sv_panel_description"><survey-string :locString="question.locDescription"/></div>
+    <div class="sv_panel_description">
+      <survey-string :locString="question.locDescription"/>
+    </div>
     <survey-errors :question="question"/>
     <div :style="{ paddingLeft: question.innerPaddingLeft }" v-show="!isCollapsed">
       <div v-for="(row, index) in rows" :key="question.id + '_' + index" v-if="row.visible" class="sv_panel_row">

@@ -32,25 +32,27 @@ var moduleRules = [
   },
 ];
 
-module.exports = {
-  entry: path.resolve(__dirname, "src/entries/vue.ts"),
-  module: {
-    rules: moduleRules
-  },
-  resolve: {
-    extensions: [".ts", ".js", ".tsx", ".scss"]
-  },
-  externals: {
-    vue: { root: "Vue", commonjs2: "vue", commonjs: "vue", amd: "vue" }
-  },
-  output: {
-    filename: "survey.js",
-    library: "Survey",
-    libraryTarget: "umd",
-    umdNamedDefine: true
-  },
-  plugins: [
-    new VueLoaderPlugin(),
-    new MiniCssExtractPlugin({ filename: "survey.css" })
-  ]
+module.exports = function(env, argv) {
+  return {
+    entry: path.resolve(__dirname, "src/entries/vue.ts"),
+    module: {
+      rules: moduleRules
+    },
+    resolve: {
+      extensions: [".ts", ".js", ".tsx", ".scss"]
+    },
+    externals: {
+      vue: { root: "Vue", commonjs2: "vue", commonjs: "vue", amd: "vue" }
+    },
+    output: {
+      filename: argv.mode === "development" ? "survey.js" : "survey.min.js",
+      library: "Survey",
+      libraryTarget: "umd",
+      path: path.resolve(__dirname, 'build')
+    },
+    plugins: [
+      new VueLoaderPlugin(),
+      new MiniCssExtractPlugin({ filename: argv.mode === "development" ? "survey.css" : "survey.min.css" })
+    ]
+  }
 };

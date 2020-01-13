@@ -32,4 +32,5 @@ Gemfile.lock
 /doc_generator/*.json
 *.env
 dist
+build
 component

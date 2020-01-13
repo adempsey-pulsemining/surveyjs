@@ -1,7 +1,9 @@
 <template>
   <div class="sv_page">
     <h4 v-if="hasTitle" class="sv_page_title"><survey-string :locString="page.locTitle"/></h4>
-    <div v-if="page.locDescription && page.locDescription.renderedHtml" class="sv_page_description"><survey-string :locString="page.locDescription"/></div>
+    <div v-if="page.locDescription && page.locDescription.renderedHtml" class="sv_page_description">
+      <survey-string :locString="page.locDescription"/>
+    </div>
     <div v-for="(row, index) in rows" v-if="row.visible" :key="page.id + '_' + index" class="sv_page_row">
       <survey-row :row="row" :survey="survey"></survey-row>
     </div>

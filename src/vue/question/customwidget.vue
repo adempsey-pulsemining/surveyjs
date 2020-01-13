@@ -1,7 +1,13 @@
 <template>
-  <div :class="getClass()">
-    <div v-if="hasHtml" v-html="customHtml"></div>
-    <component v-if="hasDefaultRender" :is="componentName" :question="question" />
+  <div :class="className">
+    <component v-if="hasVueComponent"
+               :is="componentName"
+               :question="question"
+               :value="question.value"
+               :readonly="question.survey.isDisplayMode"
+               :customProps="customProps"
+               @change="valueChanged"
+    />
   </div>
 </template>
 
@@ -11,35 +17,37 @@ import { Question } from "../../question";
 
 export default {
   props: {
-    question: Object as () => Question
+    question: Object as () => Question,
+  },
+  data() {
+    return {
+      customProps: <Object>[]
+    }
   },
   computed: {
-    hasDefaultRender() {
-      return this.question.customWidget.isDefaultRender || this.hasVueComponent;
+    className() {
+      return "sv_q_" + this.name.replace("-", "_");
     },
-    hasHtml() {
-      return !!this.question.customWidget.htmlTemplate;
-    },
-    customHtml() {
-      return this.question.customWidget.htmlTemplate;
+    name() {
+      return this.question.customWidget.name;
     },
     hasVueComponent() {
       var options = (<any>Vue)["options"];
       if (!options) return false;
-      return (options.components && options.components[this.question.customWidget.name]);
+      return (options.components && options.components["survey-" + this.name]);
     },
     componentName() {
-      if (this.hasVueComponent) return this.question.customWidget.name;
+      if (this.hasVueComponent) return "survey-" + this.name;
       return "survey-" + this.question.getTemplate();
     }
   },
   methods: {
-    getClass() {
-      return "sv_q_" + this.componentName;
+    valueChanged(value: any) {
+      this.question.value = value;
     }
   },
   mounted() {
-    this.question.customWidget.afterRender(this.question, this.$el);
+    this.question.customWidget.afterRender(this.question, this);
   },
   beforeDestroy(): void {
     this.question.customWidget.willUnmount(this.question, this.$el);

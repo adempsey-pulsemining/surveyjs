@@ -2,7 +2,7 @@
   <div class="sv_panel_dynamic">
     <survey-paneldynamicprogress v-if="question.isProgressTopShowing" :question="question" />
     <div v-for="panel in renderedPanels" :key="panel.id">
-      <survey-panel :question="panel" :css="css"/>
+      <survey-panel :question="panel" />
       <div v-if="!question.isReadOnly && !panel.isCollapsed">
         <input type="button" v-if="question.canRemovePanel" :value="question.panelRemoveText" @click="removePanelClick(panel)" />
       </div>
