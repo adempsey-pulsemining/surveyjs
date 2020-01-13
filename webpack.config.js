@@ -2,6 +2,7 @@
 
 const { VueLoaderPlugin } = require("vue-loader");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const path = require("path");
 
 var moduleRules = [
@@ -53,6 +54,9 @@ module.exports = function(env, argv) {
     plugins: [
       new VueLoaderPlugin(),
       new MiniCssExtractPlugin({ filename: argv.mode === "development" ? "survey.css" : "survey.min.css" })
-    ]
+    ],
+    optimization: {
+      minimizer: [new OptimizeCSSAssetsPlugin({})]
+    }
   }
 };
