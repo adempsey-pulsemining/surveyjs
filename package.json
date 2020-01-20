@@ -7,8 +7,6 @@
     "lint": "tslint ./src/**/*.ts -t verbose",
     "watch_dev": "webpack --env.buildType dev --env.platform vue --watch"
   },
-  "version": "1.0.74",
-  "name": "surveyjs",
   "private": true,
   "devDependencies": {
     "@types/node": "^12.12.16",
@@ -23,10 +21,6 @@
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.1",
-    "ts-loader": "^6.2.1",
-    "tslib": "^1.10.0",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.3",
     "url-loader": "^3.0.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",

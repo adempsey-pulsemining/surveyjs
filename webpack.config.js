@@ -14,13 +14,6 @@ var moduleRules = [
     }
   },
   {
-    test: /\.(ts|tsx)$/,
-    use: {
-      loader: "ts-loader",
-      options: { appendTsSuffixTo: [/\.vue$/] }
-    }
-  },
-  {
     test: /\.css$/,
     use: [MiniCssExtractPlugin.loader, "css-loader"]
   },
@@ -36,12 +29,12 @@ var moduleRules = [
 
 module.exports = function(env, argv) {
   return {
-    entry: path.resolve(__dirname, "src/entries/vue.ts"),
+    entry: path.resolve(__dirname, "src/main.js"),
     module: {
       rules: moduleRules
     },
     resolve: {
-      extensions: [".ts", ".js", ".tsx", ".scss"]
+      extensions: [".js", ".tsx", ".scss"]
     },
     externals: {
       vue: { root: "Vue", commonjs2: "vue", commonjs: "vue", amd: "vue" }
