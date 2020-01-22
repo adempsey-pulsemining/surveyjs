@@ -50,7 +50,10 @@ module.exports = function(env, argv) {
       new MiniCssExtractPlugin({ filename: argv.mode === "development" ? "survey.css" : "survey.min.css" })
     ],
     optimization: {
-      minimizer: [new OptimizeCSSAssetsPlugin({}), new TerserPlugin()]
+      minimizer: [
+        new OptimizeCSSAssetsPlugin({}),
+        new TerserPlugin({terserOptions: { mangle: false }})
+      ]
     }
   }
 };
