@@ -2,8 +2,22 @@ import { Element } from "./element";
 import { metaData } from "./base";
 
 export class Page extends Element {
+  static get definition() {
+    return {
+      name: "Page",
+      type: "page",
+      properties: Page.properties
+    }
+  }
+
+  static get properties() {
+    return Element.properties.concat([
+      { name: "elements", type: "array", default: [], fromTemplate: false }
+    ])
+  }
+
   constructor(page) {
-    super(page, Page.definition.properties);
+    super(page, metaData.getProperties("page"));
     this.elements = [];
   }
 
@@ -71,13 +85,4 @@ export class Page extends Element {
   }
 }
 
-const definition = {
-  name: "Page",
-  type: "page",
-  properties: [
-    { name: "elements", type: "array", default: [], fromTemplate: false }
-  ]
-};
-
-Page.definition = definition;
-metaData.addClass(definition);
+metaData.addClass(Page.definition);

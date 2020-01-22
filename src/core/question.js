@@ -2,8 +2,20 @@ import { Element } from "./element";
 import { metaData } from "./base";
 
 export class Question extends Element {
-  constructor(question) {
-    super(question, Question.definition.properties);
+  static get definition() {
+    return {
+      name: "Question",
+      type: "question",
+      properties: Question.properties
+    }
+  }
+
+  static get properties() {
+    return Element.properties.concat([]);
+  }
+
+  constructor(question, properties) {
+    super(question, properties || metaData.getProperties("question"));
   }
 
   getType() {
@@ -31,11 +43,4 @@ export class Question extends Element {
   }
 }
 
-const definition = {
-  name: "Question",
-  type: "question",
-  properties: []
-};
-
-Question.definition = definition;
-metaData.addClass(definition);
+metaData.addClass(Question.definition);

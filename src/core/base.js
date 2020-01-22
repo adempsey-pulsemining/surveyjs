@@ -6,8 +6,29 @@ import { newGuid } from "./utilities";
  */
 export var metaData = {
   classes: [],
+  properties: {},
   addClass(newClass) {
     this.classes.push(newClass);
+    this.properties[newClass.type] = newClass.properties;
+  },
+  addProperty(className, property) {
+    for (let item of this.classes) {
+      if (item.name === className) {
+        item.properties.push(property);
+      }
+    }
+    this.properties[className].push(property);
+  },
+  addProperties(className, properties) {
+    for (let item of this.classes) {
+      if (item.name === className) {
+        item.properties = (item.properties || []).concat(properties);
+      }
+    }
+    this.properties[className].properties = (this.properties[className].properties || []).concat(properties);
+  },
+  getProperties(className) {
+    return this.properties[className] || [];
   },
   hasClass(myClass) {
     return this.classes.findIndex(x => x.type === myClass) >= 0;
@@ -20,9 +41,22 @@ export var metaData = {
 };
 
 export class Base {
-  constructor(object, properties) {
-    this.__setProperties(object, Base.definition.properties.concat(properties));
+  static get definition() {
+    return {
+      name: "Base",
+      type: "base",
+      properties: Base.properties
+    }
   }
+
+  static get properties() {
+    return []
+  }
+
+  constructor(object, properties) {
+    this.__setProperties(object, properties || metaData.getProperties("base"));
+  }
+
   /**
    * Public methods
    */
@@ -37,12 +71,12 @@ export class Base {
 
   // maps properties defined on the template to instance of an object
   __setProperties(object, properties) {
-    Object.keys(object).forEach(key => {
-      let property = properties.find(x => x.name === key);
+    for (let property of properties) {
+      if (!(property.name in object) && property.default == null) continue;
       property.fromTemplate = property.fromTemplate === undefined ? true : property.fromTemplate;
-      if (!property.fromTemplate) return;
-      this.__setProperty(property, key, object[key]);
-    });
+      if (!property.fromTemplate) continue;
+      this.__setProperty(property, property.name, object[property.name]);
+    }
   }
 
   __setProperty(property, key, value) {
@@ -55,8 +89,4 @@ export class Base {
   }
 }
 
-Base.definition = {
-  name: "Base",
-  type: "base",
-  properties: []
-};
+metaData.addClass(Base.definition);

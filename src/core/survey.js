@@ -3,8 +3,23 @@ import { Page } from "./page";
 import { metaData } from "./base"
 
 export class Survey extends Base {
+  static get definition() {
+    return {
+      name: "Survey",
+      type: "survey",
+      properties: Survey.properties
+    }
+  }
+
+  static get properties() {
+    return Base.properties.concat([
+      { name: "pages", type: "array", default: [], required: true, fromTemplate: false },
+      { name: "readOnly", type: "boolean", default: false }
+    ])
+  }
+
   constructor(template) {
-    super(template, Survey.definition.properties);
+    super(template, metaData.getProperties("survey"));
     this.currentPageIndex = 0;
     this.pages = [];
     this._createEventListeners();
@@ -63,6 +78,12 @@ export class Survey extends Base {
     }
   }
 
+  savePage() {
+    if (this.onSaveButtonClicked) {
+      this.onSaveButtonClicked();
+    }
+  }
+
   get currentPage() {
     return this.pages[this.currentPageIndex];
   }
@@ -109,6 +130,7 @@ export class Survey extends Base {
   _createEventListeners() {
     this.onComplete = function() {};
     this.onValueChanged = function() {};
+    this.onSaveButtonClicked = function() {};
   }
 
   // Render survey from the template. ie create pages/panels/questions
@@ -124,16 +146,6 @@ export class Survey extends Base {
   }
 }
 
-const definition = {
-  name: "Survey",
-  type: "survey",
-  properties: [
-    { name: "pages", type: "array", default: [], required: true, fromTemplate: false },
-    { name: "readOnly", type: "boolean", default: false }
-  ]
-};
-
-Survey.definition = definition;
-metaData.addClass(definition);
+metaData.addClass(Survey.definition);
 
 

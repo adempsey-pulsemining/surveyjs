@@ -1,6 +1,14 @@
 <template>
   <div class="sv_nav">
-    <b-pagination v-model="currentPage" :total-rows="totalPages" :per-page="1"></b-pagination>
+    <b-pagination v-model="currentPage"
+                  first-text="First"
+                  last-text="Last"
+                  next-text="Next"
+                  prev-text="Prev"
+                  align="fill"
+                  :total-rows="totalPages"
+                  :per-page="1">
+    </b-pagination>
   </div>
 </template>
 

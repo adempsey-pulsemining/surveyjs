@@ -2,8 +2,22 @@ import { Element } from "./element";
 import { metaData } from "./base";
 
 export class Group extends Element {
+  static get definition() {
+    return {
+      name: "Group",
+      type: "group",
+      properties: Group.properties
+    }
+  }
+
+  static get properties() {
+    return Element.properties.concat([
+      { name: "elements", type: "array", default: [] }
+    ])
+  }
+
   constructor(element) {
-    super(element, Group.definition.properties);
+    super(element, metaData.getProperties("group"));
     this.questions = [];
   }
 
@@ -20,6 +34,7 @@ export class Group extends Element {
     let newQuestion = new window.Survey[myClass](question);
     newQuestion.survey = this.survey;
     newQuestion.page = this.page;
+    newQuestion.group = this;
     this.questions.push(newQuestion);
   }
 
@@ -28,13 +43,4 @@ export class Group extends Element {
   }
 }
 
-const definition = {
-  name: "Group",
-  type: "group",
-  properties: [
-    { name: "elements", type: "array", default: [] }
-  ]
-};
-
-Group.definition = definition;
-metaData.addClass(definition);
+metaData.addClass(Group.definition);

@@ -1,10 +1,23 @@
 import { Question } from "./question";
-import { Element } from "./element";
 import { metaData } from "./base";
 
 export class Text extends Question {
+  static get definition() {
+    return {
+      name: "Text",
+      type: "text",
+      properties: Text.properties
+    }
+  }
+
+  static get properties() {
+    return Question.properties.concat([
+      { name: "inputType", default: "text", required: false }
+    ])
+  }
+
   constructor(question) {
-    super(question, Text.definition.properties);
+    super(question, metaData.getProperties("text"));
     this.value = "";
   }
 
@@ -13,11 +26,4 @@ export class Text extends Question {
   }
 }
 
-const definition = {
-  name: "Text",
-  type: "text",
-  properties: []
-};
-
-Text.definition = definition;
-metaData.addClass(definition);
+metaData.addClass(Text.definition);
