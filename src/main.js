@@ -9,3 +9,6 @@ export { Element } from "./core/element";
 import Vue from "vue";
 import VueSurvey from "./vue/survey.vue";
 Vue.component("survey", VueSurvey);
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+Vue.component('font-awesome-icon', FontAwesomeIcon);

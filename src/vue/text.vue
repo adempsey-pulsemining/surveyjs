@@ -1,24 +1,23 @@
 <template>
   <div class="sv_q_text">
-    <input @change="onChange"
-           maxlength="32000"
-           :value="question.value"
-           :disabled="question.isReadOnly()"
-           :type="question.inputType"
-           :placeholder="question.placeHolder"
-    />
+    <b-form-input :type="question.inputType"
+                  :value="question.value"
+                  :placeholder="question.placeHolder"
+                  v-model.lazy="question.value"
+                  :disabled="question.isReadOnly()">
+    </b-form-input>
   </div>
 </template>
 
 <script>
+  import { BFormInput } from "bootstrap-vue/src/components/form-input";
+
   export default {
+    components: {
+      "b-form-input": BFormInput
+    },
     props: {
       question: Object
-    },
-    methods: {
-      onChange(e) {
-        this.question.value = e.target.value;
-      }
     }
   }
 </script>

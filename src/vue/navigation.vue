@@ -5,9 +5,11 @@
                   last-text="Last"
                   next-text="Next"
                   prev-text="Prev"
-                  align="fill"
                   :total-rows="totalPages"
                   :per-page="1">
+      <template v-slot:page="{ page, active, index }">
+        <span>{{getPageTitle(index)}}</span>
+      </template>
     </b-pagination>
   </div>
 </template>
@@ -25,6 +27,12 @@
     }
   };
 
+  const methods = {
+    getPageTitle(index) {
+      return this.survey.pages[index].title;
+    }
+  };
+
   export default {
     components: {
       "b-pagination": BPagination
@@ -32,6 +40,7 @@
     props: {
       survey: Object
     },
-    computed: computed
+    computed: computed,
+    methods: methods
   }
 </script>

@@ -1,14 +1,20 @@
 <template>
   <div class="sv_controls">
-    <input class="sv_prev_btn" v-if="!survey.isFirstPage()" type="button" value="Prev" @click="survey.prevPage()">
-    <input class="sv_next_btn" v-if="!survey.isLastPage()" type="button" value="Next" @click="survey.nextPage()">
-    <input class="sv_save_btn" v-if="!survey.readOnly" type="button" value="Save" @click="survey.savePage()">
-    <input class="sv_complete_btn" v-if="survey.isLastPage()" type="button" value="Complete" @click="survey.complete()">
+    <v-button v-if="!survey.isFirstPage()" icon="chevron-left" variant="primary" @click="survey.prevPage()">Prev</v-button>
+    <div class="flex"></div>
+    <v-button v-if="!survey.isLastPage()" icon="chevron-right" variant="primary" @click="survey.nextPage()" position="right">Next</v-button>
+    <v-button v-if="!survey.readOnly" icon="save" variant="success" @click="survey.savePage()">Save</v-button>
+    <v-button v-if="!survey.readOnly" icon="check" variant="primary" @click="survey.complete()">Complete</v-button>
   </div>
 </template>
 
 <script>
+  import VButton from "../components/v-button.vue";
+
   export default {
+    components: {
+      VButton
+    },
     props: {
       survey: Object
     }
