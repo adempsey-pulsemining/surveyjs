@@ -13,8 +13,7 @@ export class Survey extends Base {
 
   static get properties() {
     return Base.properties.concat([
-      { name: "pages", type: "array", default: [], required: true, fromTemplate: false },
-      { name: "readOnly", type: "boolean", default: false }
+      "readOnly:boolean",
     ])
   }
 
@@ -47,7 +46,7 @@ export class Survey extends Base {
     let data = {};
     for (let page of this.pages) {
       for (let question of page.questions) {
-        if (!question.value) continue;
+        if (question.value == null) continue;
         data[question.id] = this.__getQuestionData(question);
       }
     }
@@ -88,10 +87,6 @@ export class Survey extends Base {
     return this.pages[this.currentPageIndex];
   }
 
-  getType() {
-    return Survey.definition.type;
-  }
-
   addPage(page) {
     let newPage = new Page(page);
     newPage.survey = this;
@@ -122,7 +117,7 @@ export class Survey extends Base {
       comment: question.comment || "",
       name: question.name,
       title: question.title,
-      type: question.getType(),
+      type: question.type,
       page: question.pageNumber
     }
   }

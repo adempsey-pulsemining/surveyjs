@@ -18,10 +18,6 @@ export class Question extends Element {
     super(question, properties || metaData.getProperties("question"));
   }
 
-  getType() {
-    return Question.definition.type;
-  }
-
   get no() {
     if (!this.survey) return;
     return this.survey.indexOfQuestion(this) + 1;

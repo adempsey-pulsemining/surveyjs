@@ -2,7 +2,7 @@
   "scripts": {
     "build_dev": "webpack --mode=development",
     "build_prod": "webpack --mode=production",
-    "build_components": "vue-cli-service build --target wc --name v-table ./src/components/*.vue",
+    "build_components": "vue-cli-service build --dest ./build/wc --target wc --name survey-viewer ./src/main.vue",
     "build": "webpack --mode=development && webpack --mode=production",
     "lint": "tslint ./src/**/*.ts -t verbose",
     "watch_dev": "webpack --env.buildType dev --env.platform vue --watch"
@@ -14,6 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "@types/node": "^12.12.16",
+    "@vue/cli-service": "^4.1.2",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.2.0",
     "css-loader": "^3.2.1",
@@ -25,15 +26,12 @@
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.1",
+    "terser-webpack-plugin": "^2.3.2",
     "url-loader": "^3.0.0",
     "vue": "^2.6.10",
-    "vue-class-component": "^7.1.0",
     "vue-loader": "^15.7.2",
-    "vue-property-decorator": "^8.3.0",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
-    "vuetify": "^2.2.6",
-    "vuetify-loader": "^1.4.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   }

@@ -1,7 +1,7 @@
 import { Element } from "./element";
-import { metaData } from "./base";
+import { metaData, Base } from "./base";
 
-export class Page extends Element {
+export class Page extends Base {
   static get definition() {
     return {
       name: "Page",
@@ -11,18 +11,16 @@ export class Page extends Element {
   }
 
   static get properties() {
-    return Element.properties.concat([
-      { name: "elements", type: "array", default: [], fromTemplate: false }
+    return Base.properties.concat([
+      "!id",
+      "!name",
+      "title"
     ])
   }
 
   constructor(page) {
     super(page, metaData.getProperties("page"));
     this.elements = [];
-  }
-
-  getType() {
-    return Page.definition.type;
   }
 
   get pageNumber() {
@@ -68,19 +66,30 @@ export class Page extends Element {
   }
 
   __addElement(element) {
-    let newElement;
     let myClass = metaData.getClassName(element.type);
-    if (!metaData.hasClass(element.type)) return;
-    if (Element.isGroup(element)) {
-      newElement = new window.Survey[myClass](element);
-      newElement.survey = this.survey;
-      newElement.page = this;
-      newElement.addQuestions(element.elements);
-    } else {
-      newElement = new window.Survey[myClass](element);
-      newElement.survey = this.survey;
-      newElement.page = this;
+    // skip elements which are not defined in the metadata
+    if (!metaData.hasClass(element.type)) {
+      return;
     }
+    if (Element.isGroup(element)) {
+      this.__addGroup(myClass, element);
+    } else {
+      this.__addQuestion(myClass, element);
+    }
+  }
+
+  __addQuestion(myClass, element) {
+    let newElement = new window.Survey[myClass](element);
+    newElement.survey = this.survey;
+    newElement.page = this;
+    this.elements.push(newElement);
+  }
+
+  __addGroup(myClass, element) {
+    let newElement = new window.Survey[myClass](element);
+    newElement.survey = this.survey;
+    newElement.page = this;
+    newElement.addQuestions(element.elements);
     this.elements.push(newElement);
   }
 }

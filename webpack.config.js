@@ -15,15 +15,17 @@ var moduleRules = [
   },
   {
     test: /\.css$/,
-    use: [MiniCssExtractPlugin.loader, "css-loader"]
+    use: [MiniCssExtractPlugin.loader, "style-loader", "css-loader"]
   },
   {
-    test: /\.scss$/,
-    use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+    test: /\.s[ac]ss$/,
+    use: [MiniCssExtractPlugin.loader, "style-loader", "css-loader", "sass-loader"]
   },
   {
     test: /\.svg/,
-    use: { loader: "url-loader" }
+    use: {
+      loader: "url-loader"
+    }
   },
 ];
 
@@ -34,10 +36,10 @@ module.exports = function(env, argv) {
       rules: moduleRules
     },
     resolve: {
-      extensions: [".js", ".tsx", ".scss"]
+      extensions: [".js", ".vue"]
     },
     externals: {
-      vue: { root: "Vue", commonjs2: "vue", commonjs: "vue", amd: "vue" }
+      vue: "Vue"
     },
     output: {
       filename: argv.mode === "development" ? "survey.js" : "survey.min.js",

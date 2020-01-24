@@ -1,0 +1,78 @@
+textarea, input[type="text"], input[type="number"], select {
+  width: 100%;
+}
+
+.flex {
+  flex: 1 1 auto;
+}
+
+.sv_main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sv_page {
+  flex: 1 0 auto;
+}
+
+.sv_controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+}
+
+.btn {
+  margin: 5px;
+}
+
+.btn-primary {
+  background-color: var(--pms-accent-color-primary) !important;
+}
+
+.btn-success {
+  background-color: var(--pms-accent-color-success) !important;
+}
+
+/* 'lg' 'xs' 'sm', '1x', '2x', '3x', '4x', '5x', '6x', '7x', '8x', '9x', '10x'*/
+
+svg.fa-10x {
+  width: 8px;
+  height: 8px;
+}
+
+svg.fa-9x {
+  width: 12px;
+  height: 12px;
+}
+
+svg.fa-8x {
+  height: 16px;
+  width: 16px;
+}
+
+svg.fa-7x {
+  height: 19px;
+  width: 19px;
+}
+
+svg.fa-6x {
+  height: 24px;
+  width: 24px;
+}
+
+svg.fa-5x {
+  height: 28px;
+  width: 28px;
+}
+
+svg.fa-4x {
+  height: 32px;
+  width: 32px;
+}
+
+svg.fa-3x {
+  height: 48px;
+  width: 48px;
+}

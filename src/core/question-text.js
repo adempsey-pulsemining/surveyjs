@@ -12,17 +12,13 @@ export class Text extends Question {
 
   static get properties() {
     return Question.properties.concat([
-      { name: "inputType", default: "text", required: false }
+      { name: "inputType", default: "text" }
     ])
   }
 
   constructor(question) {
     super(question, metaData.getProperties("text"));
     this.value = "";
-  }
-
-  getType() {
-    return Text.definition.type;
   }
 }
 

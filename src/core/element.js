@@ -1,5 +1,4 @@
-import { Base } from "./base";
-import { metaData } from "./base";
+import { metaData, Base } from "./base";
 
 export class Element extends Base {
   static get definition() {
@@ -12,11 +11,11 @@ export class Element extends Base {
 
   static get properties() {
     return Base.properties.concat([
-      { name: "id", required: true, type: "string", readOnly: true },
-      { name: "name", required: true, type: "string" },
-      { name: "title", required: false, type: "string" },
-      { name: "type", required: true, type: "string", readOnly: true },
-      { name: "readOnly", required: false, type: "boolean" },
+      "!id",
+      "!name",
+      "!type",
+      "title",
+      "readOnly:boolean",
     ])
   }
 
@@ -29,10 +28,6 @@ export class Element extends Base {
 
   static isGroup(element) {
     return element && element.type === "group";
-  }
-
-  getType() {
-    return Element.definition.type;
   }
 
   isReadOnly() {

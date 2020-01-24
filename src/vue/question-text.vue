@@ -1,7 +1,6 @@
 <template>
   <div class="sv_q_text">
     <b-form-input :type="question.inputType"
-                  :value="question.value"
                   :placeholder="question.placeHolder"
                   v-model.lazy="question.value"
                   :disabled="question.isReadOnly()">

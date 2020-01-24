@@ -12,33 +12,27 @@
   import { faChevronLeft, faChevronRight, faSave, faCheck } from '@fortawesome/free-solid-svg-icons';
   library.add(faChevronLeft, faChevronRight, faSave, faCheck );
 
-  const props = {
-    size: { type: String, default: "8x" },
-    icon: String,
-    variant: String,
-    position: String
-  };
-
-  const computed = {
-    buttonStyle() {
-      return "display: inline-flex; align-items: center;"
-    },
-    positionRight() {
-      return this.position === "right";
-    },
-  };
-
-  const methods = {
-    clicked(event) {
-      this.$emit("click", event);
-    }
-  };
-
   export default {
     name: "v-button",
     components: { BButton },
-    props: props,
-    computed: computed,
-    methods: methods
+    props: {
+      size: { type: String, default: "8x" },
+      icon: String,
+      variant: String,
+      position: String
+    },
+    computed: {
+      buttonStyle() {
+        return "display: inline-flex; align-items: center;"
+      },
+      positionRight() {
+        return this.position === "right";
+      },
+    },
+    methods: {
+      clicked(event) {
+        this.$emit("click", event);
+      }
+    }
   }
 </script>

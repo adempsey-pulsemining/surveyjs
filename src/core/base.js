@@ -8,10 +8,22 @@ export var metaData = {
   classes: [],
   properties: {},
   addClass(newClass) {
+    let properties = [];
+    newClass.properties = newClass.properties || [];
+    for (let property of newClass.properties) {
+      if (typeof property === "string") {
+        property = this._createPropertyFromString(property);
+      }
+      properties.push(property);
+    }
+    newClass.properties = properties;
     this.classes.push(newClass);
     this.properties[newClass.type] = newClass.properties;
   },
   addProperty(className, property) {
+    if (typeof property === "string") {
+      property = this._createPropertyFromString(property);
+    }
     for (let item of this.classes) {
       if (item.name === className) {
         item.properties.push(property);
@@ -20,6 +32,11 @@ export var metaData = {
     this.properties[className].push(property);
   },
   addProperties(className, properties) {
+    for (let property of properties) {
+      if (typeof property === "string") {
+        property = this._createPropertyFromString(property);
+      }
+    }
     for (let item of this.classes) {
       if (item.name === className) {
         item.properties = (item.properties || []).concat(properties);
@@ -33,10 +50,41 @@ export var metaData = {
   hasClass(myClass) {
     return this.classes.findIndex(x => x.type === myClass) >= 0;
   },
+  getClass(myClass) {
+    return this.classes.find(x => x.type === myClass);
+  },
   getClassName(type) {
     let obj = this.classes.find(x => x.type === type);
     if (!obj) return "";
     return obj.name;
+  },
+  addCustomWidget(type, properties) {
+    if (this.properties[type]) {
+      throw new Error("There already exists a class with type " + type);
+    }
+    let newClass = {
+      name: "Widget",
+      type: type,
+      properties: properties,
+    };
+    newClass.properties = this.getProperties("question").concat(newClass.properties);
+    this.addClass(newClass);
+  },
+  getWidget(name) {
+    let myClass = this.getClass(name);
+    if (myClass) {
+      return myClass.widget;
+    }
+  },
+  _createPropertyFromString(property) {
+    let required = property.startsWith("!");
+    if (required) {
+      property = property.split("!")[1];
+    }
+    property = property.split(":");
+    let name = property[0];
+    let type = property[1];
+    return { name: name, type: type || "string", required: required || false }
   }
 };
 
@@ -72,20 +120,19 @@ export class Base {
   // maps properties defined on the template to instance of an object
   __setProperties(object, properties) {
     for (let property of properties) {
-      if (!(property.name in object) && property.default == null) continue;
-      property.fromTemplate = property.fromTemplate === undefined ? true : property.fromTemplate;
-      if (!property.fromTemplate) continue;
       this.__setProperty(property, property.name, object[property.name]);
     }
   }
 
   __setProperty(property, key, value) {
     if (!property || !key) return;
-    Object.defineProperty(this, key, {
+    let val = value != null ? value : property.default;
+    let attributes = {
       get() {
-        return value != null ? value : property.default;
+        return val;
       }
-    });
+    };
+    Object.defineProperty(this, key, attributes);
   }
 }
 

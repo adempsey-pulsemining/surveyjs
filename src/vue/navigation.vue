@@ -17,22 +17,6 @@
 <script>
   import { BPagination } from "bootstrap-vue/src/components/pagination";
 
-  const computed = {
-    currentPage: {
-      get() { return this.survey.currentPageIndex + 1 },
-      set(val) { this.survey.currentPageIndex = val - 1 }
-    },
-    totalPages() {
-      return this.survey.pages.length;
-    }
-  };
-
-  const methods = {
-    getPageTitle(index) {
-      return this.survey.pages[index].title;
-    }
-  };
-
   export default {
     components: {
       "b-pagination": BPagination
@@ -40,7 +24,19 @@
     props: {
       survey: Object
     },
-    computed: computed,
-    methods: methods
+    computed: {
+      currentPage: {
+        get() { return this.survey.currentPageIndex + 1 },
+        set(val) { this.survey.currentPageIndex = val - 1 }
+      },
+      totalPages() {
+        return this.survey.pages.length;
+      }
+    },
+    methods: {
+      getPageTitle(index) {
+        return this.survey.pages[index].title;
+      }
+    }
   }
 </script>

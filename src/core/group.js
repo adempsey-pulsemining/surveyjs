@@ -37,10 +37,6 @@ export class Group extends Element {
     newQuestion.group = this;
     this.questions.push(newQuestion);
   }
-
-  getType() {
-    return Group.definition.type;
-  }
 }
 
 metaData.addClass(Group.definition);
