@@ -24,9 +24,12 @@ import {
 	faChevronLeft, 
 	faChevronRight, 
 	faSave, 
-	faCheck 
+	faCheck,
+	faEllipsisH,
+	faTimes,
+	faEdit
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faChevronLeft, faChevronRight, faSave, faCheck );
+library.add(faChevronLeft, faChevronRight, faSave, faCheck, faEllipsisH, faTimes, faEdit );
 config.autoAddCss = false;
 
 export { default as VueWidget } from "./core/widget";

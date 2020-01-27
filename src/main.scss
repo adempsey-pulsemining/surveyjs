@@ -41,6 +41,21 @@ textarea, input:not(type="button"), select {
 	transition: none;
 }
 
+.sv_q_header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.sv_dropdown-item {
+	display:inline-flex;
+	align-items: center;
+}
+
+.sv_dropdown-item svg {
+	margin-right: 5px;
+}
+
 
 /* 'lg' 'xs' 'sm', '1x', '2x', '3x', '4x', '5x', '6x', '7x', '8x', '9x', '10x'*/
 

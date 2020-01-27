@@ -15,7 +15,8 @@ export class Element extends Base {
       "!name",
       "!type",
       "title",
-      "readOnly:boolean",
+			"readOnly:boolean",
+			"required:boolean"
     ])
 	}
 	
@@ -29,7 +30,11 @@ export class Element extends Base {
 
   isReadOnly() {
     return this.readOnly || this.survey.readOnly || (this.group && this.group.readOnly) || (this.page && this.page.readOnly);
-  }
+	}
+	
+	isRequired() {
+		return this.required || (this.group && this.group.required);
+	}
 }
 
 metaData.addClass(Element.definition);

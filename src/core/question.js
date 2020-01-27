@@ -22,6 +22,18 @@ export class Question extends Element {
 		return !!this.value;
 	}
 
+	isValid() {
+		let valid = true;
+		if (this.isRequired()) {
+			valid = this.isAnswered();
+		}
+		return valid;
+	}
+
+	addComment() {
+		console.log(this);
+	}
+
   get no() {
     if (!this.survey) return;
     return this.survey.indexOfQuestion(this) + 1;

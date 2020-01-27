@@ -1,8 +1,8 @@
 <template>
   <b-button :style="buttonStyle" :variant="variant" @click="clicked">
-    <font-awesome-icon v-if="!positionRight" :icon="icon" :size="size" style="margin-right: 5px" />
+    <font-awesome-icon v-if="!positionRight && icon" :icon="icon" :size="size" style="margin-right: 5px" />
     <slot></slot>
-    <font-awesome-icon v-if="positionRight" :icon="icon" :size="size" style="margin-left: 5px" />
+    <font-awesome-icon v-if="positionRight && icon" :icon="icon" :size="size" style="margin-left: 5px" />
   </b-button>
 </template>
 

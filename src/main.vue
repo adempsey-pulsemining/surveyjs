@@ -14,6 +14,7 @@
   @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
   @import "../node_modules/bootstrap-vue/dist/bootstrap-vue.min.css";
 	@import "main.scss";
+	@import "./styles/modal.scss";
 	
 	:host {
 		display: block;

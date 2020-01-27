@@ -2,7 +2,7 @@
   <div class="sv_q_text">
     <b-form-input :type="question.inputType"
                   :placeholder="question.placeHolder"
-                  v-model.lazy="question.value"
+                  v-model="question.value" lazy
                   :disabled="question.isReadOnly()">
     </b-form-input>
   </div>
@@ -17,6 +17,6 @@
 		name: "survey-text",
     components: {
       BFormInput
-    }
+		}
   })
 </script>

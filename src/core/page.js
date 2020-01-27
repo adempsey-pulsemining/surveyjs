@@ -35,7 +35,11 @@ export class Page extends Base {
   // Get all questions in the page including inside groups
   get questions() {
     return this.getQuestions(true);
-  }
+	}
+	
+	hasErrors() {
+		return this.questions.some(question => !question.isValid());
+	}
 
   // Get all questions in the page excluding questions in groups
   getElements() {

@@ -10,6 +10,7 @@
 	</body>
 	<script>
 		let tem = {
+			showQuestionNumbers: true,
 			pages: [
 				{
 					name: "page1", title: "Page 1", elements: [
@@ -23,7 +24,7 @@
 				{
 					name: "page2", elements: [
 						{ name: "question1", type: "text" },
-						{ name: "group1", type: "group", elements: [
+						{ name: "group1", type: "group", required: true, elements: [
 							{ name: "question1", type: "text", title: "Question 1" },
 							{ name: "question2", type: "text", title: "Question 2" }
 						]}

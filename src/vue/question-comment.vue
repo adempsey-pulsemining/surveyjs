@@ -1,6 +1,6 @@
 <template>
   <div class="sv_q_comment">
-    <b-form-textarea v-model="question.value"
+    <b-form-textarea v-model="question.value" lazy
 		                 :disabled="question.isReadOnly()">
 		</b-form-textarea>
   </div>

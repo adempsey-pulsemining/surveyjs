@@ -13,7 +13,8 @@ export class Survey extends Base {
   static get properties() {
     return Base.properties.concat([
 			"readOnly:boolean",
-			{ name: "showProgressBar", type: Boolean, default: true }
+			{ name: "showProgressBar", type: Boolean, default: true },
+			{ name: "showQuestionNumbers", type: Boolean, default: true }
     ])
   }
 
