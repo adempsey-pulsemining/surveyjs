@@ -5,9 +5,10 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      question: Object
-    }
-  }
+	import QuestionMixin from "./mixins/question";
+
+  export default Vue.extend({
+		mixins: [QuestionMixin],
+		name: "survey-boolean"
+  });
 </script>

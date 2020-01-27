@@ -1,31 +1,53 @@
 <template>
   <div class="sv_page">
-    <div class="sv_page_title">{{page.title}}</div>
-    <div class="sv_page_row" v-for="element in page.getElements()">
-      <component v-if="isGroup(element)" is="survey-group" :survey="survey" :group="element"></component>
-      <component v-else is="survey-question" :question="element"></component>
-    </div>
+    <div class="sv_page_title">{{title}}</div>
+		<div v-if="hasElements">
+			<div class="sv_page_row" v-for="(element, index) in elements" :key="index">
+				<component v-if="isGroup(element)" is="survey-group" :survey="survey" :group="element" />
+				<component v-else is="survey-question" :question="element" />
+			</div>
+		</div>
+		<div v-else>
+			<span>There are no visible elements on this page.</span>
+		</div>
   </div>
 </template>
 
 <script>
   import { Element } from "../core/element";
   import SurveyGroup from "./group.vue";
-  import Question from "./question.vue";
+  import SurveyQuestion from "./question.vue";
 
   export default {
+		name: "survey-page",
     components: {
-      "survey-group": SurveyGroup,
-      "survey-question": Question
+      SurveyGroup,
+      SurveyQuestion
     },
     props: {
-      page: Object,
-      survey: Object,
-    },
+      page: {
+				type: Object,
+				required: true
+			}, 
+      survey: {
+				type: Object
+			}
+		},
+		computed: {
+			title() {
+				return this.page.title || this.page.name;
+			},
+			elements() {
+				return this.page ? this.page.getElements() : [];
+			},
+			hasElements() {
+				return this.elements.length > 0;
+			}
+		},
     methods: {
-      isGroup(question) {
-        return Element.isGroup(question);
-      }
+			isGroup(element) {
+				return Element.isGroup(element);
+			}
     }
   }
 </script>

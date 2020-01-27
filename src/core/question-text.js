@@ -19,7 +19,7 @@ export class Text extends Question {
   constructor(question) {
     super(question, metaData.getProperties("text"));
     this.value = "";
-  }
+	}
 }
 
 metaData.addClass(Text.definition);

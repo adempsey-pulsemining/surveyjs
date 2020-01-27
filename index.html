@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="build/survey.js"></script>
+		<script src="build/wc/survey-viewer.js"></script>
+	</head>
+	<body>
+		<survey-viewer id="viewer"></survey-viewer>
+	</body>
+	<script>
+		let tem = {
+			pages: [
+				{
+					name: "page1", title: "Page 1", elements: [
+						{ inline: true, readOnly: false, type: "radio", "name": "radio1", choices: [
+							{ name: "choice1" }, 
+							"Choice 2",
+						]},
+						{ type: "comment", name: "question-comment" }
+					]
+				},
+				{
+					name: "page2", elements: [
+						{ name: "question1", type: "text" },
+						{ name: "group1", type: "group", elements: [
+							{ name: "question1", type: "text", title: "Question 1" },
+							{ name: "question2", type: "text", title: "Question 2" }
+						]}
+					]
+				}, 
+			]
+		}
+		let survey = new Survey.Survey(tem);
+		document.getElementById("viewer").survey = survey;
+	</script>
+</html>

@@ -17,17 +17,14 @@ export class Element extends Base {
       "title",
       "readOnly:boolean",
     ])
+	}
+	
+	static isGroup(element) {
+    return element && element.type === "group";
   }
 
   constructor(object, properties) {
     super(object, properties || metaData.getProperties("element"));
-    if (!this.title) {
-      this.title = this.name;
-    }
-  }
-
-  static isGroup(element) {
-    return element && element.type === "group";
   }
 
   isReadOnly() {

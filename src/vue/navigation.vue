@@ -1,6 +1,7 @@
 <template>
   <div class="sv_nav">
     <b-pagination v-model="currentPage"
+									align="fill"
                   first-text="First"
                   last-text="Last"
                   next-text="Next"
@@ -8,7 +9,10 @@
                   :total-rows="totalPages"
                   :per-page="1">
       <template v-slot:page="{ page, active, index }">
-        <span>{{getPageTitle(index)}}</span>
+        <div class="sv_nav_page">
+					<span>{{getPageTitle(index)}}</span>
+					<font-awesome-icon v-if="isPageCompleted(index)" icon="check" size="8x" style="margin-left: 5px" />
+				</div>
       </template>
     </b-pagination>
   </div>
@@ -18,11 +22,15 @@
   import { BPagination } from "bootstrap-vue/src/components/pagination";
 
   export default {
+		name: "survey-navigation",
     components: {
-      "b-pagination": BPagination
+      BPagination
     },
     props: {
-      survey: Object
+      survey: {
+				type: Object,
+				required: true
+			}
     },
     computed: {
       currentPage: {
@@ -31,12 +39,18 @@
       },
       totalPages() {
         return this.survey.pages.length;
-      }
+			}
     },
     methods: {
       getPageTitle(index) {
-        return this.survey.pages[index].title;
-      }
+				let page = this.survey.pages[index];
+				if (!page) return;
+        return page.title || page.name;
+			},
+			isPageCompleted(index) {
+				let page = this.survey.pages[index];
+				return page && page.completed;
+			}
     }
   }
 </script>

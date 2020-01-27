@@ -9,14 +9,14 @@
 </template>
 
 <script>
-  import { BFormInput } from "bootstrap-vue/src/components/form-input";
+	import { BFormInput } from "bootstrap-vue/src/components/form-input";
+	import QuestionMixin from "./mixins/question";
 
-  export default {
+  export default Vue.extend({
+		mixins: [QuestionMixin],
+		name: "survey-text",
     components: {
-      "b-form-input": BFormInput
-    },
-    props: {
-      question: Object
+      BFormInput
     }
-  }
+  })
 </script>

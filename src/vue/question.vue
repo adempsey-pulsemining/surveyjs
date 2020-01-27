@@ -1,7 +1,7 @@
 <template>
   <div class="sv_q">
     <div class="sv_q_header">
-      <span>{{question.no}}. {{question.title}}</span>
+      <span>{{questionTitle}}</span>
     </div>
     <div class="sv_q_body">
       <component :is="componentName" :question="question" />
@@ -10,22 +10,32 @@
 </template>
 
 <script>
-  import TextVue from "./question-text.vue";
-  import QuestionVue from "./question.vue";
-  import BooleanVue from "./question-boolean.vue";
-  import CheckboxVue from "./question-checkbox.vue";
+  import SurveyText from "./question-text.vue";
+  import SurveyBoolean from "./question-boolean.vue";
+	import SurveyCheckbox from "./question-checkbox.vue";
+	import SurveyRadio from "./question-radio.vue";
+	import SurveyDropdown from "./question-dropdown.vue";
+	import SurveyComment from "./question-comment.vue";
 
   export default {
+		name: "survey-question",
     components: {
-      "survey-text": TextVue,
-      "survey-question": QuestionVue,
-      "survey-boolean": BooleanVue,
-      "survey-checkbox": CheckboxVue
+      SurveyText,
+      SurveyBoolean,
+			SurveyCheckbox,
+			SurveyRadio,
+			SurveyDropdown,
+			SurveyComment
     },
     props: {
-      question: Object
+      question: {
+				type: Object
+			}
     },
     computed: {
+			questionTitle() {
+				return this.question.no + ". " + (this.question.title || this.question.name);
+			},
       componentName() {
         return "survey-" + this.question.type;
       }

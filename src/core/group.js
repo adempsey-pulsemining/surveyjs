@@ -11,14 +11,12 @@ export class Group extends Element {
   }
 
   static get properties() {
-    return Element.properties.concat([
-      { name: "elements", type: "array", default: [] }
-    ])
+    return Element.properties.concat([]);
   }
 
   constructor(element) {
     super(element, metaData.getProperties("group"));
-    this.questions = [];
+    this.elements = [];
   }
 
   addQuestions(questions) {
@@ -35,7 +33,7 @@ export class Group extends Element {
     newQuestion.survey = this.survey;
     newQuestion.page = this.page;
     newQuestion.group = this;
-    this.questions.push(newQuestion);
+    this.elements.push(newQuestion);
   }
 }
 

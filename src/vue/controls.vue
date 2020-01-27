@@ -12,11 +12,15 @@
   import VButton from "../components/v-button.vue";
 
   export default {
+		name: "survey-controls",
     components: {
       VButton
     },
     props: {
-      survey: Object
-    }
+      survey: {
+				type: Object,
+				required: true
+			}
+		}
   }
 </script>

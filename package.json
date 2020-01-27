@@ -1,9 +1,10 @@
 {
   "scripts": {
     "build_dev": "webpack --mode=development",
-    "build_prod": "webpack --mode=production",
-    "build_components": "vue-cli-service build --dest ./build/wc --target wc --name survey-viewer ./src/main.vue",
-    "build": "webpack --mode=development && webpack --mode=production",
+		"build_prod": "webpack --mode=production",
+		"build_library": "webpack --mode=development && webpack --mode=production",
+    "build_component": "vue-cli-service build --dest ./build/wc --target wc --name survey-viewer ./src/main.vue",
+    "build": "npm run build_component && npm run build_library",
     "lint": "tslint ./src/**/*.ts -t verbose",
     "watch_dev": "webpack --env.buildType dev --env.platform vue --watch"
   },

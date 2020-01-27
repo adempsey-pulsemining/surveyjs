@@ -1,7 +1,7 @@
 <template>
   <div class="sv_group">
-    <div class="sv_group_title">{{group.title}}</div>
-    <component v-for="(question, index) in group.questions" is="survey-question" :question="question" :key="index"></component>
+    <div class="sv_group_title">{{title}}</div>
+    <component v-for="(question, index) in questions" :is="componentName" :question="question" :key="index"></component>
   </div>
 </template>
 
@@ -9,12 +9,29 @@
   import QuestionVue from "./question.vue";
 
   export default {
+		name: "survey-group",
     components: {
       "survey-question": QuestionVue
     },
     props: {
-      survey: Object,
-      group: Object
-    }
+      survey: {
+				type: Object
+			},
+      group: {
+				type: Object,
+				required: true
+			}
+		},
+		computed: {
+			componentName() {
+				return QuestionVue.name;
+			},
+			title() {
+				return this.group.title || this.group.name;
+			},
+			questions() {
+				return this.group.elements;
+			}
+		}
   }
 </script>

@@ -8,9 +8,6 @@
 
 <script>
   import { BButton } from "bootstrap-vue/src/components/button";
-  import { library } from '@fortawesome/fontawesome-svg-core';
-  import { faChevronLeft, faChevronRight, faSave, faCheck } from '@fortawesome/free-solid-svg-icons';
-  library.add(faChevronLeft, faChevronRight, faSave, faCheck );
 
   export default {
     name: "v-button",
@@ -33,6 +30,6 @@
       clicked(event) {
         this.$emit("click", event);
       }
-    }
+		}
   }
 </script>

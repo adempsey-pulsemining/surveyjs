@@ -20,12 +20,17 @@ export class Page extends Base {
 
   constructor(page) {
     super(page, metaData.getProperties("page"));
-    this.elements = [];
+		this.elements = [];
   }
 
   get pageNumber() {
     return this.survey.pages.indexOf(this) + 1;
-  }
+	}
+	
+	// Returns true if the page has no unanswered questions
+	get completed() {
+		return this.questions.every(question => question.isAnswered());
+	}
 
   // Get all questions in the page including inside groups
   get questions() {
@@ -53,7 +58,7 @@ export class Page extends Base {
     let questions = [];
     for (let element of this.elements) {
       if (Element.isGroup(element)) {
-        questions = questions.concat(element.questions);
+        questions = questions.concat(element.elements);
       } else {
         questions.push(element);
       }

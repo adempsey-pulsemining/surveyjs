@@ -16,7 +16,11 @@ export class Question extends Element {
 
   constructor(question, properties) {
     super(question, properties || metaData.getProperties("question"));
-  }
+	}
+	
+	isAnswered() {
+		return !!this.value;
+	}
 
   get no() {
     if (!this.survey) return;

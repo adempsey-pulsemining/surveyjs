@@ -1,9 +1,5 @@
 import { newGuid } from "./utilities";
 
-/**
- * Defines the various classes and their properties.
- * @type {{classes: [], hasClass(*): boolean, getClassName(*): (string|*), addClass(*=): void}}
- */
 export var metaData = {
   classes: [],
   properties: {},
@@ -83,8 +79,15 @@ export var metaData = {
     }
     property = property.split(":");
     let name = property[0];
-    let type = property[1];
-    return { name: name, type: type || "string", required: required || false }
+		let type = property[1];
+		let prop = {
+			name: name,
+			type: type || "string"
+		};
+		if (required) {
+			prop.required = true;
+		}
+    return prop;
   }
 };
 
@@ -120,17 +123,21 @@ export class Base {
   // maps properties defined on the template to instance of an object
   __setProperties(object, properties) {
     for (let property of properties) {
-      this.__setProperty(property, property.name, object[property.name]);
+			let value = object[property.name];
+			this.__setProperty(property, property.name, value);
     }
   }
 
   __setProperty(property, key, value) {
-    if (!property || !key) return;
-    let val = value != null ? value : property.default;
-    let attributes = {
+		if (!property || !key) return;
+		let val = value;
+		if (val == null && property.default != null) {
+			val = property.default;
+		}
+    const attributes = {
       get() {
         return val;
-      }
+			}
     };
     Object.defineProperty(this, key, attributes);
   }

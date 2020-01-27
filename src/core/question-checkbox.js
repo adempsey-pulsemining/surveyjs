@@ -12,14 +12,19 @@ export class Checkbox extends Question {
 
   static get properties() {
     return Question.properties.concat([
-      { name: "choices", type: "array" }
+			{ name: "choices", type: "array", default: [] },
+			{ name: "inline", type: "boolean" }
     ]);
   }
 
   constructor(question) {
     super(question, metaData.getProperties("checkbox"));
     this.value = [];
-  }
+	}
+	
+	isAnswered() {
+		return this.value && this.value.length;
+	}
 }
 
 metaData.addClass(Checkbox.definition);

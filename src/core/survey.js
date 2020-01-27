@@ -1,6 +1,5 @@
-import { Base } from "./base";
 import { Page } from "./page";
-import { metaData } from "./base"
+import { metaData, Base } from "./base"
 
 export class Survey extends Base {
   static get definition() {
@@ -13,7 +12,8 @@ export class Survey extends Base {
 
   static get properties() {
     return Base.properties.concat([
-      "readOnly:boolean",
+			"readOnly:boolean",
+			{ name: "showProgressBar", type: Boolean, default: true }
     ])
   }
 
@@ -46,12 +46,12 @@ export class Survey extends Base {
     let data = {};
     for (let page of this.pages) {
       for (let question of page.questions) {
-        if (question.value == null) continue;
+        if (!question.isAnswered()) continue;
         data[question.id] = this.__getQuestionData(question);
       }
     }
     return data;
-  }
+	}
 
   isFirstPage() {
     return this.currentPageIndex === 0;
@@ -142,5 +142,3 @@ export class Survey extends Base {
 }
 
 metaData.addClass(Survey.definition);
-
-
