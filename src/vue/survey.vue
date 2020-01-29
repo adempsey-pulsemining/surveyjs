@@ -1,10 +1,10 @@
 <template>
   <div class="sv_main">
 		<div class="sv_body" v-if="hasPages">
-			<survey-navigation :survey="survey"></survey-navigation>
+			<survey-navigation v-if="!survey.isPdfRender" :survey="survey"></survey-navigation>
 			<survey-page :survey="survey" :page="survey.currentPage"></survey-page>
-			<survey-progress v-if="survey.showProgressBar" :survey="survey"></survey-progress>
-			<survey-controls :survey="survey"></survey-controls>
+			<survey-progress v-if="survey.showProgressBar && !survey.isPdfRender" :survey="survey"></survey-progress>
+			<survey-controls v-if="!survey.isPdfRender" :survey="survey"></survey-controls>
 		</div>
 		<div v-else class="sv_empty">
 			<span>There are no pages in the survey.</span>
@@ -39,3 +39,15 @@
 		}
   }
 </script>
+
+<style>
+	.sv_main {
+		height: 100%;
+	}
+
+	.sv_main .sv_body {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+</style>

@@ -1,3 +1,8 @@
 module.exports = {
-	productionSourceMap: false
-}
+	productionSourceMap: false,
+	chainWebpack: config => {
+		config.externals({
+			"jquery": "jQuery"
+		})
+	}
+};

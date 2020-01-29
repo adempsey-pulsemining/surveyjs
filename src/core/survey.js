@@ -13,8 +13,9 @@ export class Survey extends Base {
   static get properties() {
     return Base.properties.concat([
 			"readOnly:boolean",
-			{ name: "showProgressBar", type: Boolean, default: true },
-			{ name: "showQuestionNumbers", type: Boolean, default: true }
+			{ name: "showProgressBar", type: "boolean", default: true },
+			{ name: "showQuestionNumbers", type: "boolean", default: true },
+      "isPdfRender:boolean"
     ])
   }
 
@@ -47,7 +48,7 @@ export class Survey extends Base {
     let data = {};
     for (let page of this.pages) {
       for (let question of page.questions) {
-        if (!question.isAnswered()) continue;
+        if (!question.hasValue() && !question.comment) continue;
         data[question.id] = this.__getQuestionData(question);
       }
     }

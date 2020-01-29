@@ -17,10 +17,16 @@ export class Question extends Element {
   constructor(question, properties) {
     super(question, properties || metaData.getProperties("question"));
 	}
-	
+
+	// question is considered answered
 	isAnswered() {
 		return !!this.value;
 	}
+
+	// question has value but not answered
+	hasValue() {
+    return !!this.value;
+  }
 
 	isValid() {
 		let valid = true;
@@ -28,10 +34,6 @@ export class Question extends Element {
 			valid = this.isAnswered();
 		}
 		return valid;
-	}
-
-	addComment() {
-		console.log(this);
 	}
 
   get no() {

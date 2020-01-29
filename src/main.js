@@ -11,6 +11,8 @@ export { Checkbox } from "./core/question-checkbox";
 export { Radio } from "./core/question-radio";
 export { Dropdown } from "./core/question-dropdown";
 export { Comment } from "./core/question-comment";
+export { MultipleText } from "./core/question-multipletext";
+export { Html } from "./core/question-html";
 
 import Vue from "vue";
 import VueSurvey from "./vue/survey.vue";
@@ -33,3 +35,5 @@ library.add(faChevronLeft, faChevronRight, faSave, faCheck, faEllipsisH, faTimes
 config.autoAddCss = false;
 
 export { default as VueWidget } from "./core/widget";
+
+import "./styles/main.scss";

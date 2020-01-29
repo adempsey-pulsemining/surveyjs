@@ -9,10 +9,10 @@
                   :total-rows="totalPages"
                   :per-page="1">
       <template v-slot:page="{ page, active, index }">
-        <div class="sv_nav_page">
-					<span>{{getPageTitle(index)}}</span>
-					<font-awesome-icon v-if="isPageCompleted(index)" icon="check" size="8x" style="margin-left: 5px" />
-				</div>
+        <div class="sv_nav_page" :class="{ completed: isPageCompleted(index) }">
+          <span>{{getPageTitle(index)}}</span>
+          <font-awesome-icon v-if="isPageCompleted(index)" icon="check" size="8x" style="margin-left: 5px" />
+        </div>
       </template>
     </b-pagination>
   </div>

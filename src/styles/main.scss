@@ -1,4 +1,4 @@
-textarea, input:not(type="button"), select {
+textarea, input:not([type="button"]), select {
   width: 100%;
 }
 
@@ -6,27 +6,13 @@ textarea, input:not(type="button"), select {
   flex: 1 1 auto;
 }
 
-.sv_main {
-  display: flex;
-  flex-direction: column;
-	height: 100%;
-	padding: 5px;
-}
-
-.sv_page {
-  flex: 1 0 auto;
-}
-
-.sv_controls {
-  display: flex;
-  flex-direction: row;
+.dropdown-item {
+  display: inline-flex;
   align-items: center;
 }
 
-.custom-control-label span {
-	display: inline-block;
-	vertical-align: middle;
-	margin-bottom: -2px;
+.dropdown-item svg {
+  margin-right: 5px;
 }
 
 .btn-primary {
@@ -35,25 +21,6 @@ textarea, input:not(type="button"), select {
 
 .btn-success {
   background-color: var(--pms-accent-color-success, #007e33) !important;
-}
-
-.sv_progress div[role="progressbar"] {
-	transition: none;
-}
-
-.sv_q_header {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
-
-.sv_dropdown-item {
-	display:inline-flex;
-	align-items: center;
-}
-
-.sv_dropdown-item svg {
-	margin-right: 5px;
 }
 
 

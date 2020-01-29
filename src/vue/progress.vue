@@ -27,3 +27,13 @@
 		}
 	}
 </script>
+
+<style>
+	.sv_progress div[role="progressbar"] {
+		transition: none;
+	}
+
+	.sv_progress > span {
+		padding: 5px;
+	}
+</style>

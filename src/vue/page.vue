@@ -51,3 +51,12 @@
     }
   }
 </script>
+
+<style>
+	.sv_page {
+		flex: 1 1 auto;
+		overflow: scroll;
+		max-height: 100%;
+		padding: 10px;
+	}
+</style>

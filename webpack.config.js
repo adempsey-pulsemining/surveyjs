@@ -15,11 +15,11 @@ var moduleRules = [
   },
   {
     test: /\.css$/,
-    use: [MiniCssExtractPlugin.loader, "style-loader", "css-loader"]
+    use: [MiniCssExtractPlugin.loader, "css-loader"]
   },
   {
     test: /\.s[ac]ss$/,
-    use: [MiniCssExtractPlugin.loader, "style-loader", "css-loader", "sass-loader"]
+    use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
   },
   {
     test: /\.svg/,
@@ -39,7 +39,8 @@ module.exports = function(env, argv) {
       extensions: [".js", ".vue"]
     },
     externals: {
-      vue: "Vue"
+      vue: "Vue",
+      jquery: "jQuery"
     },
     output: {
       filename: argv.mode === "development" ? "survey.js" : "survey.min.js",
@@ -54,7 +55,10 @@ module.exports = function(env, argv) {
     optimization: {
       minimizer: [
         new OptimizeCSSAssetsPlugin({}),
-        new TerserPlugin({terserOptions: { mangle: false }})
+        new TerserPlugin({
+          extractComments: false,
+          terserOptions: { mangle: false }
+        })
       ]
     }
   }
