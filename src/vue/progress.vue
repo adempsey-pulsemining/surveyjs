@@ -33,7 +33,8 @@
 		transition: none;
 	}
 
-	.sv_progress > span {
-		padding: 5px;
+	.sv_progress {
+		padding: 10px;
+		padding-bottom: 0;
 	}
 </style>

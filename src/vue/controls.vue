@@ -31,6 +31,7 @@
     flex-direction: row;
     align-items: center;
     padding: 10px;
+		padding-top: 5px;
   }
 
   #sv_complete_btn, #sv_next_btn {

@@ -13,6 +13,7 @@ export { Dropdown } from "./core/question-dropdown";
 export { Comment } from "./core/question-comment";
 export { MultipleText } from "./core/question-multipletext";
 export { Html } from "./core/question-html";
+export { Matrix } from "./core/question-matrix";
 
 import Vue from "vue";
 import VueSurvey from "./vue/survey.vue";

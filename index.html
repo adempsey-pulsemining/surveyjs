@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href=https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css>
+		<link type="text/css" rel="stylesheet" href=https://cdn.jsdelivr.net/npm/bootstrap-vue@2.3.0/dist/bootstrap-vue.css />
+		<link rel="stylesheet" href="build/survey.css">
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 		<script src="build/survey.js"></script>
-		<script src="build/wc/survey-viewer.js"></script>
 	</head>
+	<style>
+		body, html, #app {
+			height: 100%;
+		}
+	</style>
 	<body>
-		<survey-viewer id="viewer"></survey-viewer>
+		<div id="app">
+			<survey :survey="survey"></survey>
+		</div>
 	</body>
 	<script>
 		let tem = {
@@ -26,13 +36,17 @@
 						{ name: "question1", type: "text" },
 						{ name: "group1", type: "group", required: true, elements: [
 							{ name: "question1", type: "text", title: "Question 1" },
-							{ name: "question2", type: "text", title: "Question 2" }
+							{ name: "question2", type: "text", title: "Question 2" },
+							{ name: "question3", type: "matrix", rows: ["1",{name: "2", title: "Row 2"}], columns: ["1","2","3"]}
 						]}
 					]
 				}, 
 			]
 		}
 		let survey = new Survey.Survey(tem);
-		document.getElementById("viewer").survey = survey;
+		new Vue({ 
+			el: document.getElementById("app"), 
+			data: { survey: survey }
+		});
 	</script>
 </html>

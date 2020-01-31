@@ -34,6 +34,7 @@
 	import SurveyComment from "./question-comment.vue";
 	import SurveyMultipletext from "./question-multipletext.vue";
 	import SurveyHtml from "./question-html.vue";
+	import SurveyMatrix from "./question-matrix.vue";
 	import { BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue/src/components/dropdown";
 	import VButton from "../components/v-button.vue";
 	import { BFormTextarea } from "bootstrap-vue/src/components/form-textarea";
@@ -50,6 +51,7 @@
 			SurveyComment,
 			SurveyMultipletext,
 			SurveyHtml,
+			SurveyMatrix,
 			BDropdown, BDropdownItem, BDropdownItemButton, BModal,
 			VButton, BFormTextarea
     },
@@ -100,4 +102,8 @@
     flex-direction: row;
     align-items: center;
   }
+
+	.dropdown button {
+		padding-right: 0;
+	}
 </style>
