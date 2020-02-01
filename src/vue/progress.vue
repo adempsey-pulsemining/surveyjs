@@ -34,7 +34,7 @@
 	}
 
 	.sv_progress {
-		padding: 10px;
+		padding: .75rem;
 		padding-bottom: 0;
 	}
 </style>

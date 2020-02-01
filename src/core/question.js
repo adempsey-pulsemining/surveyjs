@@ -36,6 +36,17 @@ export class Question extends Element {
 		return valid;
 	}
 
+	get data() {
+		return {
+      value: this.value,
+      comment: this.comment || "",
+      name: this.name,
+      title: this.title || this.name,
+      type: this.type,
+      page: this.pageNumber
+    }
+	}
+
   get no() {
     if (!this.survey) return;
     return this.survey.indexOfQuestion(this) + 1;
@@ -45,7 +56,7 @@ export class Question extends Element {
     this.__value = val;
     if (this.survey) {
       this.survey.onValueChanged(this, val);
-    }
+		}
   }
 
   get value() {

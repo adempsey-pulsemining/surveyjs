@@ -1,13 +1,13 @@
 <template>
   <div class="sv_page">
     <div class="sv_page_title">{{title}}</div>
-		<div v-if="hasElements">
+		<div class="sv_page_body" v-if="hasElements">
 			<div class="sv_page_row" v-for="(element, index) in elements" :key="index">
 				<component v-if="isGroup(element)" is="survey-group" :survey="survey" :group="element" />
 				<component v-else is="survey-question" :question="element" />
 			</div>
 		</div>
-		<div v-else>
+		<div class="sv_page_empty" v-else>
 			<span>There are no visible elements on this page.</span>
 		</div>
   </div>
@@ -57,6 +57,11 @@
 		flex: 1 1 auto;
 		overflow: scroll;
 		max-height: 100%;
-		padding: 10px;
+		padding: 0 .75rem;
+	}
+
+	.sv_page .sv_page_title {
+		font-weight: bold;
+		font-size: 1.1rem;
 	}
 </style>

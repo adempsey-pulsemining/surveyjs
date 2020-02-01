@@ -12,7 +12,7 @@
 			<div class="flex"></div>
 			<b-dropdown dropleft no-caret variant="link">
 				<template v-slot:button-content>
-					<font-awesome-icon icon="ellipsis-h" size="8x" />
+					<font-awesome-icon icon="ellipsis-h" size="6x" />
 				</template>
 				<b-dropdown-item-button @click="editComment">
           <font-awesome-icon icon="edit" size="8x" /><span>Edit comment</span>
@@ -105,5 +105,9 @@
 
 	.dropdown button {
 		padding-right: 0;
+	}
+
+	.sv_q_body {
+		padding: .75rem;
 	}
 </style>

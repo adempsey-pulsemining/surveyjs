@@ -49,7 +49,7 @@ export class Survey extends Base {
     for (let page of this.pages) {
       for (let question of page.questions) {
         if (!question.hasValue() && !question.comment) continue;
-        data[question.id] = this.__getQuestionData(question);
+        data[question.id] = question.data;
       }
     }
     return data;
@@ -112,17 +112,6 @@ export class Survey extends Base {
   /**
    * Private methods
    */
-
-  __getQuestionData(question) {
-    return {
-      value: question.value,
-      comment: question.comment || "",
-      name: question.name,
-      title: question.title,
-      type: question.type,
-      page: question.pageNumber
-    }
-  }
 
   _createEventListeners() {
     this.onComplete = function() {};

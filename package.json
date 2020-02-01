@@ -2,7 +2,8 @@
   "scripts": {
     "dev": "webpack --mode=development",
     "prod": "webpack --mode=production",
-    "library": "webpack --mode=development && webpack --mode=production",
+		"library": "webpack --mode=development && webpack --mode=production",
+		"library_dev": "webpack --mode=development",
     "component": "vue-cli-service build --dest ./build/wc --target wc --name survey-viewer ./src/main.vue",
     "all": "npm run component && npm run library",
     "lint": "tslint ./src/**/*.ts -t verbose",

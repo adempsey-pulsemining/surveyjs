@@ -11,7 +11,7 @@ export default {
 				return;
 			}
 			return this.question.choices.map(function(x) {
-				return typeof x === "string" ? { name: x, title: x } : { name: x.name, title: x.title || x.name }
+				return typeof x === "object" ? { name: x.name, title: x.title || x.name } : { name: x, title: x };
 			});
 		}
 	}

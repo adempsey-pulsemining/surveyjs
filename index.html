@@ -37,7 +37,9 @@
 						{ name: "group1", type: "group", required: true, elements: [
 							{ name: "question1", type: "text", title: "Question 1" },
 							{ name: "question2", type: "text", title: "Question 2" },
-							{ name: "question3", type: "matrix", rows: ["1",{name: "2", title: "Row 2"}], columns: ["1","2","3"]}
+							{ name: "question3", type: "matrix", rows: 
+							["Row 1",{name: "row2", title: "Row 2"}], columns: ["Column 1","Column 2","Column 3"],
+						    choices: ["1","2",3], "multipleChoice": true}
 						]}
 					]
 				}, 

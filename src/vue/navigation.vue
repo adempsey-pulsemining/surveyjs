@@ -56,6 +56,10 @@
 </script>
 
 <style>
+	.sv_nav > ul {
+		margin-bottom: .75rem;
+	}
+
 	.sv_nav .flex-fill {
 		flex: 1 1 0 !important;
 	}
