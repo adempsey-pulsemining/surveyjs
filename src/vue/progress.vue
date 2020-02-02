@@ -35,6 +35,7 @@
 
 	.sv_progress {
 		padding: 0 .75rem;
-		margin-top: .75rem;
+		padding-top: .75rem;
+		border-top: thin solid lightgrey;
 	}
 </style>

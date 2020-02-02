@@ -57,7 +57,7 @@
 
 <style>
 	.sv_nav > ul {
-		margin-bottom: .75rem;;
+		margin-bottom: 0;
 	}
 
 	.sv_nav .flex-fill {

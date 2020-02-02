@@ -11,7 +11,9 @@ export class Question extends Element {
   }
 
   static get properties() {
-    return Element.properties.concat([]);
+    return Element.properties.concat([
+			"description"
+		]);
   }
 
   constructor(question, properties) {

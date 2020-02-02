@@ -58,6 +58,7 @@
 <style>
 	.sv_page {
 		padding: 0 .75rem;
+		padding-top: .75rem;
 	}
 
 	.sv_page:first-child {
@@ -67,5 +68,6 @@
 	.sv_page .sv_page_title {
 		font-weight: bold;
 		font-size: 1.1rem;
+		margin-bottom: .5rem;
 	}
 </style>

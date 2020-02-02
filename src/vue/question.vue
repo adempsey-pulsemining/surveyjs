@@ -8,7 +8,11 @@
       </div>
     </b-modal>
     <div class="sv_q_header">
-      <span>{{questionTitle}}</span>
+			<span class="sv_q_no" :style="getQuestionNoStyle" v-if="showQuestionNo">{{questionNo}}</span>
+			<div style="display: flex; flex-direction: column">
+				<span class="sv_q_title">{{questionTitle}}</span>
+				<span v-if="question.description" class="sv_q_description">{{question.description}}</span>
+			</div>
 			<div class="flex"></div>
 			<b-dropdown dropleft no-caret variant="link">
 				<template v-slot:button-content>
@@ -68,14 +72,23 @@
     computed: {
 			questionTitle() {
 				let title = "";
-				if (this.question.survey.showQuestionNumbers) {
-					title = this.question.no + ". ";
-				}
 				return title + (this.question.title || this.question.name);
 			},
       componentName() {
         return "survey-" + this.question.type;
-      }
+			},
+			showQuestionNo() {
+				return this.question.survey.showQuestionNumbers
+			},
+			questionNo() {
+				return this.question.no + ". ";
+			},
+			getQuestionNoStyle() {
+				if (this.question.description) {
+					return "align-self: start";
+				}
+				return "";
+			}
 		},
     methods: {
 		  editComment() {
@@ -108,6 +121,14 @@
 	}
 
 	.sv_q_body {
-		padding: .75rem;
+		padding: 1rem;
+	}
+
+	.sv_q_no {
+		margin-right: 5px;
+	}
+
+	.sv_q_description {
+		font-size: 75%;
 	}
 </style>
