@@ -16,7 +16,7 @@ export class Boolean extends Question {
 
   constructor(question) {
     super(question, metaData.getProperties("boolean"));
-    this.value = false;
+    this.value = null;
 	}
 	
 	isAnswered() {

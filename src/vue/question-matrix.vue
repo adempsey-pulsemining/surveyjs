@@ -4,15 +4,15 @@
 			<thead>
 				<tr>
 					<th></th>
-					<th v-for="(column, index) in question.columns" :key="index">{{column.title}}</th>
+					<th v-for="(column, index) in question.columns" :key="index">{{column.title || column.name}}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="(row, rowIndex) in question.rows" :key="rowIndex">
-					<td>{{row.title}}</td>
+					<td>{{row.title || row.name}}</td>
 					<td v-for="(column, colIndex) in question.columns" :key="colIndex">
 						<b-form-radio v-if="!question.multipleChoice" v-model="row.value" :value="column.name" />
-						<matrix-cell v-else :cell="question.getCell(rowIndex, colIndex)" />
+						<matrix-cell v-else :cell="question.getCell(rowIndex, colIndex)" :question="question" />
 					</td>
 				</tr>
 			</tbody>
@@ -40,14 +40,11 @@
 	.sv_q_matrix .table td,
 	.sv_q_matrix .table th {
 		vertical-align: middle;
-		padding: 0;
+		padding: .75rem;
 	}
 
 	.sv_q_matrix .table th {
 		border-top: none;
-	}
-
-	.sv_q_matrix .table tbody tr td:first-child {
-		font-weight: bold;
+		font-weight: normal;
 	}
 </style>

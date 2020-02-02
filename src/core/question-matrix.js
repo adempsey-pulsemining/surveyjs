@@ -28,20 +28,36 @@ export class Matrix extends Question {
 		for (let column of question.columns) {
 			this.columns.push(new MatrixColumn(column));
 		}
-		this.addCells();
+		this.addCells(question);
 	}
 
-	addCells() {
+	get data() {
+		let data = super.data;
+		data.columns = this.columns;
+		data.rows = this.rows;
+		return data;
+	}
+	
+	get value() {
+		if (this.multipleChoice) {
+			return this.cellsValue();
+		} else {
+			return this.getValue();
+		}
+	}
+
+	addCells(question) {
 		this.cells = {};
 		this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((col, colIndex) => {
-				this.addCell(rowIndex, colIndex, col.cellType);
+				this.addCell(question, rowIndex, colIndex, col.cellType || question.cellType);
 			});
 		});
 	}
 
-	addCell(row, col, type) {
-		let cell = new MatrixCell(this, row, col, type);
+	addCell(question, row, col, type) {
+		let cell = new MatrixCell(question, row, col, type);
+		cell.question = this;
 		this.cells[row] = this.cells[row] || {};
 		this.cells[row][col] = cell;
 	}
@@ -53,28 +69,38 @@ export class Matrix extends Question {
   isAnswered() {
 		if (!this.multipleChoice) {
 			return Object.keys(this.value).length === this.rows.length;
+		} else {
+			return this.allCellsAnswered();
 		}
+	}
+	
+	allCellsAnswered() {
 		let answered = true;
 		this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
 				let val = this.cells[rowIndex][colIndex].value;
-				if (!val) {
-					return answered = false;
+				if (val == null) {
+					answered = false;
 				}
 			});
 		});
 		return answered;
-  }
+	}
 
   hasValue() {
 		if (!this.multipleChoice) {
 			return Object.keys(this.value).length > 0;
+		} else {
+			return this.cellsHasValue();
 		}
+	}
+
+	cellsHasValue() {
 		let hasValue = false;
 		this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
 				let val = this.cells[rowIndex][colIndex].value;
-				if (val) {
+				if (val != null) {
 					hasValue = true;
 				}
 			});
@@ -82,31 +108,31 @@ export class Matrix extends Question {
 		return hasValue;
 	}
 
-	get value() {
+	getValue() {
 		let value = {};
-		this.rows.forEach((row, rowIndex) => {
+		this.rows.forEach((row) => {
 			value[row.name] = value[row.name] || {};
-			this.columns.forEach((column, colIndex) => {
-				if (this.multipleChoice) {
-					let val = this.cells[rowIndex][colIndex].value;
-					if (val) {
-						value[row.name][column.name] = val;
-					}
-				} else {
-					if (row.value === column.name) {
-						value[row.name] = column.name;
-					}
+			this.columns.forEach((column) => {
+				if (row.value === column.name) {
+					value[row.name] = column.name;
 				}
 			});
 		});
 		return value;
 	}
 
-	get data() {
-		let data = super.data;
-		data.columns = this.columns;
-		data.rows = this.rows;
-		return data;
+	cellsValue() {
+		let value = {};
+		this.rows.forEach((row, rowIndex) => {
+			value[row.name] = value[row.name] || {};
+			this.columns.forEach((column, colIndex) => {
+				let val = this.cells[rowIndex][colIndex].value;
+				if (val) {
+					value[row.name][column.name] = val;
+				}
+			});
+		});
+		return value;
 	}
 }
 
@@ -142,7 +168,7 @@ class MatrixColumn extends Base {
 
   static get properties() {
     return Base.properties.concat([
-			{ name: "cellType", type: "string", default: "dropdown" }
+			{ name: "cellType", type: "string", default: "" }
 		]);
   }
 
@@ -153,12 +179,25 @@ class MatrixColumn extends Base {
   }
 }
 
-class MatrixCell {
+class MatrixCell extends Base {
+	static get definition() {
+    return {
+      name: "MatrixCell",
+      type: "matrixcell",
+      properties: MatrixCell.properties
+    }
+  }
+
+  static get properties() {
+    return Base.properties.concat([]);
+	}
+	
 	constructor(question, rowIndex, colIndex, type) {
-		this.question = question;
+		super(question, metaData.getProperties(type));
+		this.value = null;
 		this.row = rowIndex;
 		this.col = colIndex;
-		this.type = type;
+		this.cellType = type;
 	}
 
 	isReadOnly() {
@@ -173,3 +212,4 @@ class MatrixCell {
 metaData.addClass(Matrix.definition);
 metaData.addClass(MatrixRow.definition);
 metaData.addClass(MatrixColumn.definition);
+metaData.addClass(MatrixCell.definition);

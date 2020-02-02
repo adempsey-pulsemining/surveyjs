@@ -1,6 +1,8 @@
 <template>
   <div class="sv_q_boolean">
-    <b-form-checkbox v-model="question.value" :disabled="question.isReadOnly()" />
+    <b-form-checkbox v-model="question.value" 
+		                 :indeterminate="question.value == null"
+		                 :disabled="question.isReadOnly()" />
   </div>
 </template>
 
