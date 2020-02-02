@@ -1,8 +1,11 @@
 <template>
   <div class="sv_main">
 		<div class="sv_body" v-if="hasPages">
-			<survey-navigation v-if="!survey.isPdfRender" :survey="survey"></survey-navigation>
-			<survey-page :survey="survey" :page="survey.currentPage"></survey-page>
+			<survey-navigation v-if="!survey.isPdfRender && !survey.singlePage" :survey="survey"></survey-navigation>
+			<survey-page v-if="!survey.singlePage" :survey="survey" :page="survey.currentPage"></survey-page>
+			<div class="sv_page_container" v-else>
+				<survey-page v-for="(page, index) in survey.pages" :key="index" :page="survey.pages[index]" :survey="survey"></survey-page>
+			</div>			
 			<survey-progress v-if="survey.showProgressBar && !survey.isPdfRender" :survey="survey"></survey-progress>
 			<survey-controls v-if="!survey.isPdfRender" :survey="survey"></survey-controls>
 		</div>
@@ -43,6 +46,10 @@
 <style>
 	.sv_main {
 		height: 100%;
+	}
+
+	.sv_page_container {
+		overflow: scroll;
 	}
 
 	.sv_main .sv_body {

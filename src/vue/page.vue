@@ -1,5 +1,5 @@
 <template>
-  <div class="sv_page">
+  <div class="sv_page" :style="pageStyle">
     <div class="sv_page_title">{{title}}</div>
 		<div class="sv_page_body" v-if="hasElements">
 			<div class="sv_page_row" v-for="(element, index) in elements" :key="index">
@@ -42,6 +42,9 @@
 			},
 			hasElements() {
 				return this.elements.length > 0;
+			},
+			pageStyle() {
+				return !this.survey.singlePage ? "flex: 1 1 auto; overflow: scroll; max-height: 100%" : "";
 			}
 		},
     methods: {
@@ -54,10 +57,11 @@
 
 <style>
 	.sv_page {
-		flex: 1 1 auto;
-		overflow: scroll;
-		max-height: 100%;
 		padding: 0 .75rem;
+	}
+
+	.sv_page:first-child {
+		padding-top: .75rem;
 	}
 
 	.sv_page .sv_page_title {

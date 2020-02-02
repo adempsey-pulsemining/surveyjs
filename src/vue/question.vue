@@ -1,5 +1,5 @@
 <template>
-  <div class="sv_q">
+  <div class="sv_q" :class="{ 'page-break-before': question.pageBreakBefore, 'page-break-after': question.pageBreakAfter }">
     <b-modal ref="modal" hide-header no-fade>
       <b-form-textarea v-model="comment"></b-form-textarea>
       <div slot="modal-footer">

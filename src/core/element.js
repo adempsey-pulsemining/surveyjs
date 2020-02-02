@@ -16,7 +16,9 @@ export class Element extends Base {
       "!type",
       "title",
 			"readOnly:boolean",
-			"required:boolean"
+			"required:boolean",
+			"pageBreakBefore:boolean",
+			"pageBreakAfter:boolean"
     ])
 	}
 	

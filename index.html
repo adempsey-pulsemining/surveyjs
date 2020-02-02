@@ -21,6 +21,8 @@
 	<script>
 		let tem = {
 			showQuestionNumbers: true,
+			singlePage: false,
+			showProgressBar: true,
 			pages: [
 				{
 					name: "page1", title: "Page 1", elements: [
@@ -40,7 +42,7 @@
 							{ name: "question3", type: "matrix", rows: 
 							["Row 1",{name: "row2", title: "Row 2"}], columns: ["Column 1","Column 2","Column 3"],
 								choices: ["1","2",3], "multipleChoice": true},
-							{ name: "question4", type: "matrix", choices: [1,2,3], cellType: "comment", inline: true,
+							{ name: "question4", type: "matrix", choices: [1,2,3], cellType: "checkbox", inline: true,
 								rows: ["Row1", "Row2"], columns: [{name: "Column1", cellType: "dropdown"}, "column2"], multipleChoice: true}
 						]}
 					]

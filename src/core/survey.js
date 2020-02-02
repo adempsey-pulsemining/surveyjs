@@ -15,8 +15,10 @@ export class Survey extends Base {
 			"readOnly:boolean",
 			{ name: "showProgressBar", type: "boolean", default: true },
 			{ name: "showQuestionNumbers", type: "boolean", default: true },
-      "isPdfRender:boolean"
-    ])
+			{ name: "breakAfterPage", type: "boolean", default: true },
+			"isPdfRender:boolean",
+			"singlePage:boolean",
+    ]);
   }
 
   constructor(template) {
@@ -56,11 +58,11 @@ export class Survey extends Base {
 	}
 
   isFirstPage() {
-    return this.currentPageIndex === 0;
+    return this.currentPageIndex === 0 || this.singlePage;
   }
 
   isLastPage() {
-    return this.currentPageIndex === this.pages.length - 1;
+    return this.currentPageIndex === this.pages.length - 1 || this.singlePage;
   }
 
   nextPage() {
@@ -121,8 +123,8 @@ export class Survey extends Base {
 
   // Render survey from the template. ie create pages/panels/questions
   _renderSurvey(template) {
-    this._createPages(template.pages);
-  }
+		this._createPages(template.pages);
+	}
 
   _createPages(pages) {
     pages.forEach(page => {

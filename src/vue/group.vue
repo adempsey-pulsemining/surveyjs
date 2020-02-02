@@ -1,7 +1,9 @@
 <template>
   <div class="sv_group">
     <div class="sv_group_title">{{title}}</div>
-    <component v-for="(question, index) in questions" :is="componentName" :question="question" :key="index"></component>
+		<div class="sv_group_body">
+			<component v-for="(question, index) in questions" :is="componentName" :question="question" :key="index"></component>
+		</div>
   </div>
 </template>
 
@@ -35,3 +37,10 @@
 		}
   }
 </script>
+
+<style>
+	.sv_group_title {
+		font-weight: bold;
+		font-size: 1.1rem;
+	}
+</style>
