@@ -11,7 +11,6 @@ export class Element extends Base {
 
   static get properties() {
     return Base.properties.concat([
-      "!id",
       "!name",
       "!type",
       "title",

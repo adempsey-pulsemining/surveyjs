@@ -46,4 +46,8 @@
   .sv_q_multipletext label {
     margin: 0;
   }
+
+	.sv_q_multipletext > div {
+		grid-gap: .75rem;
+	}
 </style>

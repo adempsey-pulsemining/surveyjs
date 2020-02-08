@@ -6,7 +6,7 @@
 			<div class="sv_page_container" v-else>
 				<survey-page v-for="(page, index) in survey.pages" :key="index" :page="survey.pages[index]" :survey="survey"></survey-page>
 			</div>			
-			<survey-progress v-if="survey.showProgressBar && !survey.isPdfRender" :survey="survey"></survey-progress>
+			<survey-progress v-if="survey.showProgressBar && !survey.isPdfRender && !survey.singlePage" :survey="survey"></survey-progress>
 			<survey-controls v-if="!survey.isPdfRender" :survey="survey"></survey-controls>
 		</div>
 		<div v-else class="sv_empty">
@@ -50,6 +50,12 @@
 
 	.sv_page_container {
 		overflow: scroll;
+		flex: 1 1 auto;
+		border-bottom: thin solid lightgrey;
+	}
+
+	.sv_page_container > .sv_page:last-child {
+		padding-bottom: .75rem;
 	}
 
 	.sv_main .sv_body {

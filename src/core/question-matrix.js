@@ -22,10 +22,10 @@ export class Matrix extends Question {
 		super(question, metaData.getProperties("matrix"));
 		this.rows = [];
 		this.columns = [];
-		for (let row of question.rows) {
+		for (let row of question.rows || []) {
 			this.rows.push(new MatrixRow(row));
 		}
-		for (let column of question.columns) {
+		for (let column of question.columns || []) {
 			this.columns.push(new MatrixColumn(column));
 		}
 		this.addCells(question);
@@ -89,7 +89,12 @@ export class Matrix extends Question {
 
   hasValue() {
 		if (!this.multipleChoice) {
-			return Object.keys(this.value).length > 0;
+			for (let row in this.value) {
+				if (Object.keys(this.value[row]).length) {
+					return true;
+				}
+			}
+			return false;
 		} else {
 			return this.cellsHasValue();
 		}

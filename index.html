@@ -19,35 +19,91 @@
 		</div>
 	</body>
 	<script>
-		let tem = {
-			showQuestionNumbers: true,
+		function guid() {
+			return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+				(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+			);
+		}
+    let tem = {
 			singlePage: false,
-			showProgressBar: true,
 			pages: [
 				{
-					name: "page1", title: "Page 1", elements: [
-						{ inline: true, readOnly: false, description: "blah blah blah", type: "radio", "name": "radio1", choices: [
-							{ name: "choice1" }, 
-							"Choice 2",
-						]},
-						{ type: "comment", name: "question-comment" }
+					name: "page1",
+					elements: [
+						{
+							name: "question1",
+							type: "text"
+						},
+						{
+							name: "question2",
+							type: "boolean"
+						},
+						{
+							name: "question3",
+							type: "checkbox",
+							choices: [{ name: "choice1" }]
+						},
+						{
+							name: "question4",
+							type: "comment"
+						},
+						{
+							name: "question5",
+							type: "dropdown",
+							choices: [{ name: "choice1" }]
+						},
+						{
+							name: "question6",
+							type: "html",
+							html: "<div>hello</div>"
+						},
+						{
+							name: "question7",
+							type: "multipletext",
+							items: [
+								{ name: "item1", title: "Item 1" }, 
+								{ name: "item2", title: "Item 2" },
+								{ name: "item3" }
+							]
+						},
+						{
+							name: "question8",
+							type: "radio",
+							choices: [{ name: "item1" }]
+						},
+						{
+							name: "question9",
+							type: "matrix",
+							rows: [{ name: "row1", title: "Row 1" }, { name: "Row 2" }],
+							columns: [{ name: "column1" }, { name: "column2", title: "Column 2" }]
+						},
+						{
+							name: "question10",
+							type: "matrix",
+							multipleChoice: true,
+							choices: [{ name: "choice1" }],
+							rows: [{ name: "row1", title: "Row 1" }, { name: "Row 2" }],
+							columns: [{ name: "column1", cellType: "text" }, { name: "column2", title: "Column 2" }]
+						}
 					]
 				},
 				{
-					name: "page2", elements: [
-						{ name: "question1", type: "text" },
-						{ name: "group1", type: "group", required: true, elements: [
-							{ name: "question1", type: "text", title: "Question 1" },
-							{ name: "question2", type: "text", title: "Question 2" },
-							{ name: "question3", type: "matrix", rows: 
-							["Row 1",{name: "row2", title: "Row 2"}], columns: ["Column 1","Column 2","Column 3"],
-								choices: ["1","2",3], "multipleChoice": true},
-							{ name: "question4", type: "matrix", choices: [1,2,3], cellType: "checkbox", inline: true,
-								rows: ["Row1", "Row2"], columns: [{name: "Column1", cellType: "dropdown"}, "column2"], multipleChoice: true}
-						]}
-					]
-				}, 
+					name: "page2",
+					title: "Page 2",
+					elements: []
+				}
 			]
+		}
+		for (let page of tem.pages) {
+			for (let q of page.elements) {
+				if (q.type === "group") {
+					for (let e of q.elements) {
+						e.questionId = guid();
+					}
+				} else {
+					q.questionId = guid();
+				}
+			}
 		}
 		let survey = new Survey.Survey(tem);
 		new Vue({ 

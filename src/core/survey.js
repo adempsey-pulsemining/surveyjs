@@ -51,7 +51,7 @@ export class Survey extends Base {
     for (let page of this.pages) {
       for (let question of page.questions) {
         if (!question.hasValue() && !question.comment) continue;
-        data[question.id] = question.data;
+        data[question.questionId] = question.data;
       }
     }
     return data;

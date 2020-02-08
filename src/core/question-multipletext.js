@@ -19,7 +19,7 @@ export class MultipleText extends Question {
   constructor(question) {
     super(question, metaData.getProperties("multipletext"));
     this.items = [];
-    for (let item of question.items) {
+    for (let item of question.items || []) {
       this.items.push(new MultipleTextItem(item));
     }
   }

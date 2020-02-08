@@ -87,6 +87,8 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		display: inline-block;
+		width: 100%;
 	}
 
 	@media screen and (max-device-width: 480px) {

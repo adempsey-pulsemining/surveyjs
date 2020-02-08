@@ -41,10 +41,24 @@
 	.sv_q_matrix .table th {
 		vertical-align: middle;
 		padding: .75rem;
+		white-space: nowrap;
+	}
+
+	.sv_q_matrix .table td input[type="text"],
+	.sv_q_matrix .table td select {
+		min-width: 200px;
 	}
 
 	.sv_q_matrix .table th {
 		border-top: none;
 		font-weight: normal;
+	}
+
+	.sv_q_matrix .table {
+		border: thin solid lightgrey;
+	}
+
+	.sv_q_matrix tr td:first-child {
+		max-width: 100%;
 	}
 </style>

@@ -23,6 +23,13 @@ export class Checkbox extends Question {
 	}
 	
 	isAnswered() {
+		if (this.isRequired) {
+			return this.value && this.value.length;
+		}
+		return true;
+	}
+
+	hasValue() {
 		return this.value && this.value.length;
 	}
 }

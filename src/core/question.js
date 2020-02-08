@@ -12,6 +12,7 @@ export class Question extends Element {
 
   static get properties() {
     return Element.properties.concat([
+			"!questionId",
 			"description"
 		]);
   }

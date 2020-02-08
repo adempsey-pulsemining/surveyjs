@@ -12,7 +12,6 @@ export class Page extends Base {
 
   static get properties() {
     return Base.properties.concat([
-      "!id",
       "!name",
       "title"
     ])
