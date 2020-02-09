@@ -18,7 +18,15 @@ export class Html extends Question {
 
   constructor(question) {
     super(question, metaData.getProperties("html"));
-  }
+	}
+	
+	isAnswered() {
+		return true;
+	}
+
+	hasValue() {
+		return false;
+	}
 }
 
 metaData.addClass(Html.definition);

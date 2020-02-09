@@ -46,7 +46,8 @@ export class Question extends Element {
       name: this.name,
       title: this.title || this.name,
       type: this.type,
-      page: this.pageNumber
+			page: this.pageNumber,
+			sequence: this.no
     }
 	}
 

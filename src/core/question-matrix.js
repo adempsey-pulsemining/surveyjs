@@ -67,19 +67,29 @@ export class Matrix extends Question {
 	}
 
   isAnswered() {
-		if (!this.multipleChoice) {
-			return Object.keys(this.value).length === this.rows.length;
-		} else {
+		if (this.multipleChoice) {
 			return this.allCellsAnswered();
+		} else {
+			return this.rowsAnswered();
 		}
+	}
+
+	rowsAnswered() {
+		let answered = true;
+		for (let row in this.value) {
+			if (this.value[row] == null) {
+				answered = false;
+			}
+		}
+		return answered;
 	}
 	
 	allCellsAnswered() {
 		let answered = true;
 		this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
-				let val = this.cells[rowIndex][colIndex].value;
-				if (val == null) {
+				let cell = this.cells[rowIndex][colIndex];
+				if (!cell.isAnswered()) {
 					answered = false;
 				}
 			});
@@ -88,16 +98,20 @@ export class Matrix extends Question {
 	}
 
   hasValue() {
-		if (!this.multipleChoice) {
-			for (let row in this.value) {
-				if (Object.keys(this.value[row]).length) {
-					return true;
-				}
-			}
-			return false;
-		} else {
+		if (this.multipleChoice) {
 			return this.cellsHasValue();
+		} else {
+			return this.rowHasValue();
 		}
+	}
+
+	rowHasValue() {
+		for (let row in this.value) {
+			if (Object.keys(this.value[row]).length) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	cellsHasValue() {
@@ -207,6 +221,10 @@ class MatrixCell extends Base {
 
 	isReadOnly() {
 		return this.question.isReadOnly();
+	}
+
+	isAnswered() {
+		return !!this.value;
 	}
 
 	get choices() {

@@ -6,7 +6,7 @@
         <b-form-input :id="getUniqueId(index)"
                       :disabled="isReadOnly(item)"
                       :type="item.inputType"
-                      v-model="item.value">
+                      v-model="item.value" lazy>
         </b-form-input>
       </div>
     </div>
