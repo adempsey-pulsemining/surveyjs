@@ -1,9 +1,13 @@
 ﻿<script type="text/html" id="survey-question">
   <div data-bind="css: question.koRootClass, style: { paddingLeft: question.paddingLeft, paddingRight: question.paddingRight, width: question.renderWidth }, attr: {id: question.id}">
-      <div data-bind="css: {'title-left': question.hasTitleOnLeft}">
+      <div class="sv_question_header" data-bind="css: {'title-left': question.hasTitleOnLeft}">
           <!-- ko if: question.hasTitleOnLeftTop -->
           <!--ko template: { name: 'survey-question-title', data: question  } -->
           <!-- /ko -->
+          <div class="flex"></div>
+          <div class="sv_question_options">
+              <pms-widget-icon icon="fa-r:ellipsis-h" data-bind="click: function(model, event) { $root.addComment(question); event.stopPropagation() }"></pms-widget-icon>
+          </div>
           <!-- /ko -->
       </div>
 
@@ -31,5 +35,6 @@
           <!-- /ko -->
           <!-- /ko -->
       </div>
+      <div class="question-comment" data-bind="visible: question.comment && $root.isPdfRender, text: question.comment"></div>
   </div>
 </script>

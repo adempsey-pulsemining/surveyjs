@@ -1,4 +1,5 @@
 .git/*
+build
 .vs/*
 node_modules/*
 copy_packages.sh

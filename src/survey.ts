@@ -1533,6 +1533,20 @@ export class SurveyModel extends Base
     }
     return testData;
   }
+  public getSelectedQuestions(): any {
+    let selected: any = [];
+    this.pages.forEach(page => {
+      page.questions.forEach(question => {
+        if (question.isSelected) {
+          selected.push(question);
+        }
+      });
+    });
+    return selected;
+  }
+  public addComment(q: any) {
+
+  }
   public get surveyIsFinished(): boolean {
     return this.visiblePages.every(page => page.isFinished);
   }
@@ -3233,7 +3247,6 @@ export class SurveyModel extends Base
   protected doOnPageAdded(page: PageModel) {
     page.setSurveyImpl(this);
     if (!page.name) page.name = this.generateNewName(this.pages, "page");
-    if (!page.pageId) page.pageId = this.newGuid();
     this.questionHashesPanelAdded(page);
     var options = { page: page };
     this.onPageAdded.fire(this, options);

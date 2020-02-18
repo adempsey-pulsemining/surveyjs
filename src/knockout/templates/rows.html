@@ -4,6 +4,7 @@
     <div data-bind="css: panel.cssClasses.row + ' ' + row.css">
         <!-- ko foreach: { data: row.elements, as: 'question' , afterRender: row.koAfterRender } -->
         <!-- ko if: question.isVisible -->
+        <input class="question-checkbox" type="checkbox" data-bind="checked: question.isSelected" />
         <!-- ko template: { name: question.koElementType, data: question, afterRender: $parent.koElementAfterRender } -->
         <!-- /ko -->
         <!-- /ko -->

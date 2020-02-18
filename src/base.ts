@@ -163,7 +163,6 @@ export interface IQuestion extends IElement, ISurveyErrorOwner {
   hideInPdfIfEmpty: boolean;
   no: string;
   questionId: string;
-  widgetId: string;
   isEmpty(): boolean;
   onSurveyValueChanged(newValue: any): any;
   updateValueFromSurvey(newValue: any): any;

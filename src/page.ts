@@ -24,18 +24,6 @@ export class PageModel extends PanelModelBase implements IPage {
       return text;
     };
   }
-  public get widgetId(): string {
-    return this.getPropertyValue("widgetId")
-  }
-  public set widgetId(val: string) {
-    this.setPropertyValue("widgetId", val);
-  }
-  public get pageId(): string {
-    return this.getPropertyValue("pageId");
-  }
-  public set pageId(val: string) {
-    this.setPropertyValue("pageId", val);
-  }
   public updateStatus() {
     this.updateFinished();
     this.updateProgress();
@@ -429,8 +417,6 @@ export class PageModel extends PanelModelBase implements IPage {
 JsonObject.metaData.addClass(
   "page",
   [
-    "!pageId",
-    "widgetId",
     {
       name: "navigationButtonsVisibility",
       default: "inherit",
