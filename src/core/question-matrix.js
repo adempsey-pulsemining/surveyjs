@@ -35,7 +35,9 @@ export class Matrix extends Question {
 		for (let i = 0; i < this.rowCount; ++i) {
 			this.rows.push(new MatrixRow());
 		}
-		this.addCells(question);
+		if (this.multipleChoice || this.dynamic) {
+			this.addCells(question);
+		}
 	}
 
 	get data() {
