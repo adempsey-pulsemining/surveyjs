@@ -72,7 +72,7 @@
     computed: {
 			questionTitle() {
 				let title = "";
-				return title + (this.question.title || this.question.name || "");
+				return title + (this.question.title || this.question.name || "") + (this.question.required() ? " *" : "");
 			},
       componentName() {
         return "survey-" + this.question.type;

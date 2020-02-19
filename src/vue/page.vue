@@ -61,4 +61,8 @@
 		font-size: 1.1rem;
 		margin-bottom: .5rem;
 	}
+
+	.sv_page_row:nth-child(even) {
+		background-color: #f4f4f4;
+	}
 </style>

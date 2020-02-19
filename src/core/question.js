@@ -33,7 +33,7 @@ export class Question extends Element {
 
 	isValid() {
 		let valid = true;
-		if (this.isRequired()) {
+		if (this.required()) {
 			valid = this.isAnswered();
 		}
 		return valid;

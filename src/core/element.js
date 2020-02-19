@@ -15,7 +15,7 @@ export class Element extends Base {
       "!type",
       "title",
 			"readOnly:boolean",
-			"required:boolean",
+			"isRequired:boolean",
 			"pageBreakBefore:boolean",
 			"pageBreakAfter:boolean",
       "hideInPdf:boolean",
@@ -35,8 +35,8 @@ export class Element extends Base {
     return this.readOnly || this.survey.readOnly || (this.group && this.group.readOnly) || (this.page && this.page.readOnly);
 	}
 	
-	isRequired() {
-		return this.required || (this.group && this.group.required);
+	required() {
+		return this.isRequired || (this.group && this.group.isRequired);
 	}
 }
 
