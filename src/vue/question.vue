@@ -8,20 +8,20 @@
       </div>
     </b-modal>
     <div class="sv_q_header">
-			<span class="sv_q_no" :style="getQuestionNoStyle" v-if="showQuestionNo">{{questionNo}}</span>
-			<div style="display: flex; flex-direction: column">
-				<span class="sv_q_title">{{questionTitle}}</span>
-				<span v-if="question.description" class="sv_q_description">{{question.description}}</span>
-			</div>
-			<div class="flex"></div>
-			<b-dropdown dropleft no-caret variant="link">
-				<template v-slot:button-content>
-					<font-awesome-icon icon="ellipsis-h" size="6x" />
-				</template>
-				<b-dropdown-item-button @click="editComment">
-          <font-awesome-icon icon="edit" size="8x" /><span>Edit comment</span>
-        </b-dropdown-item-button>
-			</b-dropdown>
+      <div class="sv_q_header_title">
+        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>
+        <span class="sv_q_title">{{questionTitle}}</span>
+        <div class="flex"></div>
+        <b-dropdown dropleft no-caret variant="link">
+          <template v-slot:button-content>
+            <font-awesome-icon icon="ellipsis-h" size="6x" />
+          </template>
+          <b-dropdown-item-button @click="editComment">
+            <font-awesome-icon icon="edit" size="8x" /><span>Edit comment</span>
+          </b-dropdown-item-button>
+        </b-dropdown>
+      </div>
+      <div v-if="question.description" class="sv_q_description">{{question.description}}</div>
     </div>
     <div class="sv_q_body">
       <component :is="componentName" :question="question" />
@@ -72,7 +72,7 @@
     computed: {
 			questionTitle() {
 				let title = "";
-				return title + (this.question.title || this.question.name);
+				return title + (this.question.title || this.question.name || "");
 			},
       componentName() {
         return "survey-" + this.question.type;
@@ -82,12 +82,6 @@
 			},
 			questionNo() {
 				return this.question.no + ". ";
-			},
-			getQuestionNoStyle() {
-				if (this.question.description) {
-					return "align-self: start";
-				}
-				return "";
 			}
 		},
     methods: {
@@ -110,10 +104,17 @@
 </script>
 
 <style>
-  .sv_q_header {
+  .sv_q_header_title {
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+
+  .sv_q_header {
+    display: flex;
+    flex-direction: column;
+    color: var(--darkest-text-color);
+    font-weight: bold;
   }
 
 	.dropdown button {
@@ -121,7 +122,7 @@
 	}
 
 	.sv_q_body {
-		padding: 1rem;
+		padding: 1rem 0;
 	}
 
 	.sv_q_no {

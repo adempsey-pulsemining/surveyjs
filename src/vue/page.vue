@@ -56,15 +56,6 @@
 </script>
 
 <style>
-	.sv_page {
-		padding: 0 .75rem;
-		padding-top: .75rem;
-	}
-
-	.sv_page:first-child {
-		padding-top: .75rem;
-	}
-
 	.sv_page .sv_page_title {
 		font-weight: bold;
 		font-size: 1.1rem;

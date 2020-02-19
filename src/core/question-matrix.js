@@ -14,7 +14,8 @@ export class Matrix extends Question {
     return Question.properties.concat([
 			{ name: "cellType", type: "string", default: "dropdown" },
 			{ name: "multipleChoice", type: "boolean", default: false },
-		  { name: "choices", type: "array", default: []}
+		  { name: "choices", type: "array", default: []},
+		  { name: "dynamic", type: "boolean", default: false}
     ]);
   }
 
@@ -28,6 +29,12 @@ export class Matrix extends Question {
 		for (let column of question.columns || []) {
 			this.columns.push(new MatrixColumn(column));
 		}
+		if (this.dynamic && !this.rowCount) {
+			this.rowCount = 2;
+		}
+		for (let i = 0; i < this.rowCount; ++i) {
+			this.rows.push(new MatrixRow());
+		}
 		this.addCells(question);
 	}
 
@@ -39,6 +46,9 @@ export class Matrix extends Question {
 	}
 	
 	get value() {
+  	if (this.dynamic) {
+  		return this.dynamicValue();
+		}
 		if (this.multipleChoice) {
 			return this.cellsValue();
 		} else {
@@ -47,8 +57,9 @@ export class Matrix extends Question {
 	}
 
 	addCells(question) {
-		this.cells = {};
+		this.cells = [];
 		this.rows.forEach((row, rowIndex) => {
+			this.cells.push({});
 			this.columns.forEach((col, colIndex) => {
 				this.addCell(question, rowIndex, colIndex, col.cellType || question.cellType);
 			});
@@ -58,7 +69,6 @@ export class Matrix extends Question {
 	addCell(question, row, col, type) {
 		let cell = new MatrixCell(question, row, col, type);
 		cell.question = this;
-		this.cells[row] = this.cells[row] || {};
 		this.cells[row][col] = cell;
 	}
 
@@ -127,6 +137,20 @@ export class Matrix extends Question {
 		return hasValue;
 	}
 
+	dynamicValue() {
+  	let value = [];
+		this.rows.forEach((row, rowIndex) => {
+			value.push({});
+			this.columns.forEach((column, colIndex) => {
+				let val = this.cells[rowIndex][colIndex].value;
+				if (val) {
+					value[rowIndex][column.name] = val;
+				}
+			});
+		});
+		return value;
+	}
+
 	getValue() {
 		let value = {};
 		this.rows.forEach((row) => {
@@ -152,6 +176,21 @@ export class Matrix extends Question {
 			});
 		});
 		return value;
+	}
+
+	addRow() {
+  	this.cells.push({});
+		this.rows.push(new MatrixRow());
+		this.columns.forEach((col, colIndex) => {
+			this.addCell(this, this.rows.length - 1, colIndex, col.cellType || this.cellType);
+		});
+		++this.rowCount;
+	}
+
+	removeRow(index) {
+    this.cells.splice(index, 1);
+		this.rows.splice(index, 1);
+		--this.rowCount;
 	}
 }
 

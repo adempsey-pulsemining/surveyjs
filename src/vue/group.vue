@@ -41,7 +41,6 @@
 <style>
 	.sv_group_title {
 		font-weight: bold;
-		font-size: 1.1rem;
-		margin-bottom: .5rem;
+		margin: .5rem 0;
 	}
 </style>

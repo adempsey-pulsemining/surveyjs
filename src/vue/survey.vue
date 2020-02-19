@@ -2,7 +2,9 @@
   <div class="sv_main">
 		<div class="sv_body" v-if="hasPages">
 			<survey-navigation v-if="!survey.isPdfRender && !survey.singlePage" :survey="survey"></survey-navigation>
-			<survey-page v-if="!survey.singlePage" :survey="survey" :page="survey.currentPage"></survey-page>
+			<div class="sv_page_container" v-if="!survey.singlePage">
+				<survey-page :survey="survey" :page="survey.currentPage"></survey-page>
+			</div>
 			<div class="sv_page_container" v-else>
 				<survey-page v-for="(page, index) in survey.pages" :key="index" :page="survey.pages[index]" :survey="survey"></survey-page>
 			</div>			
@@ -54,8 +56,13 @@
 		border-bottom: thin solid lightgrey;
 	}
 
+	.sv_page_container > .sv_page {
+		padding: 1rem;
+		padding-bottom: 0;
+	}
+
 	.sv_page_container > .sv_page:last-child {
-		padding-bottom: .75rem;
+		padding-bottom: 1rem;
 	}
 
 	.sv_main .sv_body {

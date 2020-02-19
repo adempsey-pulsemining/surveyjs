@@ -1,3 +1,7 @@
+html {
+  --darkest-text-color: var(--pms-grey-700);
+}
+
 textarea, input:not([type="button"]), select {
   width: 100%;
 }
@@ -16,11 +20,11 @@ textarea, input:not([type="button"]), select {
 }
 
 .btn-primary {
-  background-color: var(--pms-accent-color-primary, #0099cc) !important;
+  background-color: var(--pms-accent-color-primary, #07619e) !important;
 }
 
 .btn-success {
-  background-color: var(--pms-accent-color-success, #007e33) !important;
+  background-color: var(--pms-accent-color-success, #3c763d) !important;
 }
 
 
