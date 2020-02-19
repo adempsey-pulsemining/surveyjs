@@ -16,13 +16,17 @@ export class Dropdown extends Question {
     ]);
   }
 
+  static IsAnswered(value) {
+    return !!value;
+  }
+
   constructor(question) {
     super(question, metaData.getProperties("dropdown"));
     this.value = "";
 	}
 	
 	isAnswered() {
-		return !!this.value;
+		return Dropdown.IsAnswered(this.value);
 	}
 }
 

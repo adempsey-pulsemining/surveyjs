@@ -17,17 +17,25 @@ export class Checkbox extends Question {
     ]);
   }
 
+  static IsAnswered(value) {
+    return this.HasValue(value);
+  }
+
+  static HasValue(value) {
+    return !!value && value.length > 0;
+  }
+
   constructor(question) {
     super(question, metaData.getProperties("checkbox"));
     this.value = [];
 	}
 	
 	isAnswered() {
-		return this.hasValue();
+		return Checkbox.IsAnswered(this.value);
 	}
 
 	hasValue() {
-		return !!this.value && this.value.length;
+		return Checkbox.HasValue(this.value);
 	}
 }
 

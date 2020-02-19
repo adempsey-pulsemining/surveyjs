@@ -14,13 +14,17 @@ export class Boolean extends Question {
     return Question.properties.concat([]);
   }
 
+  static IsAnswered(value) {
+    return value != null;
+  }
+
   constructor(question) {
     super(question, metaData.getProperties("boolean"));
     this.value = null;
 	}
 	
 	isAnswered() {
-		return this.value != null;
+		return Boolean.IsAnswered(this.value);
 	}
 }
 

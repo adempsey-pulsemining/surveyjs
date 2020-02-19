@@ -17,7 +17,9 @@ export class Element extends Base {
 			"readOnly:boolean",
 			"required:boolean",
 			"pageBreakBefore:boolean",
-			"pageBreakAfter:boolean"
+			"pageBreakAfter:boolean",
+      "hideInPdf:boolean",
+      "hideInPdfIfEmpty:boolean"
     ])
 	}
 	

@@ -4,7 +4,7 @@
 		<div class="sv_page_body" v-if="hasElements">
 			<div class="sv_page_row" v-for="(element, index) in elements" :key="index">
 				<component v-if="isGroup(element)" is="survey-group" :survey="survey" :group="element" />
-				<component v-else is="survey-question" :question="element" />
+				<component v-if="!isGroup(element) && element.isShownInPdf" is="survey-question" :question="element" />
 			</div>
 		</div>
 		<div class="sv_page_empty" v-else>

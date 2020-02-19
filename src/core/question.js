@@ -70,6 +70,19 @@ export class Question extends Element {
   get pageNumber() {
     return this.page.pageNumber;
   }
+
+  get isShownInPdf() {
+    if (!this.survey.isPdfRender) {
+      return true;
+    }
+    if (this.hideInPdf) {
+      return false;
+    }
+    if (this.hideInPdfIfEmpty) {
+      return !!this.hasValue();
+    }
+    return true;
+  }
 }
 
 metaData.addClass(Question.definition);

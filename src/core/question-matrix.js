@@ -1,5 +1,9 @@
 import { Question } from "./question";
 import { metaData, Base } from "./base";
+import { Dropdown } from "./question-dropdown";
+import { Boolean } from "./question-boolean";
+import { Checkbox} from "./question-checkbox";
+import { Radio} from "./question-radio";
 
 export class Matrix extends Question {
   static get definition() {
@@ -36,7 +40,7 @@ export class Matrix extends Question {
 			this.rows.push(new MatrixRow());
 		}
 		if (this.multipleChoice || this.dynamic) {
-			this.addCells(question);
+			this._addCells(question);
 		}
 	}
 
@@ -58,17 +62,17 @@ export class Matrix extends Question {
 		}
 	}
 
-	addCells(question) {
+	_addCells(question) {
 		this.cells = [];
 		this.rows.forEach((row, rowIndex) => {
 			this.cells.push({});
 			this.columns.forEach((col, colIndex) => {
-				this.addCell(question, rowIndex, colIndex, col.cellType || question.cellType);
+				this._addCell(question, rowIndex, colIndex, col.cellType || question.cellType);
 			});
 		});
 	}
 
-	addCell(question, row, col, type) {
+	_addCell(question, row, col, type) {
 		let cell = new MatrixCell(question, row, col, type);
 		cell.question = this;
 		this.cells[row][col] = cell;
@@ -79,7 +83,7 @@ export class Matrix extends Question {
 	}
 
   isAnswered() {
-		if (this.multipleChoice) {
+		if (this.multipleChoice || this.dynamic) {
 			return this.allCellsAnswered();
 		} else {
 			return this.rowsAnswered();
@@ -110,7 +114,7 @@ export class Matrix extends Question {
 	}
 
   hasValue() {
-		if (this.multipleChoice) {
+		if (this.multipleChoice || this.dynamic) {
 			return this.cellsHasValue();
 		} else {
 			return this.rowHasValue();
@@ -184,7 +188,7 @@ export class Matrix extends Question {
   	this.cells.push({});
 		this.rows.push(new MatrixRow());
 		this.columns.forEach((col, colIndex) => {
-			this.addCell(this, this.rows.length - 1, colIndex, col.cellType || this.cellType);
+			this._addCell(this, this.rows.length - 1, colIndex, col.cellType || this.cellType);
 		});
 		++this.rowCount;
 	}
@@ -265,7 +269,13 @@ class MatrixCell extends Base {
 	}
 
 	isAnswered() {
-		return !!this.value;
+		switch (this.cellType) {
+			case "radio": return Radio.IsAnswered(this.value);
+			case "dropdown": return Dropdown.IsAnswered(this.value);
+			case "checkbox": return Checkbox.IsAnswered(this.value);
+			case "boolean": return Boolean.IsAnswered(this.value);
+			default: return !!this.value;
+		}
 	}
 
 	get choices() {
