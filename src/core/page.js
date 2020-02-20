@@ -28,6 +28,10 @@ export class Page extends Base {
     return this.getElements().filter(element => element.visible);
   }
 
+  get visibleQuestions() {
+    return this.questions.filter(x => x.visible);
+  }
+
   get pageNumber() {
     return this.survey.pages.indexOf(this) + 1;
 	}
@@ -35,20 +39,33 @@ export class Page extends Base {
 	// Returns true if the page has no unanswered questions
 	get completed() {
 		return this.questions.every(question => question.isAnswered());
+  }
+  
+  hasErrors() {
+		return this.questions.some(question => !question.isValid());
 	}
 
   // Get all questions in the page including inside groups
   get questions() {
     return this.getQuestions(true);
-	}
-	
-	hasErrors() {
-		return this.questions.some(question => !question.isValid());
-	}
+  }
 
   // Get all questions in the page excluding questions in groups
   getElements() {
     return this.getQuestions(false);
+  }
+
+  getAllElements() {
+    let elements = [];
+    for (let element of this.elements) {
+      if (Element.isGroup(element)) {
+        elements.push(element);
+        elements = elements.concat(element.elements);
+      } else {
+        elements.push(element);
+      }
+    }
+    return elements;
   }
 
   getQuestions(flatten = false) {
@@ -63,7 +80,7 @@ export class Page extends Base {
     });
   }
 
-  __getQuestionsNoGroup() {
+  __getQuestionsNoGroup(visible = false) {
     let questions = [];
     for (let element of this.elements) {
       if (Element.isGroup(element)) {
@@ -75,7 +92,7 @@ export class Page extends Base {
     return questions;
   }
 
-  __getQuestions() {
+  __getQuestions(visible = false) {
     return this.elements || [];
   }
 

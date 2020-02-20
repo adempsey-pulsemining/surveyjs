@@ -161,6 +161,7 @@ export class Const {
 export class Variable extends Const {
   constructor(variableName) {
     super(variableName);
+    this.variableName = variableName;
   }
 
   getType() {
@@ -405,9 +406,13 @@ OperandMaker.binaryFunctions = {
       var i = 0;
       right = rightArray[rIndex];
       for (; i < left.length; i++) {
-        if (isEqual(left[i], right)) break;
+        if (isEqual(left[i], right)) {
+          break;
+        }
       }
-      if (i == left.length) return !isContains;
+      if (i == left.length) {
+        return !isContains;
+      }
     }
     return isContains;
   }

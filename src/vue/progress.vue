@@ -1,7 +1,7 @@
 <template>
 	<div class="sv_progress">
 		<span>{{progressText}}</span>
-		<b-progress :max="survey.pages.length" :value="survey.currentPageIndex + 1" height="5px"></b-progress>
+		<b-progress :max="survey.visiblePages.length" :value="survey.currentPageIndex + 1" height="5px"></b-progress>
 	</div>
 </template>
 
@@ -22,7 +22,7 @@
 		},
 		computed: {
 			progressText() {
-				return "Page " + (this.survey.currentPageIndex + 1) + " of " + this.survey.pages.length;
+				return "Page " + (this.survey.currentPageIndex + 1) + " of " + this.survey.visiblePages.length;
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 import { newGuid } from "./utilities";
+import grammar from "../expressions/grammar.pegjs";
 
 export var metaData = {
   classes: [],
@@ -115,6 +116,44 @@ export class Base {
   newGuid() {
     return newGuid();
   }
+
+  doTriggers(survey) {
+    for (let element of survey.getAllElements().filter(x => x.visibleIf)) {
+      this._processTrigger(survey, element);
+    }
+  }
+
+  _processTrigger(survey, element) {
+    if (!element.visibleIf) return;
+    let expression = grammar.parse(element.visibleIf);
+    console.log(expression);
+    do {
+      expression = this.__parseExpression(survey, expression);
+      expression = expression.consumer(expression.left.value, expression.right.value);
+    } while (typeof expression === "object");
+    console.log(expression);
+    element.visible = !!expression;
+  }
+
+  __parseExpression(survey, expression) {
+    if (expression.left.getType() === "variable") {
+      expression.left.value = this.getVariableValue(survey, expression.left.variableName);
+    }
+    if (expression.right.getType() === "variable") {
+      expression.right.value = this.getVariableValue(survey, expression.right.variableName);
+    }
+    return expression;
+  }
+
+  getVariableValue(survey, variableName) {
+    for (let element of survey.getAllElements()) {
+      if (element.name === variableName) {
+        return element.value;
+      }
+    }
+    return null;
+  }
+
 
   /**
    * Private methods

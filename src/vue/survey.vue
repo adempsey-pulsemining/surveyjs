@@ -2,7 +2,7 @@
   <div class="sv_main">
 		<div class="sv_body" v-if="hasPages">
 			<survey-navigation v-if="!survey.isPdfRender && !survey.singlePage" :survey="survey"></survey-navigation>
-			<div class="sv_page_container" v-if="!survey.singlePage">
+			<div class="sv_page_container" v-if="!survey.singlePage && survey.currentPage.visible">
 				<survey-page :survey="survey" :page="survey.currentPage"></survey-page>
 			</div>
 			<div class="sv_page_container" v-else>
@@ -39,7 +39,7 @@
 		},
 		computed: {
 			hasPages() {
-				return this.survey.pages && this.survey.pages.length;
+				return this.survey.visiblePages && this.survey.visiblePages.length;
 			}
 		}
   }
@@ -51,7 +51,7 @@
 	}
 
 	.sv_page_container {
-		overflow: scroll;
+		overflow-y: scroll;
 		flex: 1 1 auto;
 		border-bottom: thin solid lightgrey;
 	}

@@ -83,19 +83,25 @@ export class Question extends Element {
   }
 
   __getProxyHandler() {
-    var that = this;
-    return new Proxy(this, {
-      set(obj, prop, val) {
-        that.__questionPropertyChanged(obj, prop, val);
-        obj[prop] = val;
-        return true;
-      }
-    });
+    var handler = this.__proxyHandler;
+    return new Proxy(this, handler);
   }
 
-  __questionPropertyChanged(obj, prop, val) {
+  get __proxyHandler() {
+    var that = this;
+    return {
+      set(obj, prop, val) {
+        let oldVal = typeof obj[prop] === "object" ? JSON.parse(JSON.stringify(obj[prop])) : obj[prop];
+        obj[prop] = val;
+        that.__questionPropertyChanged(prop, val, oldVal);
+        return true;
+      }
+    }
+  }
+
+  __questionPropertyChanged(prop, val, oldVal) {
     if (prop === "__value" && this.survey) {
-      this.survey.valueChanged(this, val, obj[prop]);
+      this.survey.valueChanged(this, val, oldVal);
     }
   }
 }

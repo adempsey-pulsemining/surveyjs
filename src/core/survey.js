@@ -1,6 +1,7 @@
 import { Page } from "./page";
 import { metaData, Base } from "./base";
 import { isEqual } from "lodash";
+import { Element } from "./element";
 
 export class Survey extends Base {
   static get definition() {
@@ -67,7 +68,7 @@ export class Survey extends Base {
   }
 
   isLastPage() {
-    return this.currentPageIndex === this.pages.length - 1 || this.singlePage;
+    return this.currentPageIndex === this.visiblePages.length - 1 || this.singlePage;
   }
 
   nextPage() {
@@ -93,7 +94,7 @@ export class Survey extends Base {
   }
 
   get currentPage() {
-    return this.pages[this.currentPageIndex];
+    return this.visiblePages[this.currentPageIndex];
   }
 
   addPage(page) {
@@ -112,6 +113,38 @@ export class Survey extends Base {
     return questions;
   }
 
+  get visibleQuestions() {
+    let questions = [];
+    this.visiblePages.forEach(page => {
+      questions = questions.concat(page.questions);
+    });
+    return questions;
+  }
+
+  get elements() {
+    let elements = [];
+    this.pages.forEach(page => {
+      elements = elements.concat(page.getElements());
+    });
+    return elements;
+  }
+
+  get visibleElements() {
+    let elements = [];
+    this.visiblePages.forEach(page => {
+      elements = elements.concat(page.visibleElements);
+    });
+    return elements;
+  }
+
+  getAllElements() {
+    let elements = [];
+    this.pages.forEach(page => {
+      elements = elements.concat(page.getAllElements());
+    });
+    return elements;
+  }
+
   indexOfQuestion(question) {
     return this.questions.indexOf(question);
   }
@@ -120,6 +153,7 @@ export class Survey extends Base {
     newVal = typeof newVal === "object" ? JSON.parse(JSON.stringify(newVal)) : newVal;
     oldVal = typeof oldVal === "object" ? JSON.parse(JSON.stringify(oldVal)) : oldVal;
     if (this.onValueChanged && !isEqual(newVal, oldVal)) {
+      this.doTriggers(this);
       this.onValueChanged(question, newVal, oldVal);
     }
   }
@@ -136,7 +170,8 @@ export class Survey extends Base {
 
   // Render survey from the template. ie create pages/panels/questions
   _renderSurvey(template) {
-		this._createPages(template.pages);
+    this._createPages(template.pages);
+    this.doTriggers(this);
 	}
 
   _createPages(pages) {
@@ -145,6 +180,7 @@ export class Survey extends Base {
       newPage.addElements(page.elements);
     });
   }
+
 }
 
 metaData.addClass(Survey.definition);

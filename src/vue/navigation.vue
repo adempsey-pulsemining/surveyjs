@@ -38,17 +38,17 @@
         set(val) { this.survey.currentPageIndex = val - 1 }
       },
       totalPages() {
-        return this.survey.pages.length;
+        return this.survey.visiblePages.length;
 			}
     },
     methods: {
       getPageTitle(index) {
-				let page = this.survey.pages[index];
+				let page = this.survey.visiblePages[index];
 				if (!page) return;
         return page.title || page.name;
 			},
 			isPageCompleted(index) {
-				let page = this.survey.pages[index];
+				let page = this.survey.visiblePages[index];
 				return page && page.completed;
 			}
     }
