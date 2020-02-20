@@ -2,7 +2,7 @@
   <div class="sv_group">
     <div class="sv_group_title">{{title}}</div>
 		<div class="sv_group_body">
-			<component v-for="(question, index) in questions" :is="componentName" :question="question" :key="index"></component>
+			<component v-for="(question, index) in visibleQuestions" :is="componentName" :question="question" :key="index"></component>
 		</div>
   </div>
 </template>
@@ -33,7 +33,10 @@
 			},
 			questions() {
 				return this.group.elements;
-			}
+			},
+      visibleQuestions() {
+			  return this.group.visibleElements;
+      }
 		}
   }
 </script>

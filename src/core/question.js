@@ -19,6 +19,7 @@ export class Question extends Element {
 
   constructor(question, properties) {
     super(question, properties || metaData.getProperties("question"));
+    this.proxy = this.__getProxyHandler();
 	}
 
 	// question is considered answered
@@ -57,10 +58,7 @@ export class Question extends Element {
   }
 
   set value(val) {
-    this.__value = val;
-    if (this.survey) {
-      this.survey.onValueChanged(this, val);
-		}
+    this.proxy.__value = val;
   }
 
   get value() {
@@ -82,6 +80,23 @@ export class Question extends Element {
       return !!this.hasValue();
     }
     return true;
+  }
+
+  __getProxyHandler() {
+    var that = this;
+    return new Proxy(this, {
+      set(obj, prop, val) {
+        that.__questionPropertyChanged(obj, prop, val);
+        obj[prop] = val;
+        return true;
+      }
+    });
+  }
+
+  __questionPropertyChanged(obj, prop, val) {
+    if (prop === "__value" && this.survey) {
+      this.survey.valueChanged(this, val, obj[prop]);
+    }
   }
 }
 

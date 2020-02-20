@@ -13,13 +13,19 @@ export class Page extends Base {
   static get properties() {
     return Base.properties.concat([
       "!name",
-      "title"
+      "title",
+      "visibleIf",
+      { name: "visible", type: "boolean", default: true, writable: true }
     ])
   }
 
   constructor(page) {
     super(page, metaData.getProperties("page"));
 		this.elements = [];
+  }
+
+  get visibleElements() {
+    return this.getElements().filter(element => element.visible);
   }
 
   get pageNumber() {

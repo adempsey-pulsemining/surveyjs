@@ -19,7 +19,9 @@ export class Element extends Base {
 			"pageBreakBefore:boolean",
 			"pageBreakAfter:boolean",
       "hideInPdf:boolean",
-      "hideInPdfIfEmpty:boolean"
+      "hideInPdfIfEmpty:boolean",
+      "visibleIf",
+      { name: "visible", type: "boolean", default: true, writable: true }
     ])
 	}
 	

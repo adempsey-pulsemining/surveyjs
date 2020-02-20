@@ -1,5 +1,6 @@
 import { Page } from "./page";
-import { metaData, Base } from "./base"
+import { metaData, Base } from "./base";
+import { isEqual } from "lodash";
 
 export class Survey extends Base {
   static get definition() {
@@ -32,6 +33,10 @@ export class Survey extends Base {
   /**
    * Public methods
    */
+
+  get visiblePages() {
+    return this.pages.filter(page => page.visible);
+  }
 
   reset() {
     this.data = {};
@@ -109,6 +114,14 @@ export class Survey extends Base {
 
   indexOfQuestion(question) {
     return this.questions.indexOf(question);
+  }
+
+  valueChanged(question, newVal, oldVal) {
+    newVal = typeof newVal === "object" ? JSON.parse(JSON.stringify(newVal)) : newVal;
+    oldVal = typeof oldVal === "object" ? JSON.parse(JSON.stringify(oldVal)) : oldVal;
+    if (this.onValueChanged && !isEqual(newVal, oldVal)) {
+      this.onValueChanged(question, newVal, oldVal);
+    }
   }
 
   /**

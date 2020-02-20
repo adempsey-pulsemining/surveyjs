@@ -134,12 +134,19 @@ export class Base {
 		if (val == null && property.default != null) {
 			val = property.default;
 		}
-    const attributes = {
+		if (!property.writable) {
+		  this.__setReadonlyProp(key, val);
+    } else {
+      this[property.name] = val;
+    }
+  }
+
+  __setReadonlyProp(key, val) {
+    Object.defineProperty(this, key, {
       get() {
         return val;
-			}
-    };
-    Object.defineProperty(this, key, attributes);
+      }
+    });
   }
 }
 

@@ -19,6 +19,10 @@ export class Group extends Element {
     this.elements = [];
   }
 
+  get visibleElements() {
+    return this.elements.filter(x => x.visible);
+  }
+
   addQuestions(questions) {
     questions = questions || [];
     for (let question of questions) {

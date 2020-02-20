@@ -28,7 +28,7 @@ export class Matrix extends Question {
 		this.rows = [];
 		this.columns = [];
 		for (let row of question.rows || []) {
-			this.rows.push(new MatrixRow(row));
+			this.rows.push(new MatrixRow(this, row));
 		}
 		for (let column of question.columns || []) {
 			this.columns.push(new MatrixColumn(column));
@@ -37,7 +37,7 @@ export class Matrix extends Question {
 			this.rowCount = 2;
 		}
 		for (let i = 0; i < this.rowCount; ++i) {
-			this.rows.push(new MatrixRow());
+			this.rows.push(new MatrixRow(this));
 		}
 		if (this.multipleChoice || this.dynamic) {
 			this._addCells(question);
@@ -50,7 +50,11 @@ export class Matrix extends Question {
 		data.rows = this.rows;
 		return data;
 	}
-	
+
+	set value(val) {
+  	super.value = val;
+	}
+
 	get value() {
   	if (this.dynamic) {
   		return this.dynamicValue();
@@ -73,8 +77,7 @@ export class Matrix extends Question {
 	}
 
 	_addCell(question, row, col, type) {
-		let cell = new MatrixCell(question, row, col, type);
-		cell.question = this;
+		let cell = new MatrixCell(this, question, row, col, type);
 		this.cells[row][col] = cell;
 	}
 
@@ -186,7 +189,7 @@ export class Matrix extends Question {
 
 	addRow() {
   	this.cells.push({});
-		this.rows.push(new MatrixRow());
+		this.rows.push(new MatrixRow(this));
 		this.columns.forEach((col, colIndex) => {
 			this._addCell(this, this.rows.length - 1, colIndex, col.cellType || this.cellType);
 		});
@@ -213,12 +216,36 @@ class MatrixRow extends Base {
     return Base.properties.concat([]);
   }
 
-  constructor(item) {
+  constructor(question, item) {
 		super(item, metaData.getProperties("matrixrow"));
+		var that = this;
+		this.question = question;
+		var proxyHandler = {
+			set(obj, prop, val) {
+				return that.__rowPropChanged(obj, prop, val);
+			}
+		};
+		this.proxy = new Proxy(this, proxyHandler);
 		this.value = null;
 		this.name = typeof item === "object" ? item.name : item;
 		this.title = typeof item === "object" ? (item.title || item.name) : item;
   }
+
+  set value(val) {
+  	this.proxy.__value = val;
+	}
+
+	get value() {
+  	return this.proxy.__value;
+	}
+
+	__rowPropChanged(obj, prop, val) {
+		obj[prop] = val;
+		if (prop === "__value" && !this.question.dynamic) {
+			this.question.value = this.question.value;
+		}
+		return true;
+	}
 }
 
 class MatrixColumn extends Base {
@@ -256,12 +283,28 @@ class MatrixCell extends Base {
     return Base.properties.concat([]);
 	}
 	
-	constructor(question, rowIndex, colIndex, type) {
+	constructor(q, question, rowIndex, colIndex, type) {
 		super(question, metaData.getProperties(type));
+		this.question = q;
+		var that = this;
+		var proxyHandler = {
+			set(obj, prop, val) {
+				return that.__cellPropChanged(obj, prop, val);
+			}
+		};
+		this.proxy = new Proxy(this, proxyHandler);
 		this.value = null;
 		this.row = rowIndex;
 		this.col = colIndex;
 		this.cellType = type;
+	}
+
+	set value(val) {
+		this.proxy.__value = val;
+	}
+
+	get value() {
+		return this.proxy.__value;
 	}
 
 	isReadOnly() {
@@ -280,6 +323,14 @@ class MatrixCell extends Base {
 
 	get choices() {
 		return this.question.choices;
+	}
+
+	__cellPropChanged(obj, prop, val) {
+		obj[prop] = val;
+		if (prop === "__value" && val != null) {
+			this.question.value = this.question.value;
+		}
+		return true;
 	}
 }
 

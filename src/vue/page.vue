@@ -2,7 +2,7 @@
   <div class="sv_page" :style="pageStyle">
     <div class="sv_page_title">{{title}}</div>
 		<div class="sv_page_body" v-if="hasElements">
-			<div class="sv_page_row" v-for="(element, index) in elements" :key="index">
+			<div class="sv_page_row" v-for="(element, index) in visibleElements" :key="index">
 				<component v-if="isGroup(element)" is="survey-group" :survey="survey" :group="element" />
 				<component v-if="!isGroup(element) && element.isShownInPdf" is="survey-question" :question="element" />
 			</div>
@@ -39,6 +39,9 @@
 			},
 			elements() {
 				return this.page ? this.page.getElements() : [];
+			},
+			visibleElements() {
+				return this.page ? this.page.visibleElements : [];
 			},
 			hasElements() {
 				return this.elements.length > 0;

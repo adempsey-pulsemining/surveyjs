@@ -38,6 +38,11 @@
     },
     mounted() {
       this.id = this.question.newGuid();
+    },
+    watch: {
+      "question.value": function(newVal, oldVal) {
+        this.question.survey.valueChanged(this.question, newVal, oldVal);
+      }
     }
   });
 </script>

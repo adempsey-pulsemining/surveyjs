@@ -6,7 +6,7 @@
 				<survey-page :survey="survey" :page="survey.currentPage"></survey-page>
 			</div>
 			<div class="sv_page_container" v-else>
-				<survey-page v-for="(page, index) in survey.pages" :key="index" :page="survey.pages[index]" :survey="survey"></survey-page>
+				<survey-page v-for="(page, index) in survey.visiblePages" :key="index" :page="survey.visiblePages[index]" :survey="survey"></survey-page>
 			</div>			
 			<survey-progress v-if="survey.showProgressBar && !survey.isPdfRender && !survey.singlePage" :survey="survey"></survey-progress>
 			<survey-controls v-if="!survey.isPdfRender" :survey="survey"></survey-controls>
