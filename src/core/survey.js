@@ -25,10 +25,33 @@ export class Survey extends Base {
 
   constructor(template) {
     super(template, metaData.getProperties("survey"));
-    this.currentPageIndex = 0;
     this.pages = [];
-    this._createEventListeners();
+    this.currentPageIndex = 0;
     this._renderSurvey(template);
+    this._createEventListeners();
+    this.pageIndexProxy = this.__getPageIndexProxy();
+    this.pageIndexProxy.currentPageIndex = 0;
+  }
+
+  __getPageIndexProxy() {
+    var that = this;
+    return new Proxy(this, {
+      set(obj, prop, val) {
+        return that.__onSetProxy(obj, prop, val);
+      },
+      get(obj, prop) {
+        return obj[prop]
+      }
+    });
+  }
+
+  __onSetProxy(obj, prop, val) {
+    let oldVal = obj[prop];
+    obj[prop] = val;
+    if (prop === "currentPageIndex") {
+      this.pageChanged(oldVal, val);
+    }
+    return true;
   }
 
   /**
@@ -60,25 +83,28 @@ export class Survey extends Base {
         data[question.questionId] = question.data;
       }
     }
+    if (typeof data.value === "object") {
+      data.value = JSON.parse(JSON.stringify(data.value));
+    }
     return data;
 	}
 
   isFirstPage() {
-    return this.currentPageIndex === 0 || this.singlePage;
+    return this.pageIndexProxy.currentPageIndex === 0 || this.singlePage;
   }
 
   isLastPage() {
-    return this.currentPageIndex === this.visiblePages.length - 1 || this.singlePage;
+    return this.pageIndexProxy.currentPageIndex === this.visiblePages.length - 1 || this.singlePage;
   }
 
   nextPage() {
     if (this.isLastPage()) return;
-    ++this.currentPageIndex;
+    ++this.pageIndexProxy.currentPageIndex;
   }
 
   prevPage() {
     if (this.isFirstPage()) return;
-    --this.currentPageIndex;
+    --this.pageIndexProxy.currentPageIndex;
   }
 
   complete() {
@@ -94,7 +120,7 @@ export class Survey extends Base {
   }
 
   get currentPage() {
-    return this.visiblePages[this.currentPageIndex];
+    return this.visiblePages[this.pageIndexProxy.currentPageIndex];
   }
 
   addPage(page) {
@@ -158,6 +184,10 @@ export class Survey extends Base {
     }
   }
 
+  pageChanged(oldVal, newVal) {
+    this.doTriggers(this);
+  }
+
   /**
    * Private methods
    */
@@ -171,7 +201,6 @@ export class Survey extends Base {
   // Render survey from the template. ie create pages/panels/questions
   _renderSurvey(template) {
     this._createPages(template.pages);
-    this.doTriggers(this);
 	}
 
   _createPages(pages) {

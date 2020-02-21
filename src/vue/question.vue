@@ -24,7 +24,8 @@
       <div v-if="question.description" class="sv_q_description">{{question.description}}</div>
     </div>
     <div class="sv_q_body">
-      <component :is="componentName" :question="question" />
+      <component v-if="question.isWidget" is="survey-widget" :question="question" />
+      <component v-else :is="componentName" :question="question" />
     </div>
   </div>
 </template>
@@ -39,6 +40,7 @@
 	import SurveyMultipletext from "./question-multipletext.vue";
 	import SurveyHtml from "./question-html.vue";
 	import SurveyMatrix from "./question-matrix.vue";
+	import SurveyWidget from "./question-widget.vue";
 	import { BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue/src/components/dropdown";
 	import VButton from "../components/v-button.vue";
 	import { BFormTextarea } from "bootstrap-vue/src/components/form-textarea";
@@ -56,6 +58,7 @@
 			SurveyMultipletext,
 			SurveyHtml,
 			SurveyMatrix,
+			SurveyWidget,
 			BDropdown, BDropdownItem, BDropdownItemButton, BModal,
 			VButton, BFormTextarea
     },

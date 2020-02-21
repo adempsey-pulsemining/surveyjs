@@ -35,7 +35,7 @@
     computed: {
       currentPage: {
         get() { return this.survey.currentPageIndex + 1 },
-        set(val) { this.survey.currentPageIndex = val - 1 }
+        set(val) { this.survey.pageIndexProxy.currentPageIndex = val - 1 }
       },
       totalPages() {
         return this.survey.visiblePages.length;

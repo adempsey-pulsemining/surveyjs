@@ -1,4 +1,5 @@
 import { isEqual } from "lodash";
+import { difference } from "lodash";
 
 export class BinaryOperand {
   constructor(operatorName, left, right, isArithmeticOp = false) {
@@ -23,20 +24,33 @@ export class BinaryOperand {
   get isArithmetic() {
     return this.isArithmeticValue;
   }
+
   get isConjunction() {
     return this.operatorName == "or" || this.operatorName == "and";
   }
+
   get conjunction() {
     return this.isConjunction ? this.operatorName : "";
   }
+
   get operator() {
     return this.operatorName;
   }
+
   get leftOperand() {
     return this.left;
   }
+
   get rightOperand() {
     return this.right;
+  }
+
+  evaluateParam(x, processValue) {
+    return x == null ? null : x.evaluate(processValue);
+  }
+
+  evaluate(processValue) {
+    return this.consumer.call(this, this.evaluateParam(this.left, processValue), this.evaluateParam(this.right, processValue));
   }
 
   toString(func) {
@@ -87,6 +101,11 @@ export class UnaryOperand {
     return (OperandMaker.operatorToString(this.operatorName) + " " + this.expression.toString(func));
   }
 
+  evaluate(processValue) {
+    let value = this.expression.evaluate(processValue);
+    return this.consumer.call(this, value);
+  }
+
   setVariables(variables) {
     this.expression.setVariables(variables);
   }
@@ -107,6 +126,12 @@ export class ArrayOperand {
       if (!!res) return res;
     }
     return ("[" + this.values.map(function(el) {return el.toString(func);}).join(", ") + "]");
+  }
+
+  evaluate(processValue) {
+    return this.values.map(function(el) {
+      return el.evaluate(processValue);
+    });
   }
 
   setVariables(variables) {
@@ -143,9 +168,17 @@ export class Const {
 
   setVariables(variables) {}
 
+  evaluate() {
+    return this.getCorrectValue(this.value);
+  }
+
   getCorrectValue(value) {
-    if (!value || typeof value != "string") return value;
-    if (this.isBooleanValue(value)) return value.toLowerCase() === "true";
+    if (!value || typeof value != "string") {
+      return value;
+    }
+    if (this.isBooleanValue(value)) {
+      return value.toLowerCase() === "true";
+    }
     if (OperandMaker.isNumeric(value)) {
       if (value.indexOf("0x") == 0) return parseInt(value);
       return parseFloat(value);
@@ -174,6 +207,16 @@ export class Variable extends Const {
       if (!!res) return res;
     }
     return "{" + this.variableName + "}";
+  }
+
+  evaluate(processValue) {
+    var value = null;
+    Object.keys(processValue).forEach(key => {
+      if (processValue[key].name === this.variable) {
+        value = processValue[key].value;
+      }
+    });
+    return this.getCorrectValue(value);
   }
 
   get variable() {
@@ -295,18 +338,20 @@ OperandMaker.signs = {
   negate: "!"
 };
 
+var toArithmeticOp = function(operatorName, a, b) {
+  if (OperandMaker.isValueEmpty(a) && !OperandMaker.isSpaceString(a)) {
+    a = typeof b === "string" ? "" : 0;
+  }
+  if (OperandMaker.isValueEmpty(b) && !OperandMaker.isSpaceString(b)) {
+    b = typeof a === "string" ? "" : 0;
+  }
+  let consumer = OperandMaker.binaryFunctions[operatorName];
+  return consumer == null ? null : consumer.call(this, a, b);
+};
+
 OperandMaker.binaryFunctions = {
   arithmeticOp(operatorName) {
-    return function(a, b) {
-      if (OperandMaker.isValueEmpty(a) && !OperandMaker.isSpaceString(a)) {
-        a = typeof b === "string" ? "" : 0;
-      }
-      if (OperandMaker.isValueEmpty(b) && !OperandMaker.isSpaceString(b)) {
-        b = typeof a === "string" ? "" : 0;
-      }
-      let consumer = OperandMaker.binaryFunctions[operatorName];
-      return consumer == null ? null : consumer.call(this, a, b);
-    };
+    return function(a, b) { return toArithmeticOp(operatorName, a, b) }
   },
   and: function(a, b) {
     return a && b;
@@ -351,9 +396,17 @@ OperandMaker.binaryFunctions = {
     return left <= right;
   },
   equal: function(left, right) {
+    if (Array.isArray(left) && Array.isArray(right) && left.length === right.length) {
+      left = left.sort();
+      right = right.sort();
+    }
     return isEqual(left, right);
   },
   notequal: function(left, right) {
+    if (Array.isArray(left) && Array.isArray(right) && left.length === right.length) {
+      left = left.sort();
+      right = right.sort();
+    }
     return !isEqual(left, right);
   },
   contains: function(left, right) {
@@ -401,19 +454,11 @@ OperandMaker.binaryFunctions = {
       var found = left.indexOf(right) > -1;
       return isContains ? found : !found;
     }
+    return OperandMaker.binaryFunctions.contains.containsCoreArray(left, right, isContains);
+  },
+  containsCoreArray: function(left, right, isContains) {
     var rightArray = Array.isArray(right) ? right : [right];
-    for (var rIndex = 0; rIndex < rightArray.length; rIndex++) {
-      var i = 0;
-      right = rightArray[rIndex];
-      for (; i < left.length; i++) {
-        if (isEqual(left[i], right)) {
-          break;
-        }
-      }
-      if (i == left.length) {
-        return !isContains;
-      }
-    }
-    return isContains;
+    var leftArray = Array.isArray(left) ? left : [left];
+    return isContains ? difference(leftArray, rightArray).length === 0 : difference(leftArray, rightArray).length !== 0;
   }
 };

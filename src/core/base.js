@@ -55,7 +55,7 @@ export var metaData = {
     if (!obj) return "";
     return obj.name;
   },
-  addCustomWidget(type, properties) {
+  addCustomWidget(type, properties, widget) {
     if (this.properties[type]) {
       throw new Error("There already exists a class with type " + type);
     }
@@ -65,6 +65,7 @@ export var metaData = {
       properties: properties,
     };
     newClass.properties = this.getProperties("question").concat(newClass.properties);
+    newClass.widget = widget;
     this.addClass(newClass);
   },
   getWidget(name) {
@@ -118,37 +119,32 @@ export class Base {
   }
 
   doTriggers(survey) {
-    for (let element of survey.getAllElements().filter(x => x.visibleIf)) {
-      this._processTrigger(survey, element);
+    for (let element of survey.currentPage.getAllElements()) {
+      if (element.visibleIf) {
+        element.visible = this._processTrigger(survey, element.visibleIf);
+      }
+      if (element.enableIf) {
+        element.readOnly = !this._processTrigger(survey, element.enableIf);
+      }
     }
   }
 
-  _processTrigger(survey, element) {
-    if (!element.visibleIf) return;
-    let expression = grammar.parse(element.visibleIf);
-    console.log(expression);
-    do {
-      expression = this.__parseExpression(survey, expression);
-      expression = expression.consumer(expression.left.value, expression.right.value);
-    } while (typeof expression === "object");
-    console.log(expression);
-    element.visible = !!expression;
-  }
-
-  __parseExpression(survey, expression) {
-    if (expression.left.getType() === "variable") {
-      expression.left.value = this.getVariableValue(survey, expression.left.variableName);
+  _processTrigger(survey, trigger) {
+    if (!trigger) return;
+    this.__expressionCache = this.__expressionCache || {};
+    let expression;
+    if (!this.__expressionCache[trigger]) {
+      expression = grammar.parse(trigger);
+    } else {
+      expression = this.__expressionCache[trigger]
     }
-    if (expression.right.getType() === "variable") {
-      expression.right.value = this.getVariableValue(survey, expression.right.variableName);
-    }
-    return expression;
+    return !!expression.evaluate(survey.data);
   }
 
   getVariableValue(survey, variableName) {
     for (let element of survey.getAllElements()) {
       if (element.name === variableName) {
-        return element.value;
+        return typeof element.value === "object" ? JSON.parse(JSON.stringify(element.value)) : element.value;
       }
     }
     return null;
