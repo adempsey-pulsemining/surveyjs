@@ -1,6 +1,6 @@
 <template>
   <div class="sv_q_multipletext">
-    <div role="group" :style="getStyle(question.colCount)">
+    <div role="group" :style="getStyle(question.inline)">
       <div v-for="(item, index) in question.items" :key="index">
         <label :for="getUniqueId(index)">{{item.title || item.name}}</label>
         <b-form-input :id="getUniqueId(index)"
@@ -29,8 +29,8 @@
       }
 		},
     methods: {
-			getStyle(cols) {
-				let colCount = cols ? cols : "auto-fit";
+			getStyle(inline) {
+				let colCount = inline ? "auto-fit" : 1;
 				return `display: grid; grid-template-columns: repeat(${colCount}, minmax(200px, 1fr))`;
 			},
       isReadOnly(item) {

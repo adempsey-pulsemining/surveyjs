@@ -69,7 +69,8 @@
 		},
 		data() {
 			return {
-				comment: ""
+				comment: "",
+				alphabet: "abcdefghijklmnopqrstuvwxyz"
 			}
 		},
     computed: {
@@ -84,7 +85,10 @@
 				return this.question.survey.showQuestionNumbers
 			},
 			questionNo() {
-				return this.question.no + ". ";
+				if (this.question.group) {
+					return this.question.group.no + this.alphabet.charAt(this.question.questionNo - 1) + ". ";
+				}
+				return this.question.elementNo + ". ";
 			}
 		},
     methods: {

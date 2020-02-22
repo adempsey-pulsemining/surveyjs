@@ -53,10 +53,15 @@ export class Question extends Element {
     }
 	}
 
-  get no() {
+  get questionNo() {
     if (!this.survey) return;
     return this.survey.indexOfQuestion(this) + 1;
-  }
+	}
+	
+	get elementNo() {
+		if (!this.survey) return;
+		return this.survey.indexOfElement(this) + 1;
+	}
 
   set value(val) {
     this.proxy.__value = val;

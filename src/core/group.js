@@ -11,12 +11,19 @@ export class Group extends Element {
   }
 
   static get properties() {
-    return Element.properties.concat([]);
+    return Element.properties.concat([
+			{ name: "inline", type: "boolean", default: true }
+		]);
   }
 
   constructor(element) {
     super(element, metaData.getProperties("group"));
     this.elements = [];
+	}
+	
+	get no() {
+    if (!this.survey) return;
+    return this.survey.indexOfElement(this) + 1;
   }
 
   get visibleElements() {

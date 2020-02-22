@@ -171,9 +171,13 @@ export class Survey extends Base {
     return elements;
   }
 
-  indexOfQuestion(question) {
-    return this.questions.indexOf(question);
-  }
+  indexOfQuestion(question, visible = false) {
+    return visible ? this.visibleQuestions.indexOf(question) : this.questions.indexOf(question);
+	}
+	
+	indexOfElement(element, visible = false) {
+		return visible ? this.visibleElements.indexOf(element) : this.elements.indexOf(element);
+	}
 
   valueChanged(question, newVal, oldVal) {
     newVal = typeof newVal === "object" ? JSON.parse(JSON.stringify(newVal)) : newVal;

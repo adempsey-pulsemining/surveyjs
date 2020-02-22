@@ -31,9 +31,22 @@
 					name: "page1",
 					elements: [
 						{
+							type: "group",
+							name: "group1",
+							elements: [
+								{
+									type: "text",
+									name: "blah",
+								},
+								{
+									type: "text",
+									name: "omg"
+								}
+							]
+						},
+						{
 							name: "question1",
 							type: "text",
-							visibleIf: "{question2} = false"
 						},
 						{
 							name: "question2",
@@ -60,7 +73,6 @@
 						},
 						{
 							name: "question7",
-							colCount: 0,
 							type: "multipletext",
 							items: [
 								{ name: "item1", title: "Item 1" }, 
