@@ -12,7 +12,7 @@ export class MultipleText extends Question {
 
   static get properties() {
     return Question.properties.concat([
-
+			{ name: "colCount", type: "number", default: 0 }
     ]);
   }
 
