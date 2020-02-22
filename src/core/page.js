@@ -38,11 +38,11 @@ export class Page extends Base {
 	
 	// Returns true if the page has no unanswered questions
 	get completed() {
-		return this.questions.every(question => question.isAnswered());
+		return this.visibleQuestions.every(question => question.isAnswered());
   }
   
   hasErrors() {
-		return this.questions.some(question => !question.isValid());
+		return this.visibleQuestions.some(question => !question.isValid());
 	}
 
   // Get all questions in the page including inside groups
