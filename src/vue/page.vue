@@ -58,7 +58,7 @@
 <style>
 	.sv_page .sv_page_title {
 		font-weight: bold;
-		font-size: 1.1rem;
+		font-size: 1.2rem;
 		padding: 1rem;
 		padding-bottom: 0;
 	}

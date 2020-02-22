@@ -1,5 +1,4 @@
 import { isEqual } from "lodash";
-import { difference } from "lodash";
 
 export class BinaryOperand {
   constructor(operatorName, left, right, isArithmeticOp = false) {
@@ -454,11 +453,11 @@ OperandMaker.binaryFunctions = {
       var found = left.indexOf(right) > -1;
       return isContains ? found : !found;
     }
-    return OperandMaker.binaryFunctions.contains.containsCoreArray(left, right, isContains);
+    return OperandMaker.binaryFunctions.containsCoreArray(left, right, isContains);
   },
   containsCoreArray: function(left, right, isContains) {
     var rightArray = Array.isArray(right) ? right : [right];
     var leftArray = Array.isArray(left) ? left : [left];
-    return isContains ? difference(leftArray, rightArray).length === 0 : difference(leftArray, rightArray).length !== 0;
+    return isContains ? rightArray.every(x => leftArray.includes(x)) : !rightArray.every(x => leftArray.includes(x));
   }
 };
