@@ -86,7 +86,7 @@
 			},
 			questionNo() {
 				if (this.question.group) {
-					return this.question.group.no + this.alphabet.charAt(this.question.questionNo - 1) + ". ";
+					return this.question.group.no + this.alphabet.charAt(this.question.group.elements.indexOf(this.question)) + ". ";
 				}
 				return this.question.elementNo + ". ";
 			}
