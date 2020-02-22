@@ -38,6 +38,3 @@ config.autoAddCss = false;
 export { default as VueWidget } from "./core/widget";
 
 import "./styles/main.scss";
-
-import grammar from "./expressions/grammar.pegjs";
-export { grammar };

@@ -29,15 +29,15 @@ export class Survey extends Base {
     this.currentPageIndex = 0;
     this._renderSurvey(template);
     this._createEventListeners();
-    this.pageIndexProxy = this.__getPageIndexProxy();
+    this.pageIndexProxy = this.__getSurveyProxy();
     this.pageIndexProxy.currentPageIndex = 0;
   }
 
-  __getPageIndexProxy() {
+  __getSurveyProxy() {
     var that = this;
     return new Proxy(this, {
       set(obj, prop, val) {
-        return that.__onSetProxy(obj, prop, val);
+        return that.__onSurveyPropertyChanged(obj, prop, val);
       },
       get(obj, prop) {
         return obj[prop]
@@ -45,7 +45,7 @@ export class Survey extends Base {
     });
   }
 
-  __onSetProxy(obj, prop, val) {
+  __onSurveyPropertyChanged(obj, prop, val) {
     let oldVal = obj[prop];
     obj[prop] = val;
     if (prop === "currentPageIndex") {

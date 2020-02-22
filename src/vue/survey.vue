@@ -56,15 +56,6 @@
 		border-bottom: thin solid lightgrey;
 	}
 
-	.sv_page_container > .sv_page {
-		padding: 1rem;
-		padding-bottom: 0;
-	}
-
-	.sv_page_container > .sv_page:last-child {
-		padding-bottom: 1rem;
-	}
-
 	.sv_main .sv_body {
 		display: flex;
 		flex-direction: column;

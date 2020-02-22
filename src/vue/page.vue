@@ -59,10 +59,29 @@
 	.sv_page .sv_page_title {
 		font-weight: bold;
 		font-size: 1.1rem;
-		margin-bottom: .5rem;
+		padding: 1rem;
+		padding-bottom: 0;
 	}
 
 	.sv_page_row:nth-child(even) {
 		background-color: #f4f4f4;
+	}
+
+	.sv_page_row {
+		padding: .5rem 1rem;
+		border-bottom: thin solid lightgrey;
+	}
+
+	.sv_page_row:last-of-type {
+		border-bottom: none;
+	}
+
+	.sv_page_empty {
+		padding: .5rem 1rem;
+		padding-bottom: 2rem;
+	}
+
+	.sv_page:last-of-type .sv_page_row:last-of-type {
+		padding-bottom: 2rem;
 	}
 </style>

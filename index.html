@@ -84,13 +84,19 @@
 							choices: [{ name: "choice1" }],
 							rows: [{ name: "row1", title: "Row 1" }, { name: "Row 2" }],
 							columns: [{ name: "column1", cellType: "text" }, { name: "column2", title: "Column 2" }]
+						},
+						{
+							name: "question11",
+							type: "text"
 						}
 					]
 				},
 				{
 					name: "page2",
 					title: "Page 2",
-					elements: []
+					elements: [
+						
+					]
 				}
 			]
 		}
@@ -106,6 +112,9 @@
 			}
 		}
 		let survey = new Survey.Survey(tem);
+		survey.onValueChanged = function(question, val) {
+			console.log(question, val);
+		}
 		new Vue({ 
 			el: document.getElementById("app"), 
 			data: { survey: survey }

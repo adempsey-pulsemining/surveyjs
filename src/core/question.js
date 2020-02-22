@@ -19,7 +19,7 @@ export class Question extends Element {
 
   constructor(question, properties) {
     super(question, properties || metaData.getProperties("question"));
-    this.proxy = this.__getProxyHandler();
+    this.proxy = this.__getQuestionProxy();
     this.valueChangedCallback = function() {};
 	}
 
@@ -90,28 +90,23 @@ export class Question extends Element {
     this.survey.valueChanged(this, val, oldVal);
   }
 
-  __getProxyHandler() {
-    var handler = this.__proxyHandler;
-    return new Proxy(this, handler);
-  }
-
-  get __proxyHandler() {
-    var that = this;
-    return {
-      set(obj, prop, val) {
-        let oldVal = typeof obj[prop] === "object" ? JSON.parse(JSON.stringify(obj[prop])) : obj[prop];
-        obj[prop] = val;
-        that.__questionPropertyChanged(prop, val, oldVal);
-        return true;
+  __getQuestionProxy() {
+		var that = this;
+    return new Proxy(this, {
+			set(obj, prop, val) {
+				return that.__onQuestionPropertyChanged(obj, prop, val);
       }
-    }
-  }
-
-  __questionPropertyChanged(prop, val, oldVal) {
-    if (prop === "__value" && this.survey) {
+		});
+	}
+	
+	__onQuestionPropertyChanged(obj, prop, val) {
+		let oldVal = typeof obj[prop] === "object" ? JSON.parse(JSON.stringify(obj[prop])) : obj[prop];
+		obj[prop] = val;
+		if (prop === "__value" && this.survey) {
       this.valueChanged(val, oldVal);
     }
-  }
+		return true;
+	}
 }
 
 metaData.addClass(Question.definition);
