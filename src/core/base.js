@@ -137,7 +137,7 @@ export class Base {
       expression = grammar.parse(trigger);
     } else {
       expression = this.__expressionCache[trigger]
-    }
+		}
     return !!expression.evaluate(survey.data);
   }
 

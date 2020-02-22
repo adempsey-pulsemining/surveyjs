@@ -32,7 +32,8 @@
 					elements: [
 						{
 							name: "question1",
-							type: "text"
+							type: "text",
+							visibleIf: "{question2} = false"
 						},
 						{
 							name: "question2",
@@ -112,6 +113,7 @@
 			}
 		}
 		let survey = new Survey.Survey(tem);
+		console.log(survey);
 		survey.onValueChanged = function(question, val) {
 			console.log(question, val);
 		}

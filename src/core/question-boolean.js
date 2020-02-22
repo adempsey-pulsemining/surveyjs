@@ -26,6 +26,10 @@ export class Boolean extends Question {
 	isAnswered() {
 		return Boolean.IsAnswered(this.value);
 	}
+
+	hasValue() {
+		return this.isAnswered();
+	}
 }
 
 metaData.addClass(Boolean.definition);
