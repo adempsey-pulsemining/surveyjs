@@ -209,14 +209,31 @@ export class Variable extends Const {
   }
 
   evaluate(processValue) {
-    var value = null;
+		var value = null;
     Object.keys(processValue).forEach(key => {
-      if (processValue[key].name === this.variable) {
-        value = processValue[key].value;
-      }
+      value = this.__getValue(key, processValue);
     });
     return this.getCorrectValue(value);
-  }
+	}
+	
+	__getValue(key, processValue) {
+		let value;
+		if (processValue[key].name === this.variable) {
+			value = processValue[key].value;
+		} else if (processValue[key].name === this.variable.split(".")[0]) {
+			value = this.__getObjectValue(processValue[key].value);
+		}
+		return value;
+	}
+
+	__getObjectValue(object) {
+		let i = 1;
+		let value = object[this.variable.split(".")[i++]];
+		while (this.variable.split(".")[i]) {
+			value = value[this.variable.split(".")[i++]];
+		}
+		return value;
+	}
 
   get variable() {
     return this.variableName;
