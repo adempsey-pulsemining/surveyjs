@@ -20,6 +20,10 @@ export class Group extends Element {
     super(element, metaData.getProperties("group"));
     this.elements = [];
 	}
+
+	get titleColour() {
+    return this.group.titleColour || "";
+  }
 	
 	get no() {
     if (!this.survey) return;

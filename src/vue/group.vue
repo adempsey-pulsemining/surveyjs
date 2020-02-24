@@ -1,6 +1,6 @@
 <template>
   <div class="sv_group">
-    <div class="sv_group_title">{{title}}</div>
+    <div class="sv_group_title" :style="{ 'color': group.titleColour }">{{title}}</div>
 		<div class="sv_group_body" :style="getStyle(group.inline)">
 			<component v-for="(question, index) in visibleQuestions" :is="componentName" :question="question" :key="index"></component>
 		</div>

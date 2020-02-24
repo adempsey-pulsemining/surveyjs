@@ -8,7 +8,7 @@
       </div>
     </b-modal>
     <div class="sv_q_header">
-      <div class="sv_q_header_title">
+      <div class="sv_q_header_title" :style="{ color: question.titleColour }">
         <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>
         <span class="sv_q_title">{{questionTitle}}</span>
         <div class="flex"></div>

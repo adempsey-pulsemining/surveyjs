@@ -53,6 +53,10 @@ export class Question extends Element {
     }
 	}
 
+	get titleColour() {
+    return this.question.titleColour || "";
+  }
+
   get questionNo() {
     if (!this.survey) return;
     return this.survey.indexOfQuestion(this) + 1;
