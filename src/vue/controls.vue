@@ -44,6 +44,7 @@
     flex-direction: row;
     align-items: center;
     padding: 1rem;
+    flex-shrink: 0;
   }
 
   #sv_complete_btn, #sv_next_btn {

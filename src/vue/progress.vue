@@ -36,5 +36,6 @@
 	.sv_progress {
 		padding: 0 1rem;
 		padding-top: 1rem;
+		flex-shrink: 0;
 	}
 </style>
