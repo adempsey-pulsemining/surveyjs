@@ -679,6 +679,12 @@ export class Question extends SurveyElement
   public set hideInPdfIfEmpty(val: boolean) {
     this.setPropertyValue("hideInPdfIfEmpty", val);
   }
+  public get titleColour(): string {
+    return this.getPropertyValue("titleColour");
+  }
+  public set titleColour(val: string) {
+    this.setPropertyValue("titleColour", val);
+  }
   public isAnswered(): boolean {
     if (this.customWidget && this.customWidget.widgetJson && typeof this.customWidget.widgetJson.isAnswered == "function") {
       return this.customWidget.widgetJson.isAnswered(this);
@@ -1216,6 +1222,7 @@ export class Question extends SurveyElement
 JsonObject.metaData.addClass("question", [
   "!name",
   "!questionId",
+  { name: "titleColour", layout: "row" },
   { name: "visible:boolean", default: true },
   { name: "useDisplayValuesInTitle:boolean", default: true, layout: "row" },
   "visibleIf:condition",
