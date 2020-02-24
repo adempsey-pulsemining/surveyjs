@@ -10,6 +10,16 @@ textarea, input:not([type="button"]), select {
   flex: 1 1 auto;
 }
 
+.layout.vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.layout.horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
 .dropdown-item {
   display: inline-flex;
   align-items: center;
@@ -25,6 +35,10 @@ textarea, input:not([type="button"]), select {
 
 .btn-success {
   background-color: var(--pms-accent-color-success, #3c763d) !important;
+}
+
+.btn-danger {
+  background-color: var(--pms-accent-color-error, #a94442) !important;
 }
 
 

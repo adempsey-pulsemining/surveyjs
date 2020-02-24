@@ -29,7 +29,12 @@
       }
     },
     mounted() {
-      this.question.element = this.$refs["customElement"].querySelector(this.webComponent);
+      let customElement = this.$refs["customElement"];
+      if (customElement) {
+        this.question.element = customElement.querySelector(this.webComponent);
+      } else {
+        this.question.element = this.$el;
+      }
       if (!this.question.element) return;
       this.question.readyCallback();
     }

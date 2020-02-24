@@ -49,7 +49,7 @@ export class Question extends Element {
       title: this.title || this.name,
       type: this.type,
 			page: this.pageNumber,
-			sequence: this.no
+			sequence: this.questionNo
     }
 	}
 

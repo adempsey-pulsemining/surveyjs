@@ -29,7 +29,9 @@ export class Widget extends Question {
     this.element.addEventListener("value-changed", (e) => {
       this.value = e.detail.value;
     });
-    this.__setElementProperties();
+    if (this.widget.webComponent) {
+      this.__setElementProperties();
+    }
   }
 
   onValueChanged(value) {
