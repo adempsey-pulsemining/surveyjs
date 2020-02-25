@@ -70,7 +70,12 @@ export class Survey extends Base {
     data = typeof data === "string" ? JSON.parse(data) : data;
     for (let page of this.pages) {
       for (let question of page.questions) {
-        question.value = data[question.id] ? data[question.id].value : "";
+        if (data[question.questionId] && data[question.questionId].value) {
+          question.value = data[question.questionId].value;
+        }
+        if (data[question.questionId] && data[question.questionId].comment) {
+          question.comment = data[question.questionId].comment;
+        }
       }
     }
   }
@@ -82,9 +87,6 @@ export class Survey extends Base {
         if (!question.hasValue() && !question.comment) continue;
         data[question.questionId] = question.data;
       }
-    }
-    if (typeof data.value === "object") {
-      data.value = JSON.parse(JSON.stringify(data.value));
     }
     return data;
 	}
@@ -179,12 +181,10 @@ export class Survey extends Base {
 		return visible ? this.visibleElements.indexOf(element) : this.elements.indexOf(element);
 	}
 
-  valueChanged(question, newVal, oldVal) {
-    newVal = typeof newVal === "object" ? JSON.parse(JSON.stringify(newVal)) : newVal;
-    oldVal = typeof oldVal === "object" ? JSON.parse(JSON.stringify(oldVal)) : oldVal;
-    if (this.onValueChanged && !isEqual(newVal, oldVal)) {
+  valueChanged(question, newVal) {
+    if (this.onValueChanged) {
       this.doTriggers(this);
-      this.onValueChanged(question, newVal, oldVal);
+      this.onValueChanged(question, newVal);
     }
   }
 

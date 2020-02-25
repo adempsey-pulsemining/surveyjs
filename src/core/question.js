@@ -43,13 +43,14 @@ export class Question extends Element {
 
 	get data() {
 		return {
-      value: this.value,
+      value: this.cloneValue,
       comment: this.comment || "",
       name: this.name,
       title: this.title || this.name,
       type: this.type,
 			page: this.pageNumber,
-			sequence: this.questionNo
+			sequence: this.questionNo,
+      timestamp: new Date()
     }
 	}
 
@@ -68,7 +69,13 @@ export class Question extends Element {
 	}
 
   set value(val) {
-    this.proxy.__value = val;
+    if (val !== this.proxy.__value) {
+      this.proxy.__value = val;
+    }
+  }
+
+  get cloneValue() {
+    return this.value;
   }
 
   get value() {
@@ -92,11 +99,13 @@ export class Question extends Element {
     return true;
   }
 
-  valueChanged(val, oldVal) {
+  valueChanged(val) {
     if (this.valueChangedCallback) {
-      this.valueChangedCallback(val, oldVal);
+      this.valueChangedCallback(val);
     }
-    this.survey.valueChanged(this, val, oldVal);
+    if (this.survey) {
+      this.survey.valueChanged(this, val);
+    }
   }
 
   __getQuestionProxy() {
@@ -109,10 +118,9 @@ export class Question extends Element {
 	}
 	
 	__onQuestionPropertyChanged(obj, prop, val) {
-		let oldVal = typeof obj[prop] === "object" ? JSON.parse(JSON.stringify(obj[prop])) : obj[prop];
 		obj[prop] = val;
 		if (prop === "__value" && this.survey) {
-      this.valueChanged(val, oldVal);
+      this.valueChanged(this.cloneValue);
     }
 		return true;
 	}

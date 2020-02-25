@@ -29,7 +29,15 @@ export class Checkbox extends Question {
     super(question, metaData.getProperties("checkbox"));
     this.value = [];
 	}
-	
+
+  get cloneValue() {
+    let value = [];
+    for (let item of this.value) {
+      value.push(item);
+    }
+    return value;
+  }
+
 	isAnswered() {
 		return Checkbox.IsAnswered(this.value);
 	}

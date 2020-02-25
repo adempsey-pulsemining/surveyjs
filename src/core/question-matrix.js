@@ -46,13 +46,29 @@ export class Matrix extends Question {
 
 	get data() {
 		let data = super.data;
-		data.columns = this.columns;
-		data.rows = this.rows;
+		let rows = [], columns = [];
+		this.rows.forEach(row => {
+			rows.push({ name: row.name, title: row.title || "" });
+		});
+		this.columns.forEach(col => {
+			columns.push({ name: col.name, title: col.title || "" });
+		});
+		if (!this.dynamic) {
+			data.rows = rows;
+		}
+		data.columns = columns;
 		return data;
 	}
 
 	set value(val) {
-  	super.value = val;
+		super.value = val;
+		if (this.dynamic) {
+			this.setDynamicValue(val);
+		} else if (this.multipleChoice) {
+			this.setCellsValue(val);
+		} else {
+			this.setValue(val);
+		}
 	}
 
 	get value() {
@@ -66,6 +82,39 @@ export class Matrix extends Question {
 		}
 	}
 
+	setDynamicValue(val) {
+		val = val || [];
+		val.forEach((row, rowIndex) => {
+			this.columns.forEach((column, colIndex) => {
+				if (val[rowIndex][column.name]) {
+					this.cells[rowIndex][colIndex].value = val[rowIndex][column.name];
+				}
+			});
+		});
+	}
+
+	setCellsValue(val) {
+  	val = val || {};
+  	this.rows.forEach((row, rowIndex) => {
+			this.columns.forEach((column, colIndex) => {
+				if (val[row.name] && val[row.name][column.name]) {
+					this.cells[rowIndex][colIndex].value = val[row.name][column.name];
+				}
+			});
+		});
+	}
+
+	setValue(val) {
+  	val = val || {};
+  	this.rows.forEach(row => {
+			this.columns.forEach(column => {
+				if (val[row.name] && column.name === val[row.name]) {
+					row.value = val[row.name];
+				}
+			});
+		});
+	}
+
 	_addCells(question) {
 		this.cells = [];
 		this.rows.forEach((row, rowIndex) => {
@@ -77,8 +126,7 @@ export class Matrix extends Question {
 	}
 
 	_addCell(question, row, col, type) {
-		let cell = new MatrixCell(this, question, row, col, type);
-		this.cells[row][col] = cell;
+		this.cells[row][col] = new MatrixCell(this, question, row, col, type);
 	}
 
 	getCell(row, col) {
@@ -151,7 +199,7 @@ export class Matrix extends Question {
 		this.rows.forEach((row, rowIndex) => {
 			value.push({});
 			this.columns.forEach((column, colIndex) => {
-				let val = this.cells[rowIndex][colIndex].value;
+				let val = this.cells[rowIndex][colIndex].cloneValue;
 				if (val) {
 					value[rowIndex][column.name] = val;
 				}
@@ -178,7 +226,7 @@ export class Matrix extends Question {
 		this.rows.forEach((row, rowIndex) => {
 			value[row.name] = value[row.name] || {};
 			this.columns.forEach((column, colIndex) => {
-				let val = this.cells[rowIndex][colIndex].value;
+				let val = this.cells[rowIndex][colIndex].cloneValue;
 				if (val) {
 					value[row.name][column.name] = val;
 				}
@@ -232,7 +280,9 @@ class MatrixRow extends Base {
   }
 
   set value(val) {
-  	this.proxy.__value = val;
+  	if (val !== this.proxy.__value) {
+			this.proxy.__value = val;
+		}
 	}
 
 	get value() {
@@ -242,7 +292,7 @@ class MatrixRow extends Base {
 	__rowPropChanged(obj, prop, val) {
 		obj[prop] = val;
 		if (prop === "__value" && !this.question.dynamic) {
-			this.question.value = this.question.value;
+			this.question.valueChanged(this.question.cloneValue);
 		}
 		return true;
 	}
@@ -300,11 +350,21 @@ class MatrixCell extends Base {
 	}
 
 	set value(val) {
-		this.proxy.__value = val;
+		if (val !== this.proxy.__value) {
+			this.proxy.__value = val;
+		}
 	}
 
 	get value() {
 		return this.proxy.__value;
+	}
+
+	get cloneValue() {
+		let value = this.value;
+		if (this.cellType === "checkbox" && value) {
+			value = value.slice(0, value.length);
+		}
+		return value;
 	}
 
 	isReadOnly() {
@@ -328,7 +388,7 @@ class MatrixCell extends Base {
 	__cellPropChanged(obj, prop, val) {
 		obj[prop] = val;
 		if (prop === "__value" && val != null) {
-			this.question.value = this.question.value;
+			this.question.valueChanged(this.question.cloneValue);
 		}
 		return true;
 	}

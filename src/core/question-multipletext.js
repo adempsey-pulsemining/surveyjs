@@ -24,6 +24,14 @@ export class MultipleText extends Question {
     }
   }
 
+  set value(val) {
+    for (let item of this.items) {
+      if (val[item.name]) {
+        item.value = val[item.name];
+      }
+    }
+  }
+
   get value() {
     let value = {};
     for (let item of this.items) {

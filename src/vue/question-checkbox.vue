@@ -1,6 +1,6 @@
 <template>
   <div class="sv_q_checkbox">
-    <b-form-checkbox-group v-model="question.value"
+    <b-form-checkbox-group v-model="value"
                            :options="choices"
                            value-field="name"
 													 text-field="title"
@@ -19,6 +19,12 @@
 		name: "survey-checkbox",
     components: {
       BFormCheckboxGroup
+    },
+    computed: {
+		  value: {
+        set(val) { this.question.value = val || [] },
+        get() { return this.question.value || [] }
+      }
     }
   })
 </script>

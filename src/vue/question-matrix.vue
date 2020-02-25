@@ -12,7 +12,7 @@
 				<tbody>
 				<tr v-for="(row, rowIndex) in question.rows" :key="rowIndex">
 					<td v-if="!question.dynamic">{{row.title || row.name}}</td>
-					<td v-for="(column, colIndex) in question.columns" :key="colIndex">
+					<td v-for="(column, colIndex) in question.columns" :key="rowIndex + ',' + colIndex">
 						<b-form-radio v-if="!question.multipleChoice && !question.dynamic" v-model="row.value" :value="column.name" />
 						<matrix-cell v-if="question.multipleChoice || question.dynamic" :cell="question.getCell(rowIndex, colIndex)" :question="question" :key="rowIndex + ',' + colIndex + ',' + cellKey" />
 					</td>
