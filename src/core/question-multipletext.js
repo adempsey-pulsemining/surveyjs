@@ -1,5 +1,6 @@
 import { Question } from "./question";
 import { metaData, Base } from "./base";
+import moment from "moment";
 
 export class MultipleText extends Question {
   static get definition() {
@@ -68,6 +69,18 @@ class MultipleTextItem extends Base {
       "readOnly:boolean",
       { name: "inputType", type: "string", default: "text" }
     ];
+  }
+
+  set value(val) {
+    this.__value = val;
+  }
+
+  get value() {
+    let value = this.__value;
+    if (this.inputType === "date" && this.placeHolder) {
+      value = moment(new Date(this.placeHolder)).format("YYYY-MM-DD");
+    }
+    return value;
   }
 
   constructor(item) {

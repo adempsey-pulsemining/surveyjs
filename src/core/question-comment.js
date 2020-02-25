@@ -11,7 +11,9 @@ export class Comment extends Question {
   }
 
   static get properties() {
-    return Question.properties.concat([]);
+    return Question.properties.concat([
+      "placeHolder"
+    ]);
   }
 
   constructor(question) {

@@ -29,6 +29,14 @@ var moduleRules = [
   },
 ];
 
+var minimizers = [
+  new OptimizeCSSAssetsPlugin({}),
+  new TerserPlugin({
+    extractComments: false,
+    terserOptions: { mangle: false }
+  })
+];
+
 module.exports = function(env, argv) {
   return {
     entry: path.resolve(__dirname, "src/main.js"),
@@ -40,7 +48,8 @@ module.exports = function(env, argv) {
     },
     externals: {
       vue: "Vue",
-      jquery: "jQuery"
+      jquery: "jQuery",
+      moment: "moment"
     },
     output: {
       filename: argv.mode === "development" ? "survey.js" : "survey.min.js",
@@ -53,13 +62,7 @@ module.exports = function(env, argv) {
       new MiniCssExtractPlugin({ filename: argv.mode === "development" ? "survey.css" : "survey.min.css" })
     ],
     optimization: {
-      minimizer: [
-        new OptimizeCSSAssetsPlugin({}),
-        new TerserPlugin({
-          extractComments: false,
-          terserOptions: { mangle: false }
-        })
-      ]
+      minimizer: minimizers
     }
   }
 };

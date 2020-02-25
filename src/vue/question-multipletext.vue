@@ -5,6 +5,7 @@
         <label :for="getUniqueId(index)">{{item.title || item.name}}</label>
         <b-form-input :id="getUniqueId(index)"
                       :disabled="isReadOnly(item)"
+                      :placeholder="item.placeHolder"
                       :type="item.inputType"
                       v-model="item.value" lazy>
         </b-form-input>
