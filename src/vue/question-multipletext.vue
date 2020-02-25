@@ -54,6 +54,7 @@
 <style>
   .sv_q_multipletext label {
     margin: 0;
+    margin-bottom: .5rem;
   }
 
 	.sv_q_multipletext > div {

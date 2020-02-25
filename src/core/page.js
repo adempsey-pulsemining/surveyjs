@@ -22,6 +22,7 @@ export class Page extends Base {
   constructor(page) {
     super(page, metaData.getProperties("page"));
 		this.elements = [];
+		this.showErrors = false;
   }
 
   get visibleElements() {
@@ -42,7 +43,7 @@ export class Page extends Base {
   }
   
   hasErrors() {
-		return this.visibleQuestions.some(question => !question.isValid());
+		return this.visibleQuestions.some(question => question.hasErrors);
 	}
 
   // Get all questions in the page including inside groups

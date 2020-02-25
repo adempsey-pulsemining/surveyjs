@@ -3,6 +3,7 @@
     <v-button id="sv_prev_btn" v-if="!survey.isFirstPage()" icon="chevron-left" variant="primary" @click="survey.prevPage()">Prev</v-button>
     <div class="flex"></div>
     <v-button id="sv_save_btn" v-if="!survey.readOnly" icon="save" variant="success" @click="survey.savePage()">Save</v-button>
+    <v-button id="sv_save_exit_btn" v-if="!survey.readOnly" icon="save" variant="success" @click="survey.savePage(true)">Save & Exit</v-button>
     <b-dropdown id="sv_control_options" dropup right no-caret variant="link">
       <template v-slot:button-content>
         <font-awesome-icon icon="ellipsis-h" size="6x" />
@@ -10,7 +11,7 @@
       <b-dropdown-item-button @click="survey.savePage()">
         <font-awesome-icon icon="save" size="8x" /><span>Save</span>
       </b-dropdown-item-button>
-      <b-dropdown-item-button @click="survey.savePage()">
+      <b-dropdown-item-button @click="survey.savePage(true)">
         <font-awesome-icon icon="save" size="8x" /><span>Save & Exit</span>
       </b-dropdown-item-button>
     </b-dropdown>
@@ -48,11 +49,11 @@
   }
 
   #sv_complete_btn, #sv_next_btn {
-    margin-left: 5px
+    margin-left: .5rem
   }
 
   #sv_prev_btn, #sv_save_btn {
-    margin-right: 5px;
+    margin-right: .5rem;
   }
 
 	@media screen and (max-device-width: 480px) {
@@ -60,7 +61,7 @@
       display: block;
       margin-right: .5rem;
     }
-    #sv_save_btn {
+    #sv_save_btn, #sv_save_exit_btn {
       display: none !important;
     }
 	}
@@ -69,7 +70,7 @@
 		#sv_control_options {
       display: none;
     }
-    #sv_save_btn {
+    #sv_save_btn, #sv_save_exit_btn {
       display: inline-flex;
     }
 	}

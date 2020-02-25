@@ -86,6 +86,10 @@ export class Matrix extends Question {
 		val = val || [];
 		val.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
+				if (!this.cells[rowIndex]) {
+					this.rows.push(new MatrixRow(this));
+					this._addCellsForRow(this, rowIndex);
+				}
 				if (val[rowIndex][column.name]) {
 					this.cells[rowIndex][colIndex].value = val[rowIndex][column.name];
 				}
@@ -118,10 +122,14 @@ export class Matrix extends Question {
 	_addCells(question) {
 		this.cells = [];
 		this.rows.forEach((row, rowIndex) => {
-			this.cells.push({});
-			this.columns.forEach((col, colIndex) => {
-				this._addCell(question, rowIndex, colIndex, col.cellType || question.cellType);
-			});
+			this._addCellsForRow(question, rowIndex);
+		});
+	}
+
+	_addCellsForRow(question, rowIndex) {
+		this.cells.push({});
+		this.columns.forEach((col, colIndex) => {
+			this._addCell(question, rowIndex, colIndex, col.cellType || question.cellType);
 		});
 	}
 

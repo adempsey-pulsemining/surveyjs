@@ -11,6 +11,10 @@ export class Widget extends Question {
     this.readyCallback = this.widget.readyCallback || this.ready;
   }
 
+  isReadOnly() {
+    return this.widget.isReadOnly ? this.widget.isReadOnly() : this.isReadOnly();
+  }
+
   get isWidget() {
     return true;
   }

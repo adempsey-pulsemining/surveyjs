@@ -1,5 +1,5 @@
 <template>
-  <div class="sv_q" :class="{ 'page-break-before': question.pageBreakBefore, 'page-break-after': question.pageBreakAfter }">
+  <div class="sv_q" :id="question.elementId" :class="{ 'page-break-before': question.pageBreakBefore, 'page-break-after': question.pageBreakAfter }">
     <b-modal ref="modal" hide-header no-fade>
       <b-form-textarea v-model="comment"></b-form-textarea>
       <div slot="modal-footer">
@@ -12,7 +12,7 @@
         <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>
         <span class="sv_q_title">{{questionTitle}}</span>
         <div class="flex"></div>
-        <b-dropdown dropleft no-caret variant="link">
+        <b-dropdown v-if="!isPdfRender" dropleft no-caret variant="link">
           <template v-slot:button-content>
             <font-awesome-icon icon="ellipsis-h" size="6x" />
           </template>
@@ -26,6 +26,12 @@
     <div class="sv_q_body">
       <component v-if="question.isWidget" is="survey-widget" :question="question" />
       <component v-else :is="componentName" :question="question" />
+    </div>
+    <div class="sv_q_comment" v-if="isPdfRender && question.comment">
+      {{question.comment}}
+    </div>
+    <div class="sv_q_error" v-if="question.hasErrors && question.showErrors">
+      <div v-for="error in question.errors"><font-awesome-icon icon="exclamation-triangle" size="8x" style="margin-right:5px;" />{{error}}</div>
     </div>
   </div>
 </template>
@@ -89,11 +95,15 @@
 					return this.question.group.no + this.alphabet.charAt(this.question.group.elements.indexOf(this.question)) + ". ";
 				}
 				return this.question.elementNo + ". ";
-			}
+			},
+      isPdfRender() {
+			  return this.question.survey && this.question.survey.isPdfRender;
+      }
 		},
     methods: {
 		  editComment() {
-		    this.$refs["modal"].show();
+        this.comment = this.question.comment;
+        this.$refs["modal"].show();
       },
       applyComment() {
         this.question.comment = this.comment;
@@ -139,4 +149,15 @@
 	.sv_q_description {
 		font-size: 75%;
 	}
+
+  .sv_q_error > div {
+    display: flex;
+    align-items: center;
+    padding: .75rem;
+    border: thin solid red;
+    color: white;
+    margin-bottom: .5rem;
+    border-radius: .5rem;
+    background-color: #F44336
+  }
 </style>

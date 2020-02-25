@@ -21,6 +21,7 @@ export class Element extends Base {
       "hideInPdf:boolean",
       "hideInPdfIfEmpty:boolean",
       "visibleIf",
+      "enableIf",
       "titleColour",
       { name: "visible", type: "boolean", default: true, writable: true }
     ])

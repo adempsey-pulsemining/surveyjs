@@ -7,6 +7,7 @@
                   next-text="Next"
                   prev-text="Prev"
                   :total-rows="totalPages"
+                  :disabled="!canContinue"
                   :per-page="1">
       <template v-slot:page="{ page, active, index }">
         <div class="sv_nav_page" :class="{ completed: isPageCompleted(index) }">
@@ -33,9 +34,16 @@
 			}
     },
     computed: {
+		  canContinue() {
+        return !this.survey.currentPage.hasErrors();
+      },
       currentPage: {
-        get() { return this.survey.currentPageIndex + 1 },
-        set(val) { this.survey.pageIndexProxy.currentPageIndex = val - 1 }
+        get() {
+          return this.survey.proxy.currentPageIndex + 1
+        },
+        set(val) {
+          this.survey.changePage(val - 1);
+        }
       },
       totalPages() {
         return this.survey.visiblePages.length;

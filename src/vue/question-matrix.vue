@@ -6,17 +6,17 @@
 				<tr>
 					<th v-if="!question.dynamic"></th>
 					<th v-for="(column, index) in question.columns" :key="index">{{column.title || column.name}}</th>
-					<th v-if="question.dynamic"></th>
+					<th v-if="question.dynamic && !question.isReadOnly()"></th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr v-for="(row, rowIndex) in question.rows" :key="rowIndex">
 					<td v-if="!question.dynamic">{{row.title || row.name}}</td>
 					<td v-for="(column, colIndex) in question.columns" :key="rowIndex + ',' + colIndex">
-						<b-form-radio v-if="!question.multipleChoice && !question.dynamic" v-model="row.value" :value="column.name" />
+						<b-form-radio v-if="!question.multipleChoice && !question.dynamic" v-model="row.value" :value="column.name" :disabled="question.isReadOnly()" />
 						<matrix-cell v-if="question.multipleChoice || question.dynamic" :cell="question.getCell(rowIndex, colIndex)" :question="question" :key="rowIndex + ',' + colIndex + ',' + cellKey" />
 					</td>
-					<td v-if="question.dynamic">
+					<td v-if="question.dynamic && !question.isReadOnly()">
 						<v-button class="sv_remove_row_btn" variant="primary" @click="removeRow(rowIndex)">
 							<span>Remove Row</span>
 						</v-button>
@@ -25,7 +25,7 @@
 				</tbody>
 			</table>
 		</div>
-		<v-button class="sv_add_row_btn" v-if="question.dynamic" variant="primary" @click="addRow">
+		<v-button class="sv_add_row_btn" v-if="question.dynamic && !question.isReadOnly()" variant="primary" @click="addRow">
 			<span>Add Row</span>
 		</v-button>
   </div>

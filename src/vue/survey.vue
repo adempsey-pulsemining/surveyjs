@@ -1,7 +1,7 @@
 <template>
   <div class="sv_main">
 		<div class="sv_body" v-if="hasPages">
-			<survey-navigation v-if="!survey.isPdfRender && !survey.singlePage" :survey="survey"></survey-navigation>
+			<survey-navigation v-if="!survey.isPdfRender && !survey.singlePage && survey.visiblePages.length > 1" :survey="survey"></survey-navigation>
 			<div class="sv_page_container" v-if="!survey.singlePage && survey.currentPage.visible">
 				<survey-page :survey="survey" :page="survey.currentPage"></survey-page>
 			</div>

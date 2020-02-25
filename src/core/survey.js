@@ -19,7 +19,7 @@ export class Survey extends Base {
 			{ name: "showQuestionNumbers", type: "boolean", default: true },
 			{ name: "breakAfterPage", type: "boolean", default: true },
 			"isPdfRender:boolean",
-			"singlePage:boolean",
+      { name: "singlePage", type: "boolean", default: false, writable: true }
     ]);
   }
 
@@ -29,8 +29,11 @@ export class Survey extends Base {
     this.currentPageIndex = 0;
     this._renderSurvey(template);
     this._createEventListeners();
-    this.pageIndexProxy = this.__getSurveyProxy();
-    this.pageIndexProxy.currentPageIndex = 0;
+    this.proxy = this.__getSurveyProxy();
+    this.proxy.currentPageIndex = 0;
+    if (this.isPdfRender) {
+      this.singlePage = true;
+    }
   }
 
   __getSurveyProxy() {
@@ -40,7 +43,7 @@ export class Survey extends Base {
         return that.__onSurveyPropertyChanged(obj, prop, val);
       },
       get(obj, prop) {
-        return obj[prop]
+        return obj[prop];
       }
     });
   }
@@ -92,21 +95,54 @@ export class Survey extends Base {
 	}
 
   isFirstPage() {
-    return this.pageIndexProxy.currentPageIndex === 0 || this.singlePage;
+    return this.proxy.currentPageIndex === 0 || this.singlePage;
   }
 
   isLastPage() {
-    return this.pageIndexProxy.currentPageIndex === this.visiblePages.length - 1 || this.singlePage;
+    return this.proxy.currentPageIndex === this.visiblePages.length - 1 || this.singlePage;
+  }
+
+  canContinue() {
+    if (this.currentPage.hasErrors()) {
+      this.showErrors();
+      return;
+    }
+    return true;
+  }
+
+  showErrors() {
+    this.currentPage.showErrors = true;
+    this.scrollToFirstError();
+  }
+
+  scrollToFirstError() {
+    for (let question of this.visibleQuestions) {
+      if (question.hasErrors) {
+        document.getElementById(question.elementId).scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }
+
+  changePage(index) {
+    for (let i = this.proxy.currentPageIndex; i < index; ++i) {
+      if (this.visiblePages[i].hasErrors()) {
+        this.showErrors();
+        this.proxy.currentPageIndex = i;
+        return;
+      }
+    }
+    this.proxy.currentPageIndex = index;
   }
 
   nextPage() {
     if (this.isLastPage()) return;
-    ++this.pageIndexProxy.currentPageIndex;
+    if (!this.canContinue()) return;
+    ++this.proxy.currentPageIndex;
   }
 
   prevPage() {
     if (this.isFirstPage()) return;
-    --this.pageIndexProxy.currentPageIndex;
+    --this.proxy.currentPageIndex;
   }
 
   complete() {
@@ -115,14 +151,14 @@ export class Survey extends Base {
     }
   }
 
-  savePage() {
+  savePage(exit) {
     if (this.onSaveButtonClicked) {
-      this.onSaveButtonClicked();
+      this.onSaveButtonClicked(exit);
     }
   }
 
   get currentPage() {
-    return this.visiblePages[this.pageIndexProxy.currentPageIndex];
+    return this.visiblePages[this.proxy.currentPageIndex];
   }
 
   addPage(page) {
@@ -188,7 +224,14 @@ export class Survey extends Base {
     }
   }
 
+  commentChanged(question, val) {
+    if (this.onCommentChanged) {
+      this.onCommentChanged(question, val);
+    }
+  }
+
   pageChanged(oldVal, newVal) {
+    this.currentPage.showErrors = false;
     this.doTriggers(this);
   }
 
@@ -199,6 +242,7 @@ export class Survey extends Base {
   _createEventListeners() {
     this.onComplete = function() {};
     this.onValueChanged = function() {};
+    this.onCommentChanged = function() {};
     this.onSaveButtonClicked = function() {};
   }
 

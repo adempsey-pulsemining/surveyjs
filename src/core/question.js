@@ -21,16 +21,34 @@ export class Question extends Element {
     super(question, properties || metaData.getProperties("question"));
     this.proxy = this.__getQuestionProxy();
     this.valueChangedCallback = function() {};
+    this.commentChangedCallback = function() {};
+    this.elementId = "sv_" + this.newGuid();
 	}
 
 	// question is considered answered
 	isAnswered() {
-		return !!this.value;
+		return !!this.value || this.isReadOnly();
 	}
 
 	// question has value but not answered
 	hasValue() {
     return !!this.value;
+  }
+
+  get errors() {
+    let errors = [];
+    if (!this.isValid()) {
+      errors.push("Please answer the question.");
+    }
+    return errors;
+  }
+
+  get hasErrors() {
+    return this.errors && this.errors.length > 0;
+  }
+
+  get showErrors() {
+    return this.page && this.page.showErrors;
   }
 
 	isValid() {
@@ -67,6 +85,14 @@ export class Question extends Element {
 		if (!this.survey) return;
 		return this.survey.indexOfElement(this) + 1;
 	}
+
+	set comment(val) {
+    this.proxy.__comment = val;
+  }
+
+  get comment() {
+    return this.proxy.__comment;
+  }
 
   set value(val) {
     if (val !== this.proxy.__value) {
@@ -108,6 +134,15 @@ export class Question extends Element {
     }
   }
 
+  commentChanged(comment) {
+    if (this.commentChangedCallback) {
+      this.commentChangedCallback(comment);
+    }
+    if (this.survey) {
+      this.survey.commentChanged(this, comment);
+    }
+  }
+
   __getQuestionProxy() {
 		var that = this;
     return new Proxy(this, {
@@ -121,6 +156,9 @@ export class Question extends Element {
 		obj[prop] = val;
 		if (prop === "__value" && this.survey) {
       this.valueChanged(this.cloneValue);
+    }
+		if (prop === "__comment") {
+		  this.commentChanged(val);
     }
 		return true;
 	}
