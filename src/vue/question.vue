@@ -1,9 +1,9 @@
 <template>
   <div class="sv_q" :id="question.elementId" :class="{ 'page-break-before': question.pageBreakBefore, 'page-break-after': question.pageBreakAfter }">
     <b-modal ref="modal" hide-header no-fade>
-      <b-form-textarea v-model="comment" :disabled="question.isReadOnly()"></b-form-textarea>
+      <b-form-textarea v-model="comment" :disabled="!canEditComment"></b-form-textarea>
       <div slot="modal-footer">
-        <v-button v-if="!question.isReadOnly()" variant="success" icon="check" @click="applyComment">Apply</v-button>
+        <v-button v-if="canEditComment" variant="success" icon="check" @click="applyComment">Apply</v-button>
         <v-button variant="danger" icon="times" @click="closeModal">Close</v-button>
       </div>
     </b-modal>
@@ -80,6 +80,9 @@
 			}
 		},
     computed: {
+		  canEditComment() {
+        return this.question.survey && !this.question.survey.readOnly && !this.question.survey.isDisplayMode('read');
+      },
 			questionTitle() {
 				let title = "";
 				return title + (this.question.title || this.question.name || "") + (this.question.required() ? " *" : "");

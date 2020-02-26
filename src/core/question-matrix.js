@@ -44,6 +44,19 @@ export class Matrix extends Question {
 		}
 	}
 
+	set survey(val) {
+  	this.__survey = val;
+		(this.cells || []).forEach(row => {
+			Object.keys(row).forEach(key => {
+				row[key].survey = val;
+			});
+		});
+	}
+
+	get survey() {
+  	return this.__survey;
+	}
+
 	get data() {
 		let data = super.data;
 		let rows = [], columns = [];

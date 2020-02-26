@@ -1,6 +1,7 @@
 <template>
   <div class="sv_q_dropdown">
     <b-form-select v-model="question.value"
+									 v-if="!isReadMode"
 									 value-field="name"
 									 text-field="title"
 									 :disabled="question.isReadOnly()"
@@ -9,6 +10,7 @@
         <b-form-select-option value="" disabled>-- Please select an option --</b-form-select-option>
       </template>
 		</b-form-select>
+		<div class="text_display" v-else>{{question.value}}</div>
   </div>
 </template>
 
@@ -22,6 +24,11 @@
     components: {
 			BFormSelect, 
 			BFormSelectOption
-    }
+    },
+		computed: {
+			isReadMode() {
+				return this.question.survey && this.question.survey.isDisplayMode('read');
+			}
+		}
   })
 </script>

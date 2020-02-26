@@ -20,6 +20,17 @@ textarea, input:not([type="button"]), select {
   flex-direction: row;
 }
 
+.text_display {
+  padding: .375rem .75rem;
+  border: 1px solid lightgrey;
+  border-radius: .25rem;
+  background-color: white;
+}
+
+.text_display:empty:before {
+  content: "\200b";
+}
+
 .dropdown-item {
   display: inline-flex;
   align-items: center;

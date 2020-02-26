@@ -19,7 +19,8 @@ export class Survey extends Base {
 			{ name: "showQuestionNumbers", type: "boolean", default: true },
 			{ name: "breakAfterPage", type: "boolean", default: true },
 			"isPdfRender:boolean",
-      { name: "singlePage", type: "boolean", default: false, writable: true }
+      { name: "singlePage", type: "boolean", default: false, writable: true },
+      { name: "displayMode", type: "string", default: "edit", writable: true },
     ]);
   }
 
@@ -93,6 +94,10 @@ export class Survey extends Base {
     }
     return data;
 	}
+
+	isDisplayMode(mode) {
+    return this.displayMode === mode;
+  }
 
   isFirstPage() {
     return this.proxy.currentPageIndex === 0 || this.singlePage;

@@ -3,8 +3,10 @@
     <b-form-input :type="question.inputType"
                   :placeholder="question.placeHolder"
                   v-model="question.value" lazy
+                  v-if="!isReadMode"
                   :disabled="question.isReadOnly()">
     </b-form-input>
+    <div class="text_display" v-else>{{question.value || question.placeHolder}}</div>
   </div>
 </template>
 
@@ -17,6 +19,11 @@
 		name: "survey-text",
     components: {
       BFormInput
-		}
+		},
+    computed: {
+      isReadMode() {
+        return this.question.survey && this.question.survey.isDisplayMode('read');
+      }
+    }
   })
 </script>

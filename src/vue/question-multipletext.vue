@@ -7,8 +7,10 @@
                       :disabled="isReadOnly(item)"
                       :placeholder="item.placeHolder"
                       :type="item.inputType"
+                      v-if="!isReadMode"
                       v-model="item.value" lazy>
         </b-form-input>
+        <div class="text_display" v-else>{{item.value || item.placeHolder}}</div>
       </div>
     </div>
   </div>
@@ -29,6 +31,11 @@
         id: "",
       }
 		},
+    computed: {
+      isReadMode() {
+        return this.question.survey && this.question.survey.isDisplayMode('read');
+      }
+    },
     methods: {
 			getStyle(inline) {
 				let colCount = inline ? "auto-fit" : 1;
