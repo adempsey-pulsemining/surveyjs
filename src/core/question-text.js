@@ -32,7 +32,7 @@ export class Text extends Question {
   }
 
   set value(val) {
-    this.__value = val;
+    super.value = val;
   }
 }
 

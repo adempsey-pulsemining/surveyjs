@@ -21,7 +21,7 @@ export class MultipleText extends Question {
     super(question, metaData.getProperties("multipletext"));
     this.items = [];
     for (let item of question.items || []) {
-      this.items.push(new MultipleTextItem(item));
+      this.items.push(new MultipleTextItem(this, item));
     }
   }
 
@@ -73,6 +73,7 @@ class MultipleTextItem extends Base {
 
   set value(val) {
     this.__value = val;
+    this.question.valueChanged(this.question.value);
   }
 
   get value() {
@@ -83,8 +84,9 @@ class MultipleTextItem extends Base {
     return value;
   }
 
-  constructor(item) {
+  constructor(q, item) {
     super(item, metaData.getProperties("multipletext_item"));
+    this.question = q;
   }
 }
 
