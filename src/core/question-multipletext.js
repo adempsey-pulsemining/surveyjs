@@ -25,6 +25,16 @@ export class MultipleText extends Question {
     }
   }
 
+  get data() {
+    let data = super.data;
+    let items = [];
+    this.items.forEach((item, index) => {
+      items.push({ name: item.name, title: item.title || item.name, value: item.value || "", sequence: this.getSequenceCharacter(index).toUpperCase() });
+    });
+    data.items = items;
+    return data;
+  }
+
   set value(val) {
     for (let item of this.items) {
       if (val[item.name]) {

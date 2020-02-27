@@ -69,7 +69,13 @@ export class Matrix extends Question {
 		if (!this.dynamic) {
 			data.rows = rows;
 		}
+		if (this.dynamic) {
+			data.type = data.type + "_dynamic";
+		} else if (this.multipleChoice) {
+			data.type = data.type + "_multiple";
+		}
 		data.columns = columns;
+		data.cells = this.getMatrixData();
 		return data;
 	}
 
@@ -93,6 +99,34 @@ export class Matrix extends Question {
 		} else {
 			return this.getValue();
 		}
+	}
+
+	getMatrixData() {
+  	let cells = [];
+    this.rows.forEach((row, rowIndex) => {
+    	this.columns.forEach((col, colIndex) => {
+    		cells.push(this.getCellData(row, rowIndex, col, colIndex));
+			});
+		});
+    return cells;
+	}
+
+	getCellData(row, rowIndex, col, colIndex) {
+		let cell = this.cells && this.cells[rowIndex] && this.cells[rowIndex][colIndex] ? this.cells[rowIndex][colIndex] : {};
+		let obj = {
+			cellType: cell.cellType || col.cellType || "",
+			rowName: row.name || "",
+			rowTitle: row.title || row.name || "",
+			rowSequence: this.getSequenceCharacter(rowIndex).toUpperCase(),
+			columnName: col.name || "",
+			columnTitle: col.title || col.name || "",
+			columnSequence: this.getSequenceCharacter(colIndex).toUpperCase(),
+			value: cell.cloneValue || ""
+		};
+		if (!this.dynamic && !this.multipleChoice && col.name === this.value[row.name]) {
+			obj.value = this.value[row.name] || ""
+		}
+		return obj;
 	}
 
 	setDynamicValue(val) {

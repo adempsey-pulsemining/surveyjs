@@ -108,6 +108,7 @@ export class Base {
 
   constructor(object, properties) {
     this.__setProperties(object, properties || metaData.getProperties("base"));
+    this.__alphabet = "abcdefghijklmnopqrstuvwxyz";
   }
 
   /**
@@ -127,6 +128,10 @@ export class Base {
         element.readOnly = !this._processTrigger(survey, element.enableIf);
       }
     }
+  }
+
+  getSequenceCharacter(index) {
+    return this.__alphabet.charAt(index);
   }
 
   _processTrigger(survey, trigger) {

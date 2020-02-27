@@ -2,7 +2,7 @@
   <div class="sv_q_multipletext">
     <div role="group" :style="getStyle(question.inline)">
       <div v-for="(item, index) in question.items" :key="index">
-        <label :for="getUniqueId(index)">{{item.title || item.name}}</label>
+        <label :for="getUniqueId(index)">{{getTitle(item, index)}}</label>
         <b-form-input :id="getUniqueId(index)"
                       :disabled="isReadOnly(item)"
                       :placeholder="item.placeHolder"
@@ -34,7 +34,7 @@
     computed: {
       isReadMode() {
         return this.question.survey && this.question.survey.isDisplayMode('read');
-      }
+      },
     },
     methods: {
 			getStyle(inline) {
@@ -46,6 +46,9 @@
       },
       getUniqueId(index) {
         return "sv_" + this.id + "_multipletext_" + index;
+      },
+      getTitle(item, index) {
+        return this.question.getSequenceCharacter(index).toUpperCase() + ") " + (item.title || item.name);
       }
     },
     mounted() {

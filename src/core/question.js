@@ -62,6 +62,7 @@ export class Question extends Element {
 	get data() {
 		return {
       value: this.cloneValue,
+      description: this.description || "",
       comment: this.comment || "",
       name: this.name,
       title: this.title || this.name,
