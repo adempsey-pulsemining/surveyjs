@@ -54,7 +54,13 @@ export class MultipleText extends Question {
   }
 
   isAnswered() {
-    return this.value && Object.keys(this.value).length === this.items.length;
+    let answered = true;
+    this.items.forEach(item => {
+      if (!item.value && !item.readOnly) {
+        answered = false;
+      }
+    });
+    return answered;
   }
 
   hasValue() {
