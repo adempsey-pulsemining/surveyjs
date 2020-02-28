@@ -1,7 +1,7 @@
 <template>
   <div class="sv_q_widget">
     <component v-if="!hasHtml" :is="widgetName" :question="question" />
-    <div :class="getClass" ref="customElement" v-else v-html="widget.html" />
+    <div :class="getClass" ref="customElement" v-else v-html="question.html" />
   </div>
 </template>
 
@@ -13,16 +13,16 @@
     name: "survey-widget",
     computed: {
       widgetName() {
-        return this.question.widget ? this.question.widget.name : "";
+        return this.question.widgetName || "";
       },
       hasHtml() {
-        return !!(this.widget && this.widget.html);
+        return !!this.question.html;
       },
       widget() {
         return this.question.widget
       },
       webComponent() {
-        return this.widget.webComponent;
+        return this.question.webComponent;
       },
       getClass() {
         return "sv_q_" + this.question.type;
@@ -36,7 +36,7 @@
         this.question.element = this.$el;
       }
       if (!this.question.element) return;
-      this.question.readyCallback();
+      this.question.ready();
     }
   })
 </script>

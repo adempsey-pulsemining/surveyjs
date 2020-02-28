@@ -7,11 +7,12 @@ export class Widget extends Question {
     if (metaData.getWidget(element.type)) {
       this.widget = metaData.getWidget(element.type);
     }
-    this.readyCallback = this.widget.readyCallback || this.ready;
-  }
-
-  isReadOnly() {
-    return this.widget.isReadOnly ? this.widget.isReadOnly() : super.isReadOnly();
+    for (let key in this.widget) {
+      if (metaData.getProperties(element.type).findIndex(x => x.name === key) < 0) {
+        this[key] = this.widget[key];
+      }
+    }
+    this.value = null;
   }
 
   get isWidget() {
@@ -28,9 +29,6 @@ export class Widget extends Question {
   }
 
   get value() {
-    if (this.widget && typeof this.widget.getValue === "function") {
-      return this.widget.getValue();
-    }
     return super.value;
   }
 
@@ -43,7 +41,7 @@ export class Widget extends Question {
     this.element.addEventListener("value-changed", (e) => {
       super.value = e.detail.value;
     });
-    if (this.widget.webComponent) {
+    if (this.webComponent) {
       this.__setElementProperties();
     }
   }
