@@ -27,9 +27,7 @@
       <component v-if="question.isWidget" is="survey-widget" :question="question" />
       <component v-else :is="componentName" :question="question" />
     </div>
-    <div class="sv_q_comment" v-if="isPdfRender && question.comment">
-      {{question.comment}}
-    </div>
+    <b-form-textarea v-if="isPdfRender && question.comment" class="sv_q_comment" :value="comment" readonly></b-form-textarea>
     <div class="sv_q_error" v-if="question.hasErrors && question.showErrors">
       <div v-for="error in question.errors"><font-awesome-icon icon="exclamation-triangle" size="8x" style="margin-right:5px;" />{{error}}</div>
     </div>

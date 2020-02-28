@@ -7,12 +7,11 @@ export class Widget extends Question {
     if (metaData.getWidget(element.type)) {
       this.widget = metaData.getWidget(element.type);
     }
-    this.valueChangedCallback = this.widget.valueChangedCallback || this.onValueChanged;
     this.readyCallback = this.widget.readyCallback || this.ready;
   }
 
   isReadOnly() {
-    return this.widget.isReadOnly ? this.widget.isReadOnly() : this.isReadOnly();
+    return this.widget.isReadOnly ? this.widget.isReadOnly() : super.isReadOnly();
   }
 
   get isWidget() {
@@ -20,34 +19,39 @@ export class Widget extends Question {
   }
 
   set value(value) {
-    this.proxy.__value = value;
-    this.onValueChanged(value);
+    super.value = value;
+    if (this.widget && typeof this.widget.setValue === "function") {
+      this.widget.setValue(value);
+    } else if (this.element && this.webComponent) {
+      this.element.value = value;
+    }
   }
 
   get value() {
-    return this.__value;
+    if (this.widget && typeof this.widget.getValue === "function") {
+      return this.widget.getValue();
+    }
+    return super.value;
   }
 
+  // the element has rendered and is ready
   ready() {
-    this.element.value = this.value;
+    this.widget.element = this.element;
+    if (typeof this.value !== "undefined") {
+      this.value = this.value;
+    }
     this.element.addEventListener("value-changed", (e) => {
-      this.value = e.detail.value;
+      super.value = e.detail.value;
     });
     if (this.widget.webComponent) {
       this.__setElementProperties();
     }
   }
 
-  onValueChanged(value) {
-    if (this.element) {
-      this.element.value = value;
-    }
-  }
-
   __setElementProperties() {
     let properties = metaData.getProperties(this.type) || [];
     for (let property of properties) {
-      if (this.element && property.name in this.element.constructor.properties) {
+      if (this.element && property.name in this.element.constructor.properties && property.name !== "value") {
         this.element[property.name] = this[property.name];
       }
     }
