@@ -102,6 +102,9 @@ export class Question extends Element {
   }
 
   get cloneValue() {
+    if (typeof this.value === "object") {
+      return Array.isArray(this.value) ? [...this.value] : Object.assign({}, this.value);
+    }
     return this.value;
   }
 

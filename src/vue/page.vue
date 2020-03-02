@@ -2,7 +2,7 @@
   <div class="sv_page">
     <div class="sv_page_title">{{title}}</div>
 		<div class="sv_page_body" v-if="hasElements">
-			<div class="sv_page_row" v-for="(element, index) in visibleElements" :key="index">
+			<div class="sv_page_row" v-for="(element, index) in visibleElements" :key="survey.currentPageIndex + '_' + index">
 				<component v-if="isGroup(element)" is="survey-group" :survey="survey" :group="element" />
 				<component v-if="!isGroup(element) && element.isShownInPdf" is="survey-question" :question="element" />
 			</div>

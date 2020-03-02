@@ -13,6 +13,13 @@ export class Widget extends Question {
       }
     }
     this.value = null;
+    if (typeof this.load === "function") {
+      this.webComponentLoaded = this.load();
+    }
+  }
+
+  get isWebComponent() {
+    return typeof customElements !== "undefined" && !!customElements.get(this.widgetName);
   }
 
   get isWidget() {
@@ -21,11 +28,6 @@ export class Widget extends Question {
 
   set value(value) {
     super.value = value;
-    if (this.widget && typeof this.widget.setValue === "function") {
-      this.widget.setValue(value);
-    } else if (this.element && this.webComponent) {
-      this.element.value = value;
-    }
   }
 
   get value() {
@@ -35,13 +37,18 @@ export class Widget extends Question {
   // the element has rendered and is ready
   ready() {
     this.widget.element = this.element;
-    if (typeof this.value !== "undefined") {
+    if (typeof this.value !== "undefined" && this.value !== null) {
       this.value = this.value;
+    }
+    if (typeof this.setValue === "function") {
+      this.setValue(this.value);
+    } else if (this.element && this.isWebComponent) {
+      this.element.value = this.value;
     }
     this.element.addEventListener("value-changed", (e) => {
       super.value = e.detail.value;
     });
-    if (this.webComponent) {
+    if (this.isWebComponent) {
       this.__setElementProperties();
     }
   }
