@@ -60,7 +60,7 @@
 				++this.cellKey;
 			},
 			getTitle(obj, index) {
-				return this.question.getSequenceCharacter(index).toUpperCase() + ") " + (obj.title || obj.name);
+				return this.question.getSequenceCharacter(index).toUpperCase() + ". " + (obj.title || obj.name);
 			}
 		}
   });

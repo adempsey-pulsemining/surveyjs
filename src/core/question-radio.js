@@ -29,6 +29,17 @@ export class Radio extends Question {
 	isAnswered() {
 		return Radio.IsAnswered(this.value);
 	}
+
+	set value(val) {
+    if (val === null) {
+      val = "";
+    }
+    super.value = val;
+  }
+
+  get value() {
+    return super.value;
+  }
 }
 
 metaData.addClass(Radio.definition);

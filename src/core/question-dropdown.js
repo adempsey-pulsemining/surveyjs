@@ -24,6 +24,17 @@ export class Dropdown extends Question {
     super(question, metaData.getProperties("dropdown"));
     this.value = "";
 	}
+
+	set value(val) {
+    if (val === null) {
+      val = "";
+    }
+    super.value = val;
+  }
+
+  get value() {
+    return super.value;
+  }
 	
 	isAnswered() {
 		return Dropdown.IsAnswered(this.value);

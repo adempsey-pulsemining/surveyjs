@@ -36,6 +36,9 @@ export class MultipleText extends Question {
   }
 
   set value(val) {
+    if (val === null) {
+      val = {};
+    }
     for (let item of this.items) {
       if (val[item.name]) {
         item.value = val[item.name];

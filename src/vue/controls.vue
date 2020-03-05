@@ -61,7 +61,7 @@
     margin-right: .5rem;
   }
 
-	@media screen and (max-device-width: 480px) {
+	@media (max-device-width: 480px) {
 		#sv_control_options {
       display: block;
       margin-right: .5rem;
@@ -71,7 +71,7 @@
     }
 	}
 
-	@media screen and (min-device-width: 481px) {
+	@media (min-device-width: 481px) {
 		#sv_control_options {
       display: none;
     }

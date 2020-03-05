@@ -1,13 +1,14 @@
 <template>
   <div class="sv_nav">
-    <b-pagination v-model="currentPage"
+    <b-pagination ref="pagination"
+                  v-model="currentPage"
 									align="fill"
                   first-text="First"
                   last-text="Last"
                   next-text="Next"
                   prev-text="Prev"
+                  @input="pageChanged"
                   :total-rows="totalPages"
-                  :disabled="!canContinue"
                   :per-page="1">
       <template v-slot:page="{ page, active, index }">
         <div class="sv_nav_page" :class="{ completed: isPageCompleted(index) }">
@@ -33,16 +34,22 @@
 				required: true
 			}
     },
+    data() {
+		  return {
+		    showErrors: false
+      }
+    },
     computed: {
-		  canContinue() {
-        return !this.survey.currentPage.hasErrors();
-      },
       currentPage: {
         get() {
           return this.survey.proxy.currentPageIndex + 1
         },
         set(val) {
           this.survey.changePage(val - 1);
+          if (this.showErrors) {
+            this.survey.showErrors();
+            this.showErrors = false;
+          }
         }
       },
       totalPages() {
@@ -50,6 +57,12 @@
 			}
     },
     methods: {
+		  pageChanged(e) {
+        if (!this.survey.canGoToPage(e - 1)) {
+          this.$refs["pagination"].currentPage = this.survey.currentPageIndex + 1;
+          this.showErrors = true;
+        }
+      },
       getPageTitle(index) {
 				let page = this.survey.visiblePages[index];
 				if (!page) return;
@@ -99,7 +112,7 @@
 		width: 100%;
 	}
 
-	@media screen and (max-device-width: 480px) {
+	@media (max-device-width: 480px) {
 		ul.b-pagination > li:nth-child(2) {
 			display: none;
 		}
@@ -109,7 +122,7 @@
 		}
 	}
 
-	@media screen and (min-device-width: 481px) {
+	@media (min-device-width: 481px) {
 		ul.b-pagination > li:nth-child(2) {
 			display: block;
 		}

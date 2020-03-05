@@ -38,6 +38,17 @@ export class Checkbox extends Question {
     return value;
   }
 
+  set value(val) {
+    if (val === null) {
+      val = [];
+    }
+    super.value = val;
+  }
+
+  get value() {
+    return super.value;
+  }
+
 	isAnswered() {
 		return Checkbox.IsAnswered(this.value);
 	}

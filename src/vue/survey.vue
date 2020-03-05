@@ -61,4 +61,10 @@
 		flex-direction: column;
 		height: 100%;
 	}
+
+	@media print {
+		.sv_main .sv_body {
+			display: block;
+		}
+	}
 </style>

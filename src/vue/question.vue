@@ -1,5 +1,5 @@
 <template>
-  <div class="sv_q" :id="question.elementId" :class="{ 'page-break-before': question.pageBreakBefore, 'page-break-after': question.pageBreakAfter }">
+  <div class="sv_q" :id="question.elementId" :class="{ 'page_break_before': question.pageBreakBefore, 'page_break_after': pageBreakAfter }">
     <b-modal ref="modal" hide-header no-fade>
       <b-form-textarea v-model="comment" :disabled="!canEditComment"></b-form-textarea>
       <div slot="modal-footer">
@@ -27,7 +27,7 @@
       <component v-if="question.isWidget" is="survey-widget" :question="question" />
       <component v-else :is="componentName" :question="question" />
     </div>
-    <b-form-textarea v-if="isPdfRender && question.comment" class="sv_q_comment" :value="comment" readonly></b-form-textarea>
+    <b-form-textarea v-if="isPdfRender && question.comment" class="sv_q_comment" v-model="question.comment"></b-form-textarea>
     <div class="sv_q_error" v-if="question.hasErrors && question.showErrors">
       <div v-for="error in question.errors"><font-awesome-icon icon="exclamation-triangle" size="8x" style="margin-right:5px;" />{{error}}</div>
     </div>
@@ -78,6 +78,9 @@
 			}
 		},
     computed: {
+		  pageBreakAfter() {
+		    return this.question.pageBreakAfter;
+      },
 		  canEditComment() {
         return this.question.survey && !this.question.survey.readOnly && !this.question.survey.isDisplayMode('read');
       },
@@ -134,10 +137,6 @@
     color: var(--darkest-text-color);
     font-weight: bold;
   }
-
-	.dropdown button {
-		padding-right: 0;
-	}
 
 	.sv_q_body {
 		padding: 1rem 0;

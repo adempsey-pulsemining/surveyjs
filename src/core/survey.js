@@ -1,6 +1,5 @@
 import { Page } from "./page";
 import { metaData, Base } from "./base";
-import { isEqual } from "lodash";
 import { Element } from "./element";
 
 export class Survey extends Base {
@@ -74,11 +73,15 @@ export class Survey extends Base {
     data = typeof data === "string" ? JSON.parse(data) : data;
     for (let page of this.pages) {
       for (let question of page.questions) {
-        if (data[question.questionId] && data[question.questionId].value) {
+        if (data[question.questionId]) {
           question.value = data[question.questionId].value;
+        } else {
+          question.value = null;
         }
-        if (data[question.questionId] && data[question.questionId].comment) {
+        if (data[question.questionId]) {
           question.comment = data[question.questionId].comment;
+        } else {
+          question.comment = "";
         }
       }
     }
@@ -107,6 +110,24 @@ export class Survey extends Base {
     return this.proxy.currentPageIndex === this.visiblePages.length - 1 || this.singlePage;
   }
 
+  canComplete() {
+    for (let page of this.visiblePages) {
+      if (page.hasErrors()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  canGoToPage(pageIndex) {
+    for (let i = this.currentPageIndex; i < pageIndex; ++i) {
+      if (this.visiblePages[i].hasErrors()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   canContinue() {
     if (this.currentPage.hasErrors()) {
       this.showErrors();
@@ -121,9 +142,12 @@ export class Survey extends Base {
   }
 
   scrollToFirstError() {
-    for (let question of this.visibleQuestions) {
+    for (let question of this.currentPage.visibleQuestions) {
       if (question.hasErrors) {
-        document.getElementById(question.elementId).scrollIntoView({ behavior: "smooth" });
+        let element = document.getElementById(question.elementId);
+        if (!element) continue;
+        element.scrollIntoView({ behavior: "smooth" });
+        return;
       }
     }
   }
@@ -148,6 +172,12 @@ export class Survey extends Base {
   prevPage() {
     if (this.isFirstPage()) return;
     --this.proxy.currentPageIndex;
+  }
+
+  clear() {
+    if (this.onClear) {
+      this.onClear();
+    }
   }
 
   complete() {
@@ -249,6 +279,7 @@ export class Survey extends Base {
     this.onValueChanged = function() {};
     this.onCommentChanged = function() {};
     this.onSaveButtonClicked = function() {};
+    this.onClear = function() {};
   }
 
   // Render survey from the template. ie create pages/panels/questions

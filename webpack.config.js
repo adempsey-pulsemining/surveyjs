@@ -27,6 +27,16 @@ var moduleRules = [
       loader: "url-loader"
     }
   },
+  {
+    test: /\.js/,
+    use: {
+      loader: "babel-loader",
+      options: {
+        presets: ["@babel/preset-env"],
+        plugins: ["@babel/plugin-proposal-optional-catch-binding"]
+      }
+    }
+  }
 ];
 
 var minimizers = [
@@ -49,7 +59,8 @@ module.exports = function(env, argv) {
     externals: {
       vue: "Vue",
       jquery: "jQuery",
-      moment: "moment"
+      moment: "moment",
+      "popper.js": "Popper",
     },
     output: {
       filename: argv.mode === "development" ? "survey.js" : "survey.min.js",
@@ -59,7 +70,7 @@ module.exports = function(env, argv) {
     },
     plugins: [
       new VueLoaderPlugin(),
-      new MiniCssExtractPlugin({ filename: argv.mode === "development" ? "survey.css" : "survey.min.css" })
+      new MiniCssExtractPlugin({ filename: argv.mode === "development" ? "survey.css" : "survey.min.css" }),
     ],
     optimization: {
       minimizer: minimizers

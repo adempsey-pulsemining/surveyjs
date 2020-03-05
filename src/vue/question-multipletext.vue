@@ -48,7 +48,7 @@
         return "sv_" + this.id + "_multipletext_" + index;
       },
       getTitle(item, index) {
-        return this.question.getSequenceCharacter(index).toUpperCase() + ") " + (item.title || item.name);
+        return this.question.getSequenceCharacter(index).toUpperCase() + ". " + (item.title || item.name);
       }
     },
     mounted() {

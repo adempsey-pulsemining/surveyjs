@@ -80,6 +80,9 @@ export class Matrix extends Question {
 	}
 
 	set value(val) {
+  	if (val === null) {
+  		val = this.dynamic ? [] : {};
+		}
 		super.value = val;
 		if (this.dynamic) {
 			this.setDynamicValue(val);

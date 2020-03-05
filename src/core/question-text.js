@@ -32,6 +32,9 @@ export class Text extends Question {
   }
 
   set value(val) {
+    if (val === null) {
+      val = "";
+    }
     super.value = val;
   }
 }

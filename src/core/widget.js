@@ -40,17 +40,22 @@ export class Widget extends Question {
     if (typeof this.value !== "undefined" && this.value !== null) {
       this.value = this.value;
     }
+    if (this.element && this.isWebComponent) {
+      this.__setupCustomElement();
+    }
+  }
+
+  __setupCustomElement() {
     if (typeof this.setValue === "function") {
       this.setValue(this.value);
-    } else if (this.element && this.isWebComponent) {
+    } else {
       this.element.value = this.value;
     }
+    this.element.question = this;
+    this.__setElementProperties();
     this.element.addEventListener("value-changed", (e) => {
       super.value = e.detail.value;
     });
-    if (this.isWebComponent) {
-      this.__setElementProperties();
-    }
   }
 
   __setElementProperties() {

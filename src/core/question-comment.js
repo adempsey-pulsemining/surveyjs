@@ -20,6 +20,17 @@ export class Comment extends Question {
     super(question, metaData.getProperties("comment"));
     this.value = "";
 	}
+
+	set value(val) {
+    if (val === null) {
+      val = "";
+    }
+    super.value = val;
+  }
+
+  get value() {
+    return super.value;
+  }
 }
 
 metaData.addClass(Comment.definition);
