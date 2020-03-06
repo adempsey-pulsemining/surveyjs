@@ -79,12 +79,12 @@ export class Question extends Element {
 
   get questionNo() {
     if (!this.survey) return;
-    return this.survey.indexOfQuestion(this) + 1;
+    return this.survey.questions.filter(x => x.type !== 'html').indexOf(this) + 1;
 	}
 	
 	get elementNo() {
 		if (!this.survey) return;
-		return this.survey.indexOfElement(this) + 1;
+    return this.survey.elements.indexOf(this) + 1;
 	}
 
 	set comment(val) {

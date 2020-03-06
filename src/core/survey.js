@@ -52,7 +52,7 @@ export class Survey extends Base {
     let oldVal = obj[prop];
     obj[prop] = val;
     if (prop === "currentPageIndex") {
-      this.pageChanged(oldVal, val);
+      this.pageChanging(oldVal, val);
     }
     return true;
   }
@@ -136,9 +136,19 @@ export class Survey extends Base {
     return true;
   }
 
+  getFirstPageWithErrors() {
+    for (let i = 0; i < this.visiblePages.length; ++i) {
+      if (this.visiblePages[i].hasErrors()) {
+        return i;
+      }
+    }
+  }
+
   showErrors() {
-    this.currentPage.showErrors = true;
-    this.scrollToFirstError();
+    setTimeout(() => {
+      this.currentPage.showErrors = true;
+      this.scrollToFirstError();
+    },1);
   }
 
   scrollToFirstError() {
@@ -153,31 +163,37 @@ export class Survey extends Base {
   }
 
   changePage(index) {
+    let currentPageIndex = this.proxy.currentPageIndex;
     for (let i = this.proxy.currentPageIndex; i < index; ++i) {
+      this.doTriggers(this, this.visiblePages[i]);
       if (this.visiblePages[i].hasErrors()) {
-        this.showErrors();
         this.proxy.currentPageIndex = i;
+        this.showErrors();
         return;
       }
     }
     this.proxy.currentPageIndex = index;
+    this.pageChanged(currentPageIndex, index);
   }
 
   nextPage() {
     if (this.isLastPage()) return;
     if (!this.canContinue()) return;
-    ++this.proxy.currentPageIndex;
+    this.changePage(this.proxy.currentPageIndex + 1);
   }
 
   prevPage() {
     if (this.isFirstPage()) return;
-    --this.proxy.currentPageIndex;
+    this.changePage(this.proxy.currentPageIndex - 1);
   }
 
   clear() {
+    this.__clearing = true;
     if (this.onClear) {
       this.onClear();
     }
+    this.doTriggersForAllPages(this);
+    this.__clearing = false;
   }
 
   complete() {
@@ -254,7 +270,9 @@ export class Survey extends Base {
 
   valueChanged(question, newVal) {
     if (this.onValueChanged) {
-      this.doTriggers(this);
+      if (!this.__clearing) {
+        this.doTriggers(this, this.currentPage);
+      }
       this.onValueChanged(question, newVal);
     }
   }
@@ -266,8 +284,17 @@ export class Survey extends Base {
   }
 
   pageChanged(oldVal, newVal) {
+    if (this.pageChanged) {
+      this.onPageChanged(this.pages[oldVal], this.pages[newVal]);
+    }
+    this.doTriggers(this, this.currentPage);
+  }
+
+  pageChanging(oldVal, newVal) {
     this.currentPage.showErrors = false;
-    this.doTriggers(this);
+    if (this.onPageChanging) {
+      this.onPageChanging(this.pages[oldVal], this.pages[newVal]);
+    }
   }
 
   /**
@@ -279,6 +306,8 @@ export class Survey extends Base {
     this.onValueChanged = function() {};
     this.onCommentChanged = function() {};
     this.onSaveButtonClicked = function() {};
+    this.onPageChanging = function() {};
+    this.onPageChanged = function() {};
     this.onClear = function() {};
   }
 

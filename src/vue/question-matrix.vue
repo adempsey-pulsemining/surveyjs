@@ -14,7 +14,7 @@
 					<td v-if="!question.dynamic">{{getTitle(row,rowIndex)}}</td>
 					<td v-for="(column, colIndex) in question.columns" :key="rowIndex + ',' + colIndex">
 						<b-form-radio v-if="!question.multipleChoice && !question.dynamic" v-model="row.value" :value="column.name" :disabled="question.isReadOnly()" />
-						<matrix-cell v-if="question.multipleChoice || question.dynamic" :cell="question.getCell(rowIndex, colIndex)" :question="question" :key="rowIndex + ',' + colIndex + ',' + cellKey" />
+						<matrix-cell v-if="question.multipleChoice || question.dynamic" :cell="question.getCell(rowIndex, colIndex)" :question="question" :key="rowIndex + ',' + colIndex + ',' + cellKey + ',' + getCellId(rowIndex, colIndex)" />
 					</td>
 					<td v-if="question.dynamic && !question.isReadOnly()">
 						<v-button class="sv_remove_row_btn" variant="primary" @click="removeRow(rowIndex)">
@@ -61,6 +61,9 @@
 			},
 			getTitle(obj, index) {
 				return this.question.getSequenceCharacter(index).toUpperCase() + ". " + (obj.title || obj.name);
+			},
+			getCellId(row, col) {
+				return this.question.cells[row][col].cellId;
 			}
 		}
   });

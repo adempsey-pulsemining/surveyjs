@@ -59,7 +59,7 @@
     methods: {
 		  pageChanged(e) {
         if (!this.survey.canGoToPage(e - 1)) {
-          this.$refs["pagination"].currentPage = this.survey.currentPageIndex + 1;
+          this.$refs["pagination"].currentPage = this.survey.getFirstPageWithErrors() + 1;
           this.showErrors = true;
         }
       },

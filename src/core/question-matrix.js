@@ -80,8 +80,9 @@ export class Matrix extends Question {
 	}
 
 	set value(val) {
-  	if (val === null) {
-  		val = this.dynamic ? [] : {};
+		if (val === null) {
+			val = this.dynamic ? [] : {};
+			this.clearCells();
 		}
 		super.value = val;
 		if (this.dynamic) {
@@ -102,6 +103,10 @@ export class Matrix extends Question {
 		} else {
 			return this.getValue();
 		}
+	}
+
+	clearCells() {
+  	this._addCells(this);
 	}
 
 	getMatrixData() {
@@ -404,7 +409,11 @@ class MatrixCell extends Base {
 		this.value = null;
 		this.row = rowIndex;
 		this.col = colIndex;
+		if (type === "radiogroup") {
+			type = "radio";
+		}
 		this.cellType = type;
+		this.cellId = this.newGuid();
 	}
 
 	set value(val) {
@@ -432,6 +441,7 @@ class MatrixCell extends Base {
 	isAnswered() {
 		switch (this.cellType) {
 			case "radio": return Radio.IsAnswered(this.value);
+			case "radiogroup": return Radio.IsAnswered(this.value);
 			case "dropdown": return Dropdown.IsAnswered(this.value);
 			case "checkbox": return Checkbox.IsAnswered(this.value);
 			case "boolean": return Boolean.IsAnswered(this.value);

@@ -7,7 +7,7 @@
         <v-button variant="danger" icon="times" @click="closeModal">Close</v-button>
       </div>
     </b-modal>
-    <div class="sv_q_header">
+    <div v-if="question.type !== 'html'" class="sv_q_header">
       <div class="sv_q_header_title" :style="{ color: question.titleColour }">
         <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>
         <span class="sv_q_title">{{questionTitle}}</span>
@@ -23,14 +23,14 @@
       </div>
       <div v-if="question.description" class="sv_q_description">{{question.description}}</div>
     </div>
+    <div class="sv_q_error" v-if="question.hasErrors && question.showErrors">
+      <div v-for="error in question.errors"><font-awesome-icon icon="exclamation-triangle" size="8x" style="margin-right:5px;" />{{error}}</div>
+    </div>
     <div class="sv_q_body">
       <component v-if="question.isWidget" is="survey-widget" :question="question" />
       <component v-else :is="componentName" :question="question" />
     </div>
     <b-form-textarea v-if="isPdfRender && question.comment" class="sv_q_comment" v-model="question.comment"></b-form-textarea>
-    <div class="sv_q_error" v-if="question.hasErrors && question.showErrors">
-      <div v-for="error in question.errors"><font-awesome-icon icon="exclamation-triangle" size="8x" style="margin-right:5px;" />{{error}}</div>
-    </div>
   </div>
 </template>
 
@@ -96,9 +96,9 @@
 			},
 			questionNo() {
 				if (this.question.group) {
-					return this.question.group.no + this.alphabet.charAt(this.question.group.elements.indexOf(this.question)) + ". ";
+					return this.question.group.no + this.alphabet.charAt(this.question.group.elements.filter(q => q.type !== 'html').indexOf(this.question)) + ". ";
 				}
-				return this.question.elementNo + ". ";
+				return this.question.questionNo + ". ";
 			},
       isPdfRender() {
 			  return this.question.survey && this.question.survey.isPdfRender;
@@ -140,6 +140,7 @@
 
 	.sv_q_body {
 		padding: 1rem 0;
+    overflow-x: scroll;
 	}
 
 	.sv_q_no {
@@ -156,7 +157,7 @@
     padding: .75rem;
     border: thin solid red;
     color: white;
-    margin-bottom: .5rem;
+    margin-top: .75rem;
     border-radius: .25rem;
     background-color: #F44336
   }

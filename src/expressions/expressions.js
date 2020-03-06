@@ -208,9 +208,10 @@ export class Variable extends Const {
 
   evaluate(processValue) {
 		var value = null;
-    Object.keys(processValue).forEach(key => {
+		for (let key in processValue) {
       value = this.__getValue(key, processValue);
-    });
+      if (value) break;
+    }
     return this.getCorrectValue(value);
 	}
 	
