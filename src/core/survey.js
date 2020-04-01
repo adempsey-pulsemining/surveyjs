@@ -93,6 +93,7 @@ export class Survey extends Base {
       for (let question of page.questions) {
         if (!question.hasValue() && !question.comment) continue;
         data[question.questionId] = question.data;
+        data[question.questionId].fixedName = data[question.questionId].name.split(".").join(" ");
       }
     }
     return data;

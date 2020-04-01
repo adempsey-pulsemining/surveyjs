@@ -217,9 +217,9 @@ export class Variable extends Const {
 	
 	__getValue(key, processValue) {
 		let value;
-		if (processValue[key].name === this.variable) {
+		if (processValue[key].fixedName === this.variable) {
 			value = processValue[key].value;
-		} else if (processValue[key].name === this.variable.split(".")[0]) {
+		} else if (processValue[key].fixedName === this.variable.split(".")[0]) {
 			value = this.__getObjectValue(processValue[key].value);
 		}
 		return value;
@@ -480,6 +480,7 @@ OperandMaker.binaryFunctions = {
 
 // taken from https://vanillajstoolkit.com/helpers/isequal/
 var isEqual = function (value, other) {
+  if (value == other) return true;
 
   // Get the value type
   var type = Object.prototype.toString.call(value);
