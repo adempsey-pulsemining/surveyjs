@@ -17,6 +17,11 @@ export class Question extends Element {
 		]);
   }
 
+  static addOption(option) {
+    this.options = this.options || [];
+    this.options.push(option);
+  }
+
   constructor(question, properties) {
     super(question, properties || metaData.getProperties("question"));
     this.proxy = this.__getQuestionProxy();

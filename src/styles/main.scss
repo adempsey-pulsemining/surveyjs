@@ -42,10 +42,12 @@ textarea, input:not([type="button"]), select {
 .dropdown-item {
   display: inline-flex;
   align-items: center;
+  padding: .5rem 1rem;
 }
 
 .dropdown-item svg {
-  margin-right: 5px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .btn-primary {

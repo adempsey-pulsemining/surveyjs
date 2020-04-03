@@ -15,7 +15,7 @@
 					<font-awesome-icon icon="cog" size="6x" />
 				</template>
 				<b-dropdown-item-button @click="showModal">
-					<font-awesome-icon icon="undo" size="8x" /><span>Clear unsaved data</span>
+					<span>Clear unsaved data</span>
 				</b-dropdown-item-button>
 			</b-dropdown>
 		</div>

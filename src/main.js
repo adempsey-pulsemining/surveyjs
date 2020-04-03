@@ -33,9 +33,11 @@ import {
 	faEdit,
 	faExclamationTriangle,
 	faCog,
-	faUndo
+	faUndo,
+	faFlag,
+	faComment
 } from '@fortawesome/free-solid-svg-icons';
-library.add(faChevronLeft, faChevronRight, faSave, faCheck, faEllipsisH, faTimes, faEdit, faExclamationTriangle, faCog, faUndo );
+library.add(faChevronLeft, faChevronRight, faSave, faCheck, faEllipsisH, faTimes, faEdit, faExclamationTriangle, faCog, faUndo, faFlag, faComment );
 config.autoAddCss = false;
 
 export { default as VueWidget } from "./core/widget";

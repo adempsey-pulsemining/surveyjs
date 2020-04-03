@@ -9,10 +9,10 @@
         <font-awesome-icon icon="ellipsis-h" size="6x" />
       </template>
       <b-dropdown-item-button @click="survey.savePage()">
-        <font-awesome-icon icon="save" size="8x" /><span>Save</span>
+       <span>Save</span>
       </b-dropdown-item-button>
       <b-dropdown-item-button @click="survey.savePage(true)">
-        <font-awesome-icon icon="save" size="8x" /><span>Save & Exit</span>
+        <span>Save & Exit</span>
       </b-dropdown-item-button>
     </b-dropdown>
     <v-button id="sv_next_btn" v-if="!survey.isLastPage()" icon="chevron-right" variant="primary" @click="survey.nextPage()" position="right">Next</v-button>

@@ -17,8 +17,13 @@
             <font-awesome-icon icon="ellipsis-h" size="6x" />
           </template>
           <b-dropdown-item-button @click="editComment">
-            <font-awesome-icon icon="edit" size="8x" /><span>Edit comment</span>
+            <span>Edit comment</span>
           </b-dropdown-item-button>
+          <div v-for="option in options">
+            <b-dropdown-item-button @click="fireOption(option)">
+              <span>{{option.title}}</span>
+            </b-dropdown-item-button>
+          </div>
         </b-dropdown>
       </div>
       <div v-if="question.description" class="sv_q_description">{{question.description}}</div>
@@ -102,6 +107,9 @@
 			},
       isPdfRender() {
 			  return this.question.survey && this.question.survey.isPdfRender;
+      },
+      options() {
+		    return Survey.Question.options;
       }
 		},
     methods: {
@@ -116,6 +124,9 @@
       closeModal() {
 		    this.comment = this.question.comment;
         this.$refs["modal"].hide();
+      },
+      fireOption(option) {
+		    option.callback(this.question);
       }
     },
     mounted() {
