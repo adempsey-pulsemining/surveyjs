@@ -59,22 +59,11 @@ export class Matrix extends Question {
 
 	get data() {
 		let data = super.data;
-		let rows = [], columns = [];
-		this.rows.forEach(row => {
-			rows.push({ name: row.name, title: row.title || "" });
-		});
-		this.columns.forEach(col => {
-			columns.push({ name: col.name, title: col.title || "" });
-		});
-		if (!this.dynamic) {
-			data.rows = rows;
-		}
 		if (this.dynamic) {
 			data.type = data.type + "_dynamic";
 		} else if (this.multipleChoice) {
 			data.type = data.type + "_multiple";
 		}
-		data.columns = columns;
 		data.cells = this.getMatrixData();
 		return data;
 	}
@@ -92,6 +81,18 @@ export class Matrix extends Question {
 		} else {
 			this.setValue(val);
 		}
+	}
+
+	setCellData(cells) {
+  	cells = cells || [];
+		cells.forEach(cell => {
+			if (!this.dynamic && !this.multipleChoice) {
+				this.rows[cell.rowIndex].answeredBy = cell.answeredBy;
+				return;
+			}
+			if (!this.cells) return;
+			this.cells[cell.rowIndex][cell.columnIndex].answeredBy = cell.answeredBy || "";
+		});
 	}
 
 	get value() {
@@ -113,7 +114,10 @@ export class Matrix extends Question {
   	let cells = [];
     this.rows.forEach((row, rowIndex) => {
     	this.columns.forEach((col, colIndex) => {
-    		cells.push(this.getCellData(row, rowIndex, col, colIndex));
+    		let cellObj = this.getCellData(row, rowIndex, col, colIndex);
+    		if (cellObj) {
+					cells.push(cellObj);
+				}
 			});
 		});
     return cells;
@@ -126,13 +130,20 @@ export class Matrix extends Question {
 			rowName: row.name || "",
 			rowTitle: row.title || row.name || "",
 			rowSequence: this.getSequenceCharacter(rowIndex).toUpperCase(),
+			rowIndex: rowIndex,
 			columnName: col.name || "",
 			columnTitle: col.title || col.name || "",
 			columnSequence: this.getSequenceCharacter(colIndex).toUpperCase(),
-			value: cell.cloneValue || ""
+			columnIndex: colIndex,
+			value: cell.cloneValue || "",
+			answeredBy: cell.answeredBy || ""
 		};
 		if (!this.dynamic && !this.multipleChoice && col.name === this.value[row.name]) {
-			obj.value = this.value[row.name] || ""
+			obj.value = this.value[row.name] || "";
+			obj.answeredBy = row.answeredBy;
+		}
+		if (!obj.value || (cell.isAnswered && !cell.isAnswered())) {
+			return null;
 		}
 		return obj;
 	}
@@ -249,7 +260,11 @@ export class Matrix extends Question {
 		this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
 				let val = this.cells[rowIndex][colIndex].value;
-				if (val != null) {
+				if (Array.isArray(val) && val.length) {
+					hasValue = true;
+				} else if (val && typeof val === "object" && Object.keys(val).length) {
+					hasValue = true;
+				} else if (val != null && val !== "") {
 					hasValue = true;
 				}
 			});
@@ -340,6 +355,7 @@ class MatrixRow extends Base {
 		this.value = null;
 		this.name = typeof item === "object" ? item.name : item;
 		this.title = typeof item === "object" ? (item.title || item.name) : item;
+		this.answeredBy = "";
   }
 
   set value(val) {
@@ -355,6 +371,7 @@ class MatrixRow extends Base {
 	__rowPropChanged(obj, prop, val) {
 		obj[prop] = val;
 		if (prop === "__value" && !this.question.dynamic) {
+			this.answeredBy = !!val ? this.question.survey.getCurrentUser() : "";
 			this.question.valueChanged(this.question.cloneValue);
 		}
 		return true;
@@ -414,6 +431,7 @@ class MatrixCell extends Base {
 		}
 		this.cellType = type;
 		this.cellId = this.newGuid();
+		this.answeredBy = "";
 	}
 
 	set value(val) {
@@ -456,6 +474,7 @@ class MatrixCell extends Base {
 	__cellPropChanged(obj, prop, val) {
 		obj[prop] = val;
 		if (prop === "__value" && val != null) {
+			this.answeredBy = this.isAnswered() ? this.question.survey.getCurrentUser() : "";
 			this.question.valueChanged(this.question.cloneValue);
 		}
 		return true;

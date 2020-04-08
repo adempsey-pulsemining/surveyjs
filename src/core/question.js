@@ -28,6 +28,7 @@ export class Question extends Element {
     this.valueChangedCallback = function() {};
     this.commentChangedCallback = function() {};
     this.elementId = "sv_" + this.newGuid();
+    this.answeredBy = "";
 	}
 
 	// question is considered answered
@@ -74,7 +75,9 @@ export class Question extends Element {
       type: this.type,
 			page: this.pageNumber,
 			sequence: this.questionNo,
-      timestamp: new Date()
+      timestamp: new Date().toISOString(),
+      questionId: this.questionId,
+      answeredBy: this.answeredBy
     }
 	}
 
@@ -135,11 +138,14 @@ export class Question extends Element {
   }
 
   valueChanged(val) {
-    if (this.valueChangedCallback) {
-      this.valueChangedCallback(val);
+    if (this.survey) {
+      this.survey.valueChanging(this, val);
     }
     if (this.survey) {
       this.survey.valueChanged(this, val);
+    }
+    if (this.valueChangedCallback) {
+      this.valueChangedCallback(val);
     }
   }
 

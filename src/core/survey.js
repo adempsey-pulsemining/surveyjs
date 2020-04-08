@@ -69,19 +69,26 @@ export class Survey extends Base {
     this.data = {};
   }
 
+  getCurrentUser() {
+    return "";
+  }
+
   set data(data) {
     data = typeof data === "string" ? JSON.parse(data) : data;
     for (let page of this.pages) {
       for (let question of page.questions) {
-        if (data[question.questionId]) {
+        if (data[question.questionId] && data[question.questionId].cells) {
+          question.comment = data[question.questionId].comment;
           question.value = data[question.questionId].value;
+          question.setCellData(data[question.questionId].cells);
+        } else if (data[question.questionId]) {
+          question.value = data[question.questionId].value;
+          question.comment = data[question.questionId].comment;
+          question.answeredBy = data[question.questionId].answeredBy;
         } else {
           question.value = null;
-        }
-        if (data[question.questionId]) {
-          question.comment = data[question.questionId].comment;
-        } else {
           question.comment = "";
+          question.answeredBy = "";
         }
       }
     }
@@ -278,6 +285,12 @@ export class Survey extends Base {
     }
   }
 
+  valueChanging(question, newVal) {
+    if (this.onValueChanging) {
+      this.onValueChanging(question, newVal);
+    }
+  }
+
   commentChanged(question, val) {
     if (this.onCommentChanged) {
       this.onCommentChanged(question, val);
@@ -305,6 +318,7 @@ export class Survey extends Base {
   _createEventListeners() {
     this.onComplete = function() {};
     this.onValueChanged = function() {};
+    this.onValueChanging = function() {};
     this.onCommentChanged = function() {};
     this.onSaveButtonClicked = function() {};
     this.onPageChanging = function() {};

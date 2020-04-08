@@ -29,7 +29,13 @@ export class MultipleText extends Question {
     let data = super.data;
     let items = [];
     this.items.forEach((item, index) => {
-      items.push({ name: item.name, title: item.title || item.name, value: item.value || "", sequence: this.getSequenceCharacter(index).toUpperCase() });
+      items.push({
+        name: item.name,
+        title: item.title || item.name,
+        value: item.value || "",
+        sequence: this.getSequenceCharacter(index).toUpperCase(),
+        answeredBy: item.answeredBy
+      });
     });
     data.items = items;
     return data;
@@ -93,6 +99,7 @@ class MultipleTextItem extends Base {
   set value(val) {
     this.__value = val;
     this.question.valueChanged(this.question.value);
+    this.answeredBy = this.value ? this.question.survey.getCurrentUser() : "";
   }
 
   get value() {
@@ -106,6 +113,7 @@ class MultipleTextItem extends Base {
   constructor(q, item) {
     super(item, metaData.getProperties("multipletext_item"));
     this.question = q;
+    this.answeredBy = "";
   }
 }
 
