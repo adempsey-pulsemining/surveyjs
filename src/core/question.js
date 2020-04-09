@@ -28,8 +28,13 @@ export class Question extends Element {
     this.valueChangedCallback = function() {};
     this.commentChangedCallback = function() {};
     this.elementId = "sv_" + this.newGuid();
-    this.answeredBy = "";
+    this.changedBy = "";
+    this.changedOn = null;
 	}
+
+	isMatrix() {
+    return false;
+  }
 
 	// question is considered answered
 	isAnswered() {
@@ -71,13 +76,14 @@ export class Question extends Element {
       description: this.description || "",
       comment: this.comment || "",
       name: this.name,
+      fixedName: this.name.split(".").join(" "),
       title: this.title || this.name,
       type: this.type,
 			page: this.pageNumber,
 			sequence: this.questionNo,
-      timestamp: new Date().toISOString(),
       questionId: this.questionId,
-      answeredBy: this.answeredBy
+      changedOn: this.changedOn || "",
+      changedBy: this.changedBy || ""
     }
 	}
 
@@ -137,15 +143,15 @@ export class Question extends Element {
     return true;
   }
 
-  valueChanged(val) {
+  valueChanged(val, obj) {
     if (this.survey) {
-      this.survey.valueChanging(this, val);
-    }
-    if (this.survey) {
-      this.survey.valueChanged(this, val);
+      this.survey.valueChanging(this, val, obj);
     }
     if (this.valueChangedCallback) {
       this.valueChangedCallback(val);
+    }
+    if (this.survey) {
+      this.survey.valueChanged(this, val, obj);
     }
   }
 

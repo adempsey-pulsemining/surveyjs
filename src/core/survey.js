@@ -69,28 +69,24 @@ export class Survey extends Base {
     this.data = {};
   }
 
-  getCurrentUser() {
-    return "";
-  }
-
   set data(data) {
     data = typeof data === "string" ? JSON.parse(data) : data;
     for (let page of this.pages) {
       for (let question of page.questions) {
-        if (data[question.questionId] && data[question.questionId].cells) {
-          question.comment = data[question.questionId].comment;
-          question.value = data[question.questionId].value;
-          question.setCellData(data[question.questionId].cells);
-        } else if (data[question.questionId]) {
-          question.value = data[question.questionId].value;
-          question.comment = data[question.questionId].comment;
-          question.answeredBy = data[question.questionId].answeredBy;
-        } else {
-          question.value = null;
-          question.comment = "";
-          question.answeredBy = "";
-        }
+        this._setData(question, data[question.questionId]);
       }
+    }
+  }
+
+  _setData(question, data) {
+    question.comment = data ? data.comment : "";
+    question.value = data ? data.value : null;
+    question.changedBy = data ? data.changedBy : "";
+    question.changedOn = data ? data.changedOn : null;
+    if (question.type === "multipletext" && data) {
+      question.setMetadata(data.items);
+    } else if (question.isMatrix() && data) {
+      question.setMetadata(data.cells);
     }
   }
 
@@ -100,7 +96,6 @@ export class Survey extends Base {
       for (let question of page.questions) {
         if (!question.hasValue() && !question.comment) continue;
         data[question.questionId] = question.data;
-        data[question.questionId].fixedName = data[question.questionId].name.split(".").join(" ");
       }
     }
     return data;
@@ -276,12 +271,12 @@ export class Survey extends Base {
 		return visible ? this.visibleElements.indexOf(element) : this.elements.indexOf(element);
 	}
 
-  valueChanged(question, newVal) {
+  valueChanged(question, newVal, obj) {
     if (this.onValueChanged) {
       if (!this.__clearing) {
         this.doTriggers(this, this.currentPage);
       }
-      this.onValueChanged(question, newVal);
+      this.onValueChanged(question, newVal, obj);
     }
   }
 

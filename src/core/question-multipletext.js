@@ -25,17 +25,29 @@ export class MultipleText extends Question {
     }
   }
 
+  getItem(name) {
+    for (let item of this.items) {
+      if (item.name === name) {
+        return item;
+      }
+    }
+  }
+
+  setMetadata(items) {
+    for (let item of items) {
+      this.getItem(item.name).changedBy = item.changedBy;
+      this.getItem(item.name).changedOn = item.changedOn;
+    }
+  }
+
   get data() {
     let data = super.data;
     let items = [];
     this.items.forEach((item, index) => {
-      items.push({
-        name: item.name,
-        title: item.title || item.name,
-        value: item.value || "",
-        sequence: this.getSequenceCharacter(index).toUpperCase(),
-        answeredBy: item.answeredBy
-      });
+      if (!item.value) return;
+      let obj = item.data;
+      obj.sequence = this.getSequenceCharacter(index).toUpperCase();
+      items.push(obj);
     });
     data.items = items;
     return data;
@@ -96,10 +108,21 @@ class MultipleTextItem extends Base {
     ];
   }
 
+  get data() {
+    return {
+      name: this.name,
+      title: this.title || this.name,
+      value: this.value || "",
+      changedBy: this.changedBy || "",
+      changedOn: this.changedOn || ""
+    }
+  }
+
   set value(val) {
     this.__value = val;
-    this.question.valueChanged(this.question.value);
-    this.answeredBy = this.value ? this.question.survey.getCurrentUser() : "";
+    this.question.valueChanged(this.question.value, {
+      name: this.name
+    });
   }
 
   get value() {
@@ -113,7 +136,8 @@ class MultipleTextItem extends Base {
   constructor(q, item) {
     super(item, metaData.getProperties("multipletext_item"));
     this.question = q;
-    this.answeredBy = "";
+    this.changedBy = "";
+    this.changedOn = null;
   }
 }
 
