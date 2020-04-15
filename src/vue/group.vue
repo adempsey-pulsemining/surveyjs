@@ -1,6 +1,6 @@
 <template>
   <div class="sv_group">
-    <div class="sv_group_title" :style="{ 'color': group.titleColour }">{{title}}</div>
+    <div v-if="title" class="sv_group_title" :style="{ 'color': group.titleColour }">{{title}}</div>
 		<div class="sv_group_body" :style="getStyle(group.inline)">
 			<component v-for="(question, index) in visibleQuestions" :is="componentName" :question="question" :key="index"></component>
 		</div>
@@ -35,7 +35,7 @@
 				return QuestionVue.name;
 			},
 			title() {
-				return this.group.title || this.group.name;
+				return this.group.title || "";
 			},
 			questions() {
 				return this.group.elements;
@@ -54,6 +54,6 @@
 	}
 
 	.sv_group_body {
-		grid-column-gap: .75rem;
+		grid-column-gap: 1rem;
 	}
 </style>

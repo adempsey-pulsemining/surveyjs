@@ -119,12 +119,6 @@ export class Base {
     return newGuid();
   }
 
-  doTriggersForAllPages(survey) {
-    for (let page of survey.pages) {
-      this.doTriggers(survey, page);
-    }
-  }
-
   doTriggers(survey, page) {
     for (let element of page.getAllElements()) {
       if (element.visibleIf) {
@@ -148,7 +142,7 @@ export class Base {
       expression = grammar.parse(trigger);
       this.__expressionCache[trigger] = expression;
     } else {
-      expression = this.__expressionCache[trigger]
+      expression = this.__expressionCache[trigger];
 		}
     return !!expression.evaluate(survey.data);
   }

@@ -209,6 +209,9 @@ export class Variable extends Const {
   evaluate(processValue) {
 		var value = null;
 		for (let key in processValue) {
+		  if (!this.variable.includes(processValue[key].name)) {
+		    continue;
+      }
       value = this.__getValue(key, processValue);
       if (value) break;
     }

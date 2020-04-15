@@ -3,11 +3,11 @@
 		<div class="table-responsive">
 			<table class="table">
 				<thead>
-				<tr>
-					<th v-if="!question.dynamic"></th>
-					<th v-for="(column, index) in question.columns" :key="index">{{getTitle(column, index)}}</th>
-					<th v-if="question.dynamic && !question.isReadOnly()"></th>
-				</tr>
+					<tr>
+						<th v-if="!question.dynamic"></th>
+						<th v-for="(column, index) in question.columns" :key="index">{{getTitle(column, index)}}</th>
+						<th v-if="question.dynamic && !question.isReadOnly()"></th>
+					</tr>
 				</thead>
 				<tbody>
 				<tr v-for="(row, rowIndex) in question.rows" :key="rowIndex">

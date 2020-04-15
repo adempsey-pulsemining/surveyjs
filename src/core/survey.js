@@ -34,6 +34,7 @@ export class Survey extends Base {
     if (this.isPdfRender) {
       this.singlePage = true;
     }
+    this.__data = {};
   }
 
   __getSurveyProxy() {
@@ -57,6 +58,14 @@ export class Survey extends Base {
     return true;
   }
 
+  _updateData(question) {
+    if (question.hasValue() || question.comment) {
+      this.__data[question.questionId] = question.data;
+    } else {
+      delete this.__data[question.questionId];
+    }
+  }
+
   /**
    * Public methods
    */
@@ -69,13 +78,22 @@ export class Survey extends Base {
     this.data = {};
   }
 
+  doTriggersForAllPages() {
+    for (let page of this.pages) {
+      this.doTriggers(this, page, this.data);
+    }
+  }
+
   set data(data) {
+    this.__settingData = true;
     data = typeof data === "string" ? JSON.parse(data) : data;
     for (let page of this.pages) {
       for (let question of page.questions) {
         this._setData(question, data[question.questionId]);
       }
     }
+    this.doTriggersForAllPages();
+    this.__settingData = false;
   }
 
   _setData(question, data) {
@@ -88,17 +106,11 @@ export class Survey extends Base {
     } else if (question.isMatrix() && data) {
       question.setMetadata(data.cells);
     }
+    this._updateData(question);
   }
 
   get data() {
-    let data = {};
-    for (let page of this.pages) {
-      for (let question of page.questions) {
-        if (!question.hasValue() && !question.comment) continue;
-        data[question.questionId] = question.data;
-      }
-    }
-    return data;
+    return this.__data || {};
 	}
 
 	isDisplayMode(mode) {
@@ -168,7 +180,7 @@ export class Survey extends Base {
   changePage(index) {
     let currentPageIndex = this.proxy.currentPageIndex;
     for (let i = this.proxy.currentPageIndex; i < index; ++i) {
-      this.doTriggers(this, this.visiblePages[i]);
+      this.doTriggers(this, this.visiblePages[i], this.data);
       if (this.visiblePages[i].hasErrors()) {
         this.proxy.currentPageIndex = i;
         this.showErrors();
@@ -195,7 +207,7 @@ export class Survey extends Base {
     if (this.onClear) {
       this.onClear();
     }
-    this.doTriggersForAllPages(this);
+    this.doTriggersForAllPages();
     this.__clearing = false;
   }
 
@@ -264,18 +276,19 @@ export class Survey extends Base {
   }
 
   indexOfQuestion(question, visible = false) {
-    return visible ? this.visibleQuestions.indexOf(question) : this.questions.indexOf(question);
+    let arr = visible ? this.visibleQuestions : this.questions;
+    return arr.filter(x => x.type !== 'html').indexOf(question);
 	}
 	
 	indexOfElement(element, visible = false) {
-		return visible ? this.visibleElements.indexOf(element) : this.elements.indexOf(element);
+    let arr = visible ? this.visibleElements : this.elements;
+    return arr.filter(x => x.type !== 'html').indexOf(element);
 	}
 
   valueChanged(question, newVal, obj) {
+    this._updateData(question);
     if (this.onValueChanged) {
-      if (!this.__clearing) {
-        this.doTriggers(this, this.currentPage);
-      }
+      this.doTriggers(this, this.currentPage, this.data);
       this.onValueChanged(question, newVal, obj);
     }
   }
@@ -287,6 +300,7 @@ export class Survey extends Base {
   }
 
   commentChanged(question, val) {
+    this._updateData(question);
     if (this.onCommentChanged) {
       this.onCommentChanged(question, val);
     }
@@ -296,7 +310,7 @@ export class Survey extends Base {
     if (this.pageChanged) {
       this.onPageChanged(this.pages[oldVal], this.pages[newVal]);
     }
-    this.doTriggers(this, this.currentPage);
+    this.doTriggers(this, this.currentPage, this.data);
   }
 
   pageChanging(oldVal, newVal) {

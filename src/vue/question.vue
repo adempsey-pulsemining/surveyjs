@@ -9,7 +9,7 @@
     </b-modal>
     <div v-if="question.type !== 'html'" class="sv_q_header">
       <div class="sv_q_header_title" :style="{ color: question.titleColour }">
-        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>
+<!--        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>-->
         <span class="sv_q_title">{{questionTitle}}</span>
         <div class="flex"></div>
         <b-dropdown v-if="!isPdfRender" dropleft no-caret variant="link">
@@ -28,7 +28,7 @@
       </div>
       <div v-if="question.description" class="sv_q_description">{{question.description}}</div>
     </div>
-    <div class="sv_q_error" v-if="question.hasErrors && question.showErrors">
+    <div class="sv_q_error" v-if="showError">
       <div v-for="error in question.errors"><font-awesome-icon icon="exclamation-triangle" size="8x" style="margin-right:5px;" />{{error}}</div>
     </div>
     <div class="sv_q_body">
@@ -83,6 +83,9 @@
 			}
 		},
     computed: {
+		  showError() {
+        return this.question.hasErrors && this.question.showErrors;
+      },
 		  pageBreakAfter() {
 		    return this.question.pageBreakAfter;
       },
@@ -91,7 +94,8 @@
       },
 			questionTitle() {
 				let title = "";
-				return title + (this.question.title || this.question.name || "") + (this.question.required() ? " *" : "");
+				title = title + (this.question.title || this.question.name || "") + (this.question.required() ? " *" : "");
+				return this.showQuestionNo ? this.questionNo + title : title;
 			},
       componentName() {
         return "survey-" + this.question.type;
@@ -103,7 +107,7 @@
 				if (this.question.group) {
 					return this.question.group.no + this.alphabet.charAt(this.question.group.elements.filter(q => q.type !== 'html').indexOf(this.question)) + ". ";
 				}
-				return this.question.questionNo + ". ";
+				return this.question.elementNo + ". ";
 			},
       isPdfRender() {
 			  return this.question.survey && this.question.survey.isPdfRender;
@@ -139,7 +143,13 @@
   .sv_q_header_title {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
+    padding-top: .5rem;
+  }
+
+  .sv_q_header_title .dropdown-toggle {
+    padding: 0;
+    padding-left: .5rem;
   }
 
   .sv_q_header {

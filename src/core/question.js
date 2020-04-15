@@ -98,7 +98,7 @@ export class Question extends Element {
 	
 	get elementNo() {
 		if (!this.survey) return;
-    return this.survey.elements.indexOf(this) + 1;
+    return this.survey.elements.filter(x => x.type !== 'html').indexOf(this) + 1;
 	}
 
 	set comment(val) {

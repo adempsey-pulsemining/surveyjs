@@ -94,7 +94,6 @@ export class Matrix extends Question {
 
 	set value(val) {
 		if (val === null) {
-			val = this.dynamic ? [] : {};
 			if (!this.isSingleChoice()) {
 				this.clearCells();
 			}
@@ -134,7 +133,10 @@ export class Matrix extends Question {
 	}
 
 	clearCells() {
-  	this._addCells(this);
+  	if (!this.cells) return;
+  	this.cells.forEach(cell => {
+  		cell.value = null;
+		});
 	}
 
 	getMatrixData() {
@@ -198,6 +200,8 @@ export class Matrix extends Question {
 			this.columns.forEach((column, colIndex) => {
 				if (val[row.name] && val[row.name][column.name]) {
 					this.cells[rowIndex][colIndex].value = val[row.name][column.name];
+				} else {
+					this.cells[rowIndex][colIndex].value = null;
 				}
 			});
 		});
@@ -216,6 +220,7 @@ export class Matrix extends Question {
 
 	_addCells(question) {
 		this.cells = [];
+		if (!this.rows) return;
 		this.rows.forEach((row, rowIndex) => {
 			this._addCellsForRow(question, rowIndex);
 		});
