@@ -460,6 +460,7 @@ class MatrixCell extends Base {
 		};
 		this.proxy = new Proxy(this, proxyHandler);
 		this.value = null;
+		this.proxy.__value = null;
 		this.row = rowIndex;
 		this.col = colIndex;
 		if (type === "radiogroup") {
@@ -472,6 +473,7 @@ class MatrixCell extends Base {
 	}
 
 	set value(val) {
+		if (!val && !this.proxy.__value) return;
 		if (val !== this.proxy.__value) {
 			this.proxy.__value = val;
 		}

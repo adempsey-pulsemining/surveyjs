@@ -138,6 +138,7 @@ class MultipleTextItem extends Base {
     this.question = q;
     this.changedBy = "";
     this.changedOn = null;
+    this.value = "";
   }
 }
 

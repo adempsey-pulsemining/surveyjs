@@ -66,10 +66,6 @@ export class Survey extends Base {
     }
   }
 
-  /**
-   * Public methods
-   */
-
   get visiblePages() {
     return this.pages.filter(page => page.visible);
   }
@@ -207,7 +203,6 @@ export class Survey extends Base {
     if (this.onClear) {
       this.onClear();
     }
-    this.doTriggersForAllPages();
     this.__clearing = false;
   }
 
@@ -286,22 +281,22 @@ export class Survey extends Base {
 	}
 
   valueChanged(question, newVal, obj) {
-    this._updateData(question);
-    if (this.onValueChanged) {
+    if (this.onValueChanged && !this.__clearing) {
       this.doTriggers(this, this.currentPage, this.data);
       this.onValueChanged(question, newVal, obj);
     }
   }
 
-  valueChanging(question, newVal) {
+  valueChanging(question, newVal, obj) {
     if (this.onValueChanging) {
-      this.onValueChanging(question, newVal);
+      this.onValueChanging(question, newVal, obj);
     }
+    this._updateData(question);
   }
 
   commentChanged(question, val) {
     this._updateData(question);
-    if (this.onCommentChanged) {
+    if (this.onCommentChanged && !this.__clearing) {
       this.onCommentChanged(question, val);
     }
   }

@@ -209,7 +209,7 @@ export class Variable extends Const {
   evaluate(processValue) {
 		var value = null;
 		for (let key in processValue) {
-		  if (!this.variable.includes(processValue[key].name)) {
+		  if (!this.variable.includes(processValue[key].fixedName)) {
 		    continue;
       }
       value = this.__getValue(key, processValue);

@@ -12,7 +12,8 @@ export class Comment extends Question {
 
   static get properties() {
     return Question.properties.concat([
-      "placeHolder"
+      "placeHolder",
+      { name: "rows", type: "number", default: 2 }
     ]);
   }
 
