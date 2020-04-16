@@ -12,7 +12,7 @@
 <!--        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>-->
         <span class="sv_q_title">{{questionTitle}}</span>
         <div class="flex"></div>
-        <b-dropdown v-if="!isPdfRender" dropleft no-caret variant="link">
+        <b-dropdown v-if="!isPdfRender && !isReadMode" dropleft no-caret variant="link">
           <template v-slot:button-content>
             <font-awesome-icon icon="ellipsis-h" size="6x" />
           </template>
@@ -35,7 +35,7 @@
       <component v-if="question.isWidget" is="survey-widget" :question="question" />
       <component v-else :is="componentName" :question="question" />
     </div>
-    <b-form-textarea v-if="isPdfRender && question.comment" class="sv_q_comment" v-model="question.comment"></b-form-textarea>
+    <b-form-textarea v-if="(isPdfRender || isReadMode) && question.comment" class="sv_q_comment" v-model="question.comment" :readonly="true"></b-form-textarea>
   </div>
 </template>
 
@@ -83,6 +83,9 @@
 			}
 		},
     computed: {
+		  isReadMode() {
+		    return this.question.survey && this.question.survey.isDisplayMode('read');
+      },
 		  showError() {
         return this.question.hasErrors && this.question.showErrors;
       },
@@ -181,5 +184,9 @@
     margin-top: .75rem;
     border-radius: .25rem;
     background-color: #F44336
+  }
+
+  .sv_q_comment {
+    margin-bottom: .5rem;
   }
 </style>

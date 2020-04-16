@@ -140,6 +140,7 @@ export class Matrix extends Question {
 	}
 
 	getMatrixData() {
+  	if (!this.rows) return;
   	let cells = [];
     this.rows.forEach((row, rowIndex) => {
     	this.columns.forEach((col, colIndex) => {
@@ -164,7 +165,7 @@ export class Matrix extends Question {
 			columnTitle: col.title || col.name || "",
 			columnSequence: this.getSequenceCharacter(colIndex).toUpperCase(),
 			columnIndex: colIndex,
-			value: cell.cloneValue || "",
+			value: cell.cloneValue,
 			changedBy: cell.changedBy || "",
 			changedOn: cell.changedOn || ""
 		};
@@ -173,7 +174,7 @@ export class Matrix extends Question {
 			obj.changedBy = row.changedBy || "";
 			obj.changedOn = row.changedOn || "";
 		}
-		if ((cell.isAnswered && !cell.isAnswered()) || !obj.value) {
+		if ((!this.isSingleChoice() && cell.isAnswered && !cell.isAnswered()) || (this.isSingleChoice() && !obj.value)) {
 			return null;
 		}
 		return obj;
@@ -195,19 +196,19 @@ export class Matrix extends Question {
 	}
 
 	setCellsValue(val) {
+  	if (!this.rows) return;
   	val = val || {};
   	this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
-				if (val[row.name] && val[row.name][column.name]) {
+				if (val[row.name] && this.cells[rowIndex][colIndex]) {
 					this.cells[rowIndex][colIndex].value = val[row.name][column.name];
-				} else {
-					this.cells[rowIndex][colIndex].value = null;
 				}
 			});
 		});
 	}
 
 	setValue(val) {
+  	if (!this.rows) return;
   	val = val || {};
   	this.rows.forEach(row => {
 			this.columns.forEach(column => {
@@ -260,6 +261,7 @@ export class Matrix extends Question {
 	}
 	
 	allCellsAnswered() {
+  	if (!this.rows) return;
 		let answered = true;
 		this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
@@ -290,6 +292,7 @@ export class Matrix extends Question {
 	}
 
 	cellsHasValue() {
+  	if (!this.rows) return;
 		let hasValue = false;
 		this.rows.forEach((row, rowIndex) => {
 			this.columns.forEach((column, colIndex) => {
@@ -307,6 +310,7 @@ export class Matrix extends Question {
 	}
 
 	dynamicValue() {
+  	if (!this.rows) return;
   	let value = [];
 		this.rows.forEach((row, rowIndex) => {
 			value.push({});
@@ -321,6 +325,7 @@ export class Matrix extends Question {
 	}
 
 	getValue() {
+  	if (!this.rows) return;
 		let value = {};
 		this.rows.forEach((row) => {
 			value[row.name] = value[row.name] || {};
@@ -334,12 +339,13 @@ export class Matrix extends Question {
 	}
 
 	cellsValue() {
+  	if (!this.rows) return;
 		let value = {};
 		this.rows.forEach((row, rowIndex) => {
 			value[row.name] = value[row.name] || {};
 			this.columns.forEach((column, colIndex) => {
 				let val = this.cells[rowIndex][colIndex].cloneValue;
-				if (val) {
+				if (val != null) {
 					value[row.name][column.name] = val;
 				}
 			});
@@ -348,6 +354,7 @@ export class Matrix extends Question {
 	}
 
 	addRow() {
+  	if (!this.rows) return;
   	this.cells.push({});
 		this.rows.push(new MatrixRow(this));
 		this.columns.forEach((col, colIndex) => {
@@ -357,6 +364,7 @@ export class Matrix extends Question {
 	}
 
 	removeRow(index) {
+  	if (!this.cells || !this.rows) return;
     this.cells.splice(index, 1);
 		this.rows.splice(index, 1);
 		--this.rowCount;
@@ -473,7 +481,9 @@ class MatrixCell extends Base {
 	}
 
 	set value(val) {
-		if (!val && !this.proxy.__value) return;
+		if (val === undefined) {
+			val = null;
+		}
 		if (val !== this.proxy.__value) {
 			this.proxy.__value = val;
 		}

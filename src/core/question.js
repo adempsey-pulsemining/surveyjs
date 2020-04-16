@@ -30,9 +30,10 @@ export class Question extends Element {
     this.elementId = "sv_" + this.newGuid();
     this.changedBy = "";
     this.changedOn = null;
+    this.value = null;
 	}
 
-	isMatrix() {
+  isMatrix() {
     return false;
   }
 
@@ -110,6 +111,9 @@ export class Question extends Element {
   }
 
   set value(val) {
+    if (val === undefined) {
+      val = null;
+    }
     if (val !== this.proxy.__value) {
       this.proxy.__value = val;
     }
@@ -175,10 +179,10 @@ export class Question extends Element {
 	
 	__onQuestionPropertyChanged(obj, prop, val) {
 		obj[prop] = val;
-		if (prop === "__value" && this.survey) {
-      this.valueChanged(this.cloneValue);
+		if (prop === "__value" && this.survey && !this.survey.isDisplayMode('read')) {
+		  this.valueChanged(this.cloneValue);
     }
-		if (prop === "__comment") {
+		if (prop === "__comment" && this.survey && !this.survey.isDisplayMode('read')) {
 		  this.commentChanged(val);
     }
 		return true;

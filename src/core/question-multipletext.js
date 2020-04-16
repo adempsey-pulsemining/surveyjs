@@ -41,6 +41,7 @@ export class MultipleText extends Question {
   }
 
   get data() {
+    if (!this.items) return {};
     let data = super.data;
     let items = [];
     this.items.forEach((item, index) => {
@@ -54,6 +55,7 @@ export class MultipleText extends Question {
   }
 
   set value(val) {
+    if (!this.items) return;
     if (val === null) {
       val = {};
     }
@@ -65,6 +67,7 @@ export class MultipleText extends Question {
   }
 
   get value() {
+    if (!this.items) return {};
     let value = {};
     for (let item of this.items) {
       if (item.value) {
@@ -75,6 +78,7 @@ export class MultipleText extends Question {
   }
 
   isAnswered() {
+    if (!this.items) return;
     let answered = true;
     this.items.forEach(item => {
       if (!item.value && !item.readOnly) {

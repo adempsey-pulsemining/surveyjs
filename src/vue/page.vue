@@ -10,7 +10,7 @@
     <div class="sv_page_title">
 			<div>{{title}}</div>
 			<div class="flex"></div>
-			<b-dropdown v-if="!survey.isPdfRender" dropleft no-caret variant="link">
+			<b-dropdown v-if="!survey.isPdfRender && !survey.readOnly" dropleft no-caret variant="link">
 				<template v-slot:button-content>
 					<font-awesome-icon icon="cog" size="6x" />
 				</template>

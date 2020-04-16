@@ -101,6 +101,7 @@ export class Page extends Base {
     let myClass = metaData.getClassName(element.type);
     // skip elements which are not defined in the metadata
     if (!metaData.hasClass(element.type)) {
+      console.warn("Page " + this.pageNumber + ": Definition for element type '" + element.type + "' was not found.");
       return;
     }
     if (Element.isGroup(element)) {

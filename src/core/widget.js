@@ -8,11 +8,11 @@ export class Widget extends Question {
       this.widget = metaData.getWidget(element.type);
     }
     for (let key in this.widget) {
+      // if key is not part of properties then add it to class instance
       if (metaData.getProperties(element.type).findIndex(x => x.name === key) < 0) {
         this[key] = this.widget[key];
       }
     }
-    this.value = null;
     if (typeof this.load === "function") {
       this.webComponentLoaded = this.load();
     }
@@ -46,24 +46,22 @@ export class Widget extends Question {
   }
 
   __setupCustomElement() {
-    if (typeof this.setValue === "function") {
-      this.setValue(this.value);
-    } else {
-      this.element.value = this.value;
-    }
     this.element.question = this;
-    this.__setElementProperties();
+    this.__setupElement();
     this.element.addEventListener("value-changed", (e) => {
       super.value = e.detail.value;
     });
   }
 
-  __setElementProperties() {
+  __setupElement() {
     let properties = metaData.getProperties(this.type) || [];
     for (let property of properties) {
       if (this.element && property.name in this.element.constructor.properties && property.name !== "value") {
         this.element[property.name] = this[property.name];
       }
+    }
+    if (typeof this.setupElement === "function") {
+      this.setupElement(this.survey, this.element);
     }
   }
 }
