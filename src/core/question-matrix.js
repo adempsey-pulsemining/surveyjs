@@ -202,6 +202,8 @@ export class Matrix extends Question {
 			this.columns.forEach((column, colIndex) => {
 				if (val[row.name] && this.cells[rowIndex][colIndex]) {
 					this.cells[rowIndex][colIndex].value = val[row.name][column.name];
+				} else if (this.cells[rowIndex][colIndex]) {
+					this.cells[rowIndex][colIndex].value = null;
 				}
 			});
 		});
