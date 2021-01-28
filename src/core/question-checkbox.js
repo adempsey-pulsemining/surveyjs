@@ -13,7 +13,8 @@ export class Checkbox extends Question {
   static get properties() {
     return Question.properties.concat([
 			{ name: "choices", type: "array", default: [] },
-			{ name: "inline", type: "boolean" }
+			{ name: "inline", type: "boolean", writable: true },
+      { name: "colCount", type: "number", writable: true }
     ]);
   }
 

@@ -4,7 +4,9 @@
                            :options="choices"
                            value-field="name"
 													 text-field="title"
-													 :stacked="!question.inline"
+                           size="lg"
+                           :stacked="!question.inline"
+                           :style="styleObject"
 													 :disabled="question.isReadOnly()">
     </b-form-checkbox-group>
   </div>
@@ -24,7 +26,18 @@
 		  value: {
         set(val) { this.question.value = val || [] },
         get() { return this.question.value || [] }
+      },
+      styleObject() {
+		    if (this.question.inline) {
+		      return;
+        }
+		    if (this.question.colCount <= 0) return;
+		    return {
+		      display: "grid",
+          gridTemplateColumns: `repeat(${this.question.colCount}, minmax(100px, 1fr))`,
+          gridGap: "1rem"
+        }
       }
-    }
+    },
   })
 </script>

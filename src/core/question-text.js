@@ -14,13 +14,19 @@ export class Text extends Question {
   static get properties() {
     return Question.properties.concat([
       { name: "inputType", default: "text" },
-      "placeHolder"
+      "placeHolder",
+      "replace"
     ])
   }
 
   constructor(question) {
     super(question, metaData.getProperties("text"));
-    this.value = "";
+    if (this.replace && this.replace === this.placeHolder) {
+      this.value = this.placeHolder;
+      this.readOnly = true;
+    } else {
+      this.value = "";
+    }
 	}
 
 	get value() {

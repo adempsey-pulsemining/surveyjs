@@ -4,16 +4,16 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th v-if="!question.dynamic"></th>
+						<th v-if="showRowTitle"></th>
 						<th v-for="(column, index) in question.columns" :key="index">{{getTitle(column, index)}}</th>
 						<th v-if="question.dynamic && !question.isReadOnly()"></th>
 					</tr>
 				</thead>
 				<tbody>
 				<tr v-for="(row, rowIndex) in question.rows" :key="rowIndex">
-					<td v-if="!question.dynamic">{{getTitle(row,rowIndex)}}</td>
+					<td v-if="showRowTitle">{{getTitle(row,rowIndex)}}</td>
 					<td v-for="(column, colIndex) in question.columns" :key="rowIndex + ',' + colIndex">
-						<b-form-radio v-if="!question.multipleChoice && !question.dynamic" v-model="row.value" :value="column.name" :disabled="question.isReadOnly()" />
+						<b-form-radio v-if="!question.multipleChoice && !question.dynamic" v-model="row.value" :value="column.name" :disabled="question.isReadOnly()" size="lg" />
 						<matrix-cell v-if="question.multipleChoice || question.dynamic" :cell="question.getCell(rowIndex, colIndex)" :question="question" :key="rowIndex + ',' + colIndex + ',' + cellKey + ',' + getCellId(rowIndex, colIndex)" />
 					</td>
 					<td v-if="question.dynamic && !question.isReadOnly()">
@@ -64,6 +64,14 @@
 			},
 			getCellId(row, col) {
 				return this.question.cells[row][col].cellId;
+			}
+		},
+		computed: {
+			showRowTitle() {
+				if (this.question.dynamic) {
+					return false;
+				}
+				return !this.question.hideRowTitle;
 			}
 		}
   });

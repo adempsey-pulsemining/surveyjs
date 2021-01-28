@@ -12,8 +12,9 @@ export class Radio extends Question {
 
   static get properties() {
     return Question.properties.concat([
-			{ name: "inline", type: "boolean" },
-			{ name: "choices", type: "array", default: [] }
+			{ name: "inline", type: "boolean", writable: true },
+      { name: "colCount", type: "number", writable: true },
+			{ name: "choices", type: "array", default: [], writable: true }
     ]);
   }
 

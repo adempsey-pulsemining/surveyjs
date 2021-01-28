@@ -14,7 +14,6 @@ export class Element extends Base {
       "!name",
       "!type",
       "title",
-			"readOnly:boolean",
 			"isRequired:boolean",
 			"pageBreakBefore:boolean",
 			"pageBreakAfter:boolean",
@@ -23,6 +22,8 @@ export class Element extends Base {
       "visibleIf",
       "enableIf",
       "titleColour",
+      "titleLocation",
+      { name: "readOnly", type: "boolean", writable: true },
       { name: "visible", type: "boolean", default: true, writable: true }
     ])
 	}

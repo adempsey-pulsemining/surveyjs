@@ -12,7 +12,7 @@ export class Html extends Question {
 
   static get properties() {
     return Question.properties.concat([
-      "html"
+      { name: "html", writable: true }
     ]);
   }
 

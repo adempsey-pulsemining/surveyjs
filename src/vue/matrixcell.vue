@@ -11,6 +11,7 @@
 	import SurveyCheckbox from "./question-checkbox.vue";
 	import SurveyComment from "./question-comment.vue";
 	import SurveyRadio from "./question-radio.vue";
+	import SurveyHtml from "./question-html.vue"
 
 	export default {
 		name: "matrix-cell",
@@ -20,7 +21,8 @@
 			SurveyBoolean,
 			SurveyCheckbox,
 			SurveyComment,
-			SurveyRadio
+			SurveyRadio,
+			SurveyHtml
 		},
 		props: {
 			cell: {

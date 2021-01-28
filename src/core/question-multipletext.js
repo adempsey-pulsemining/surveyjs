@@ -107,7 +107,8 @@ class MultipleTextItem extends Base {
       "!name",
       "title",
       "placeHolder",
-      "readOnly:boolean",
+      "replace",
+      { name: "readOnly", type: "boolean", writable: true },
       { name: "inputType", type: "string", default: "text" }
     ];
   }
@@ -142,7 +143,12 @@ class MultipleTextItem extends Base {
     this.question = q;
     this.changedBy = "";
     this.changedOn = null;
-    this.value = "";
+    if (this.replace && this.replace === this.placeHolder) {
+      this.value = this.placeHolder;
+      this.readOnly = true;
+    } else {
+      this.value = "";
+    }
   }
 }
 

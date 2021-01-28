@@ -10,7 +10,7 @@
     <div v-if="question.type !== 'html'" class="sv_q_header">
       <div class="sv_q_header_title" :style="{ color: question.titleColour }">
 <!--        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>-->
-        <span class="sv_q_title">{{questionTitle}}</span>
+        <span v-if="showTitle" class="sv_q_title">{{questionTitle}}</span>
         <div class="flex"></div>
         <b-dropdown v-if="!isPdfRender && !isReadMode" dropleft no-caret variant="link">
           <template v-slot:button-content>
@@ -117,6 +117,9 @@
       },
       options() {
 		    return Survey.Question.options;
+      },
+      showTitle() {
+		    return this.question.titleLocation !== "hidden";
       }
 		},
     methods: {

@@ -18,8 +18,9 @@ export class Matrix extends Question {
     return Question.properties.concat([
 			{ name: "cellType", type: "string", default: "dropdown" },
 			{ name: "multipleChoice", type: "boolean", default: false },
-		  { name: "choices", type: "array", default: []},
-		  { name: "dynamic", type: "boolean", default: false}
+		  { name: "choices", type: "array", default: [] },
+		  { name: "dynamic", type: "boolean", default: false },
+			{ name: "hideRowTitle", type: "boolean", default: false }
     ]);
   }
 
@@ -232,16 +233,20 @@ export class Matrix extends Question {
 	_addCellsForRow(question, rowIndex) {
 		this.cells.push({});
 		this.columns.forEach((col, colIndex) => {
-			this._addCell(question, rowIndex, colIndex, col.cellType || question.cellType);
+			this._addCell(question, rowIndex, colIndex, col);
 		});
 	}
 
-	_addCell(question, row, col, type) {
-		this.cells[row][col] = new MatrixCell(this, question, row, col, type);
+	_addCell(question, row, col, column) {
+    let choices = this.choices || [];
+    if (this.columns[col] && this.columns[col].choices && this.columns[col].choices.length) {
+    	choices = this.columns[col].choices;
+		}
+		this.cells[row][col] = new MatrixCell(this, question, row, col, column, choices);
 	}
 
 	getCell(row, col) {
-		return this.cells[row][col];
+  	return this.cells[row][col];
 	}
 
   isAnswered() {
@@ -435,7 +440,10 @@ class MatrixColumn extends Base {
 
   static get properties() {
     return Base.properties.concat([
-			{ name: "cellType", type: "string", default: "" }
+			{ name: "cellType", type: "string", default: "" },
+			{ name: "choices", type: "array", default: [] },
+			"inline:boolean",
+			"html"
 		]);
   }
 
@@ -459,7 +467,8 @@ class MatrixCell extends Base {
     return Base.properties.concat([]);
 	}
 	
-	constructor(q, question, rowIndex, colIndex, type) {
+	constructor(q, question, rowIndex, colIndex, column, choices) {
+		let type = column.cellType || question.cellType;
 		super(question, metaData.getProperties(type));
 		this.question = q;
 		var that = this;
@@ -473,6 +482,7 @@ class MatrixCell extends Base {
 		this.proxy.__value = null;
 		this.row = rowIndex;
 		this.col = colIndex;
+		this.__choices = choices;
 		if (type === "radiogroup") {
 			type = "radio";
 		}
@@ -480,6 +490,9 @@ class MatrixCell extends Base {
 		this.cellId = this.newGuid();
 		this.changedBy = "";
 		this.changedOn = null;
+		this.colCount = column.colCount;
+		this.inline = column.inline;
+		this.html = column.html;
 	}
 
 	set value(val) {
@@ -514,12 +527,41 @@ class MatrixCell extends Base {
 			case "dropdown": return Dropdown.IsAnswered(this.value);
 			case "checkbox": return Checkbox.IsAnswered(this.value);
 			case "boolean": return Boolean.IsAnswered(this.value);
+			case "html": return true;
 			default: return !!this.value;
 		}
 	}
 
+	set choices(val) {
+		this.__choices = val;
+	}
+
 	get choices() {
-		return this.question.choices;
+		return this.__choices;
+	}
+
+	set colCount(val) {
+		this.__colCount = val;
+	}
+
+	get colCount() {
+		return this.__colCount;
+	}
+
+	set inline(val) {
+		this.__inline = val;
+	}
+
+	get inline() {
+		return this.__inline;
+	}
+
+	set html(val) {
+		this.__html = val;
+	}
+
+	get html() {
+		return this.__html;
 	}
 
 	__cellPropChanged(obj, prop, val) {

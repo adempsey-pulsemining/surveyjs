@@ -12,7 +12,7 @@ export class Dropdown extends Question {
 
   static get properties() {
     return Question.properties.concat([
-			{ name: "choices", type: "array", default: [] }
+			{ name: "choices", type: "array", default: [], writable: true }
     ]);
   }
 
