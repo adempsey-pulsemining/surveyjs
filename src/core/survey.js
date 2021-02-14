@@ -185,6 +185,10 @@ export class Survey extends Base {
     }
     this.proxy.currentPageIndex = index;
     this.pageChanged(currentPageIndex, index);
+    setTimeout(() => {
+      let n = document.querySelector(".sv_page_container");
+      if (n) n.scrollTo(0, 0);
+    }, 1);
   }
 
   nextPage() {

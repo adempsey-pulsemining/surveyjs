@@ -6,7 +6,7 @@
 					<tr>
 						<th v-if="showRowTitle"></th>
 						<th v-for="(column, index) in question.columns" :key="index">{{getTitle(column, index)}}</th>
-						<th v-if="question.dynamic && !question.isReadOnly()"></th>
+						<th v-if="question.dynamic && !question.isReadOnly() && !isPdfRender"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -16,7 +16,7 @@
 						<b-form-radio v-if="!question.multipleChoice && !question.dynamic" v-model="row.value" :value="column.name" :disabled="question.isReadOnly()" size="lg" />
 						<matrix-cell v-if="question.multipleChoice || question.dynamic" :cell="question.getCell(rowIndex, colIndex)" :question="question" :key="rowIndex + ',' + colIndex + ',' + cellKey + ',' + getCellId(rowIndex, colIndex)" />
 					</td>
-					<td v-if="question.dynamic && !question.isReadOnly()">
+					<td v-if="question.dynamic && !question.isReadOnly() && !isPdfRender">
 						<v-button class="sv_remove_row_btn" variant="primary" @click="removeRow(rowIndex)">
 							<span>Remove Row</span>
 						</v-button>
@@ -25,7 +25,7 @@
 				</tbody>
 			</table>
 		</div>
-		<v-button class="sv_add_row_btn" v-if="question.dynamic && !question.isReadOnly()" variant="primary" @click="addRow">
+		<v-button class="sv_add_row_btn" v-if="question.dynamic && !question.isReadOnly() && !isPdfRender" variant="primary" @click="addRow">
 			<span>Add Row</span>
 		</v-button>
   </div>
@@ -72,9 +72,12 @@
 					return false;
 				}
 				return !this.question.hideRowTitle;
-			}
+			},
+			isPdfRender() {
+				return this.question.survey && this.question.survey.isPdfRender;
+			},
 		}
-  });
+	});
 </script>
 
 <style>

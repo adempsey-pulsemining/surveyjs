@@ -7,6 +7,11 @@
         <v-button variant="danger" icon="times" @click="closeModal">Close</v-button>
       </div>
     </b-modal>
+    <div class="sv_q_details">
+      <span>{{questionDetails}}</span>
+      <div class="flex"></div>
+      <font-awesome-icon v-if="question.isAnswered() && question.type !== 'html'" icon="check" size="6x" color="green" />
+    </div>
     <div v-if="question.type !== 'html'" class="sv_q_header">
       <div class="sv_q_header_title" :style="{ color: question.titleColour }">
 <!--        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>-->
@@ -120,6 +125,10 @@
       },
       showTitle() {
 		    return this.question.titleLocation !== "hidden";
+      },
+      questionDetails() {
+		    if (!this.question.changedBy || !this.question.changedOn) return "";
+		    return this.question.changedBy + ", " + new Date(this.question.changedOn).toLocaleString()
       }
 		},
     methods: {
@@ -191,5 +200,11 @@
 
   .sv_q_comment {
     margin-bottom: .5rem;
+  }
+
+  .sv_q_details {
+    font-size: .75rem;
+    display: flex;
+    flex-direction: row;
   }
 </style>

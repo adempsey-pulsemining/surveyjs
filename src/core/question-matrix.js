@@ -20,7 +20,8 @@ export class Matrix extends Question {
 			{ name: "multipleChoice", type: "boolean", default: false },
 		  { name: "choices", type: "array", default: [] },
 		  { name: "dynamic", type: "boolean", default: false },
-			{ name: "hideRowTitle", type: "boolean", default: false }
+			{ name: "hideRowTitle", type: "boolean", default: false },
+			{ name: "rowCount", type: "number", default: 2, writable: true }
     ]);
   }
 
@@ -28,17 +29,18 @@ export class Matrix extends Question {
 		super(question, metaData.getProperties("matrix"));
 		this.rows = [];
 		this.columns = [];
+		this._q = JSON.parse(JSON.stringify(question));
 		for (let row of question.rows || []) {
 			this.rows.push(new MatrixRow(this, row));
 		}
 		for (let column of question.columns || []) {
 			this.columns.push(new MatrixColumn(column));
 		}
-		if (this.dynamic && !this.rowCount) {
-			this.rowCount = 2;
-		}
-		for (let i = 0; i < this.rowCount; ++i) {
-			this.rows.push(new MatrixRow(this));
+		if (this.dynamic) {
+			this.rowCount = this.rowCount || 2
+			for (let i = 0; i < this.rowCount; ++i) {
+				this.rows.push(new MatrixRow(this));
+			}
 		}
 		if (this.multipleChoice || this.dynamic) {
 			this._addCells(question);
@@ -183,8 +185,14 @@ export class Matrix extends Question {
 
 	setDynamicValue(val) {
 		val = val || [];
+		this.rowCount = val.length || 2;
+		this.rows = [];
+		for (let i = 0; i < this.rowCount; ++i) {
+			this.rows.push(new MatrixRow(this));
+		}
+		this._addCells(this._q);
 		val.forEach((row, rowIndex) => {
-			this.columns.forEach((column, colIndex) => {
+			(this.columns || []).forEach((column, colIndex) => {
 				if (!this.cells[rowIndex]) {
 					this.rows.push(new MatrixRow(this));
 					this._addCellsForRow(this, rowIndex);
@@ -232,7 +240,7 @@ export class Matrix extends Question {
 
 	_addCellsForRow(question, rowIndex) {
 		this.cells.push({});
-		this.columns.forEach((col, colIndex) => {
+		(this.columns || []).forEach((col, colIndex) => {
 			this._addCell(question, rowIndex, colIndex, col);
 		});
 	}
@@ -260,7 +268,7 @@ export class Matrix extends Question {
 	rowsAnswered() {
 		let answered = true;
 		for (let row in this.value) {
-			if (this.value[row] == null) {
+			if (this.value[row] == null || Object.keys(this.value[row] || {}).length === 0) {
 				answered = false;
 			}
 		}
@@ -365,9 +373,10 @@ export class Matrix extends Question {
   	this.cells.push({});
 		this.rows.push(new MatrixRow(this));
 		this.columns.forEach((col, colIndex) => {
-			this._addCell(this, this.rows.length - 1, colIndex, col.cellType || this.cellType);
+			this._addCell(this, this.rows.length - 1, colIndex, col);
 		});
 		++this.rowCount;
+		this.valueChanged(this.value);
 	}
 
 	removeRow(index) {
@@ -375,6 +384,7 @@ export class Matrix extends Question {
     this.cells.splice(index, 1);
 		this.rows.splice(index, 1);
 		--this.rowCount;
+		this.valueChanged(this.value);
 	}
 }
 
