@@ -14,7 +14,7 @@
     </div>
     <div v-if="question.type !== 'html'" class="sv_q_header">
       <div class="sv_q_header_title" :style="{ color: question.titleColour }">
-<!--        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>-->
+        <!--        <span class="sv_q_no" v-if="showQuestionNo">{{questionNo}}</span>-->
         <span v-if="showTitle" class="sv_q_title">{{questionTitle}}</span>
         <div class="flex"></div>
         <b-dropdown v-if="!isPdfRender && !isReadMode" dropleft no-caret variant="link">
@@ -47,92 +47,94 @@
 <script>
   import SurveyText from "./question-text.vue";
   import SurveyBoolean from "./question-boolean.vue";
-	import SurveyCheckbox from "./question-checkbox.vue";
-	import SurveyRadio from "./question-radio.vue";
-	import SurveyDropdown from "./question-dropdown.vue";
-	import SurveyComment from "./question-comment.vue";
-	import SurveyMultipletext from "./question-multipletext.vue";
-	import SurveyHtml from "./question-html.vue";
-	import SurveyMatrix from "./question-matrix.vue";
-	import SurveyWidget from "./question-widget.vue";
-	import { BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue/src/components/dropdown";
-	import VButton from "../components/v-button.vue";
-	import { BFormTextarea } from "bootstrap-vue/src/components/form-textarea";
-	import { BModal } from "bootstrap-vue/src/components/modal";
+  import SurveyCheckbox from "./question-checkbox.vue";
+  import SurveyRadio from "./question-radio.vue";
+  import SurveyDropdown from "./question-dropdown.vue";
+  import SurveyComment from "./question-comment.vue";
+  import SurveyMultipletext from "./question-multipletext.vue";
+  import SurveyHtml from "./question-html.vue";
+  import SurveyMatrix from "./question-matrix.vue";
+  import SurveyWidget from "./question-widget.vue";
+  import SurveyRating from "./question-rating.vue";
+  import { BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue/src/components/dropdown";
+  import VButton from "../components/v-button.vue";
+  import { BFormTextarea } from "bootstrap-vue/src/components/form-textarea";
+  import { BModal } from "bootstrap-vue/src/components/modal";
 
   export default {
-		name: "survey-question",
+    name: "survey-question",
     components: {
       SurveyText,
       SurveyBoolean,
-			SurveyCheckbox,
-			SurveyRadio,
-			SurveyDropdown,
-			SurveyComment,
-			SurveyMultipletext,
-			SurveyHtml,
-			SurveyMatrix,
-			SurveyWidget,
-			BDropdown, BDropdownItem, BDropdownItemButton, BModal,
-			VButton, BFormTextarea
+      SurveyCheckbox,
+      SurveyRadio,
+      SurveyDropdown,
+      SurveyComment,
+      SurveyMultipletext,
+      SurveyHtml,
+      SurveyMatrix,
+      SurveyWidget,
+      SurveyRating,
+      BDropdown, BDropdownItem, BDropdownItemButton, BModal,
+      VButton, BFormTextarea
     },
     props: {
       question: {
-				type: Object
-			}
-		},
-		data() {
-			return {
-				comment: "",
-				alphabet: "abcdefghijklmnopqrstuvwxyz"
-			}
-		},
+        type: Object
+      }
+    },
+    data() {
+      return {
+        comment: "",
+        alphabet: "abcdefghijklmnopqrstuvwxyz"
+      }
+    },
     computed: {
-		  isReadMode() {
-		    return this.question.survey && this.question.survey.isDisplayMode('read');
+      isReadMode() {
+        return this.question.survey && this.question.survey.isDisplayMode('read');
       },
-		  showError() {
+      showError() {
         return this.question.hasErrors && this.question.showErrors;
       },
-		  pageBreakAfter() {
-		    return this.question.pageBreakAfter;
+      pageBreakAfter() {
+        return this.question.pageBreakAfter;
       },
-		  canEditComment() {
+      canEditComment() {
         return this.question.survey && !this.question.survey.readOnly && !this.question.survey.isDisplayMode('read');
       },
-			questionTitle() {
-				let title = "";
-				title = title + (this.question.title || this.question.name || "") + (this.question.required() ? " *" : "");
-				return this.showQuestionNo ? this.questionNo + title : title;
-			},
+      questionTitle() {
+        let title = "";
+        title = title + (this.question.title || this.question.name || "") + (this.question.required() ? " *" : "");
+        return this.showQuestionNo ? this.questionNo + title : title;
+      },
       componentName() {
         return "survey-" + this.question.type;
-			},
-			showQuestionNo() {
-				return this.question.survey.showQuestionNumbers
-			},
-			questionNo() {
-				if (this.question.group) {
-					return this.question.group.no + this.alphabet.charAt(this.question.group.elements.filter(q => q.type !== 'html').indexOf(this.question)) + ". ";
-				}
-				return this.question.elementNo + ". ";
-			},
+      },
+      showQuestionNo() {
+        return this.question.survey.showQuestionNumbers
+      },
+      questionNo() {
+        if (this.question.group) {
+          return this.question.group.no + this.alphabet.charAt(this.question.group.elements.filter(q => q.type !== 'html').indexOf(this.question)) + ". ";
+        }
+        return this.question.elementNo + ". ";
+      },
       isPdfRender() {
-			  return this.question.survey && this.question.survey.isPdfRender;
+        return this.question.survey && this.question.survey.isPdfRender;
       },
       options() {
-		    return Survey.Question.options;
+        return Survey.Question.options;
       },
       showTitle() {
-		    return this.question.titleLocation !== "hidden";
+        return this.question.titleLocation !== "hidden";
       },
       questionDetails() {
-		    if (!this.question.changedBy || !this.question.changedOn) return "";
-		    return this.question.changedBy + ", " + new Date(this.question.changedOn).toLocaleString()
+        if (!this.question.changedBy || !this.question.changedOn) return "";
+        return this.question.changedBy + ", " + new Date(this.question.changedOn).toLocaleString()
       }
-		},
+    },
     methods: {
-		  editComment() {
+      editComment() {
         this.comment = this.question.comment;
         this.$refs["modal"].show();
       },
@@ -141,15 +143,15 @@
         this.$refs["modal"].hide();
       },
       closeModal() {
-		    this.comment = this.question.comment;
+        this.comment = this.question.comment;
         this.$refs["modal"].hide();
       },
       fireOption(option) {
-		    option.callback(this.question);
+        option.callback(this.question);
       }
     },
     mounted() {
-		  this.comment = this.question.comment;
+      this.comment = this.question.comment;
     }
   }
 </script>
@@ -174,18 +176,18 @@
     font-weight: bold;
   }
 
-	.sv_q_body {
-		padding: 1rem 0;
+  .sv_q_body {
+    padding: 1rem 0;
     overflow-x: scroll;
-	}
+  }
 
-	.sv_q_no {
-		margin-right: 5px;
-	}
+  .sv_q_no {
+    margin-right: 5px;
+  }
 
-	.sv_q_description {
-		font-size: 75%;
-	}
+  .sv_q_description {
+    font-size: 75%;
+  }
 
   .sv_q_error > div {
     display: flex;

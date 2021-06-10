@@ -2,7 +2,7 @@
   <div class="sv_nav">
     <b-pagination ref="pagination"
                   v-model="currentPage"
-									align="fill"
+                  align="fill"
                   first-text="First"
                   last-text="Last"
                   next-text="Next"
@@ -24,19 +24,19 @@
   import { BPagination } from "bootstrap-vue/src/components/pagination";
 
   export default {
-		name: "survey-navigation",
+    name: "survey-navigation",
     components: {
       BPagination
     },
     props: {
       survey: {
-				type: Object,
-				required: true
-			}
+        type: Object,
+        required: true
+      }
     },
     data() {
-		  return {
-		    showErrors: false
+      return {
+        showErrors: false
       }
     },
     computed: {
@@ -54,81 +54,81 @@
       },
       totalPages() {
         return this.survey.visiblePages.length;
-			}
+      }
     },
     methods: {
-		  pageChanged(e) {
+      pageChanged(e) {
         if (!this.survey.canGoToPage(e - 1)) {
           this.$refs["pagination"].currentPage = this.survey.getFirstPageWithErrors() + 1;
           this.showErrors = true;
         }
       },
       getPageTitle(index) {
-				let page = this.survey.visiblePages[index];
-				if (!page) return;
+        let page = this.survey.visiblePages[index];
+        if (!page) return;
         return page.title || page.name;
-			},
-			isPageCompleted(index) {
-				let page = this.survey.visiblePages[index];
-				return page && page.completed;
-			}
+      },
+      isPageCompleted(index) {
+        let page = this.survey.visiblePages[index];
+        return page && page.completed;
+      }
     }
   }
 </script>
 
 <style>
-	.sv_nav > ul {
-		margin-bottom: 0;
-	}
+  .sv_nav > ul {
+    margin-bottom: 0;
+  }
 
-	.sv_nav .flex-fill {
-		flex: 1 1 0 !important;
-	}
+  .sv_nav .flex-fill {
+    flex: 1 1 0 !important;
+  }
 
-	.sv_nav .page-item {
-		overflow: hidden;
-	}
+  .sv_nav .page-item {
+    overflow: hidden;
+  }
 
-	.sv_nav_page {
-		display: flex;
-		align-items: center;
-		flex-direction: row;
-		justify-content: center;
-	}
+  .sv_nav_page {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+  }
 
-	.sv_nav .page-item:not(.active) .sv_nav_page.completed {
-		color: green;
-	}
+  .sv_nav .page-item:not(.active) .sv_nav_page.completed {
+    color: green;
+  }
 
-	.sv_nav_page svg {
-		flex-shrink: 0;
-	}
+  .sv_nav_page svg {
+    flex-shrink: 0;
+  }
 
-	.sv_nav_page span {
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		display: inline-block;
-		width: 100%;
-	}
+  .sv_nav_page span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+  }
 
-	@media (max-device-width: 480px) {
-		ul.b-pagination > li:nth-child(2) {
-			display: none;
-		}
+  @media (max-width: 480px) {
+    ul.b-pagination > li:nth-child(2) {
+      display: none;
+    }
 
-		ul.b-pagination > li:nth-last-child(2) {
-			display: none;
-		}
-	}
+    ul.b-pagination > li:nth-last-child(2) {
+      display: none;
+    }
+  }
 
-	@media (min-device-width: 481px) {
-		ul.b-pagination > li:nth-child(2) {
-			display: block;
-		}
+  @media (min-width: 481px) {
+    ul.b-pagination > li:nth-child(2) {
+      display: block;
+    }
 
-		ul.b-pagination > li:nth-last-child(2) {
-			display: block;
-		}
-	}
+    ul.b-pagination > li:nth-last-child(2) {
+      display: block;
+    }
+  }
 </style>

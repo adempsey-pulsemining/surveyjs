@@ -9,7 +9,7 @@
         <font-awesome-icon icon="ellipsis-h" size="6x" />
       </template>
       <b-dropdown-item-button @click="survey.savePage()">
-       <span>Save</span>
+        <span>Save</span>
       </b-dropdown-item-button>
       <b-dropdown-item-button @click="survey.savePage(true)">
         <span>Save & Exit</span>
@@ -25,20 +25,20 @@
   import { BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue/src/components/dropdown";
 
   export default {
-		name: "survey-controls",
+    name: "survey-controls",
     components: {
       VButton,
       BDropdown, BDropdownItem, BDropdownItemButton
     },
     props: {
       survey: {
-				type: Object,
-				required: true
-			}
-		},
+        type: Object,
+        required: true
+      }
+    },
     computed: {
-		  canSave() {
-		    return !this.survey.readOnly && !this.survey.isDisplayMode('read');
+      canSave() {
+        return !this.survey.readOnly && !this.survey.isDisplayMode('read');
       }
     }
   }
@@ -61,23 +61,23 @@
     margin-right: .5rem;
   }
 
-	@media (max-device-width: 480px) {
-		#sv_control_options {
+  @media (max-width: 480px) {
+    #sv_control_options {
       display: block;
       margin-right: .5rem;
     }
     #sv_save_btn, #sv_save_exit_btn {
       display: none !important;
     }
-	}
+  }
 
-	@media (min-device-width: 481px) {
-		#sv_control_options {
+  @media (min-width: 481px) {
+    #sv_control_options {
       display: none;
     }
     #sv_save_btn, #sv_save_exit_btn {
       display: inline-flex;
     }
-	}
+  }
 </style>
 
