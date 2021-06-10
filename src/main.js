@@ -15,6 +15,8 @@ export { MultipleText } from "./core/question-multipletext";
 export { Html } from "./core/question-html";
 export { Matrix } from "./core/question-matrix";
 export { Rating } from "./core/question-rating";
+export { File } from "./core/question-file";
+export { Expression } from "./core/question-expression";
 
 import Vue from "vue";
 import VueSurvey from "./vue/survey.vue";

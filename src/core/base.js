@@ -122,10 +122,13 @@ export class Base {
   doTriggers(survey, page) {
     for (let element of page.getAllElements()) {
       if (element.visibleIf) {
-        element.visible = this._processTrigger(survey, element.visibleIf);
+        element.visible = !!this._processTrigger(survey, element.visibleIf);
       }
       if (element.enableIf) {
         element.readOnly = !this._processTrigger(survey, element.enableIf);
+      }
+      if (element.type === "expression" && element.expression) {
+        element.value = this._processTrigger(survey, element.expression);
       }
     }
   }
@@ -144,7 +147,7 @@ export class Base {
     } else {
       expression = this.__expressionCache[trigger];
 		}
-    return !!expression.evaluate(survey.data);
+    return expression.evaluate(survey.data);
   }
 
   getVariableValue(survey, variableName) {

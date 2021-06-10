@@ -56,6 +56,8 @@
   import SurveyMatrix from "./question-matrix.vue";
   import SurveyWidget from "./question-widget.vue";
   import SurveyRating from "./question-rating.vue";
+  import SurveyFile from "./question-file.vue";
+  import SurveyExpression from "./question-expression.vue";
   import { BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue/src/components/dropdown";
   import VButton from "../components/v-button.vue";
   import { BFormTextarea } from "bootstrap-vue/src/components/form-textarea";
@@ -75,6 +77,8 @@
       SurveyMatrix,
       SurveyWidget,
       SurveyRating,
+      SurveyFile,
+      SurveyExpression,
       BDropdown, BDropdownItem, BDropdownItemButton, BModal,
       VButton, BFormTextarea
     },
