@@ -20,6 +20,8 @@ export class Survey extends Base {
 			"isPdfRender:boolean",
       { name: "singlePage", type: "boolean", default: false, writable: true },
       { name: "displayMode", type: "string", default: "edit", writable: true },
+      { name: "hideSaveButtons", type: "boolean", default: false, writable: true },
+      { name: "hideCompleteButton", type: "boolean", default: false, writable: true },
     ]);
   }
 

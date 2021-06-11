@@ -16,7 +16,7 @@
       </b-dropdown-item-button>
     </b-dropdown>
     <v-button id="sv_next_btn" v-if="!survey.isLastPage()" icon="chevron-right" variant="primary" @click="survey.nextPage()" position="right">Next</v-button>
-    <v-button id="sv_complete_btn" v-if="canSave && survey.isLastPage()" icon="check" variant="primary" @click="survey.complete()">Complete</v-button>
+    <v-button id="sv_complete_btn" v-if="canComplete && survey.isLastPage()" icon="check" variant="primary" @click="survey.complete()">Complete</v-button>
   </div>
 </template>
 
@@ -37,8 +37,11 @@
       }
     },
     computed: {
+      canComplete() {
+        return !this.survey.readOnly && !this.survey.isDisplayMode('read') && !this.survey.hideCompleteButton;
+      },
       canSave() {
-        return !this.survey.readOnly && !this.survey.isDisplayMode('read');
+        return !this.survey.readOnly && !this.survey.isDisplayMode('read') && !this.survey.hideSaveButtons;
       }
     }
   }
