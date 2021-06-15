@@ -37,6 +37,8 @@ export class Survey extends Base {
       this.singlePage = true;
     }
     this.__data = {};
+    this.completed = false;
+    this.showResultsPage = true;
   }
 
   __getSurveyProxy() {
@@ -72,7 +74,14 @@ export class Survey extends Base {
     return this.pages.filter(page => page.visible);
   }
 
+  restart() {
+    this.reset();
+    this.completed = false;
+    this.changePage(0);
+  }
+
   reset() {
+    this.__data = {};
     this.data = {};
   }
 
@@ -82,36 +91,58 @@ export class Survey extends Base {
     }
   }
 
-  set data(data) {
-    this.__settingData = true;
-    data = typeof data === "string" ? JSON.parse(data) : data;
-    for (let page of this.pages) {
-      for (let question of page.questions) {
-        this._setData(question, data[question.questionId]);
-      }
+  getSurveyResults() {
+    let results = [];
+    let data = this.data;
+    for (let id in data) {
+      results.push({
+        page: data[id].page,
+        name: data[id].name,
+        title: data[id].title,
+        description: data[id].description,
+        value: typeof data[id].value === "object" ? JSON.stringify(data[id].value) : data[id].value,
+        comment: data[id].comment
+      })
     }
-    this.doTriggersForAllPages();
-    this.__settingData = false;
+    return results;
   }
 
-  _setData(question, data) {
-    question.comment = data ? data.comment : "";
-    question.value = data ? data.value : null;
-    question.changedBy = data ? data.changedBy : "";
-    question.changedOn = data ? data.changedOn : null;
-    if (question.type === "multipletext" && data) {
-      question.setMetadata(data.items);
-    } else if (question.isMatrix() && data) {
-      question.setMetadata(data.cells);
-    }
-    this._updateData(question);
+  set data(data) {
+    data = typeof data === "string" ? JSON.parse(data) : data;
+    this.pages.forEach(page => {
+      page.questions.forEach(question => {
+        this._setQuestionData(question, data);
+      })
+    })
+    this.doTriggersForAllPages();
   }
 
   get data() {
     return this.__data || {};
 	}
 
-	isDisplayMode(mode) {
+	_setQuestionData(question, data) {
+    let questionData = data[question.questionId];
+    if (questionData) {
+      question.comment = questionData.comment;
+      question.value = questionData.value;
+      question.changedBy = questionData.changedBy;
+      question.changedOn = questionData.changedOn;
+    } else {
+      question.comment = "";
+      question.value = null;
+      question.changedBy = "";
+      question.changedOn = "";
+    }
+    if (question.type === "multipletext" && questionData) {
+      question.setMetadata(questionData.items);
+    } else if (question.isMatrix() && questionData) {
+      question.setMetadata(questionData.cells);
+    }
+    this._updateData(question);
+  }
+
+  isDisplayMode(mode) {
     return this.displayMode === mode;
   }
 
@@ -213,6 +244,7 @@ export class Survey extends Base {
   }
 
   complete() {
+    this.completed = true;
     if (this.onComplete) {
       this.onComplete();
     }
@@ -294,6 +326,7 @@ export class Survey extends Base {
   }
 
   valueChanging(question, newVal, obj) {
+    question.changedOn = new Date().toISOString();
     if (this.onValueChanging) {
       this.onValueChanging(question, newVal, obj);
     }
@@ -321,19 +354,39 @@ export class Survey extends Base {
     }
   }
 
+  downloadPdfClick() {
+    if (this.onDownloadPdfClick) {
+      this.onDownloadPdfClick(this.data);
+    }
+  }
+
+  downloadCsvClick() {
+    if (this.onDownloadCsvClick) {
+      this.onDownloadCsvClick(this.data);
+    }
+  }
+
   /**
    * Private methods
    */
 
   _createEventListeners() {
-    this.onComplete = function() {};
+    this.onComplete = function() {
+      if (!this.canComplete()) {
+        alert("You have unfinished pages. Please finish them before completing.");
+      }
+    };
     this.onValueChanged = function() {};
     this.onValueChanging = function() {};
     this.onCommentChanged = function() {};
     this.onSaveButtonClicked = function() {};
     this.onPageChanging = function() {};
     this.onPageChanged = function() {};
-    this.onClear = function() {};
+    this.onClear = function() {
+      this.reset();
+    };
+    this.onDownloadPdfClick = function() {};
+    this.onDownloadCsvClick = function() {};
   }
 
   // Render survey from the template. ie create pages/panels/questions

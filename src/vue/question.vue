@@ -133,8 +133,12 @@
         return this.question.titleLocation !== "hidden";
       },
       questionDetails() {
-        if (!this.question.changedBy || !this.question.changedOn) return "";
-        return this.question.changedBy + ", " + new Date(this.question.changedOn).toLocaleString()
+        if (!this.question.changedBy && !this.question.changedOn) return "";
+        let details = "";
+        if (this.question.changedBy) {
+          details = this.question.changedBy + ", ";
+        }
+        return details + new Date(this.question.changedOn).toLocaleString();
       }
     },
     methods: {

@@ -225,6 +225,8 @@ export class Matrix extends Question {
 			this.columns.forEach(column => {
 				if (val[row.name] && column.name === val[row.name]) {
 					row.value = val[row.name];
+				} else if (!val[row.name]) {
+					row.value = "";
 				}
 			});
 		});
@@ -431,6 +433,7 @@ class MatrixRow extends Base {
 	__rowPropChanged(obj, prop, val) {
 		obj[prop] = val;
 		if (prop === "__value" && !this.question.dynamic) {
+			obj["changedOn"] = new Date().toISOString();
 			this.question.valueChanged(this.question.cloneValue, {
 				name: this.name
 			});
@@ -577,6 +580,7 @@ class MatrixCell extends Base {
 	__cellPropChanged(obj, prop, val) {
 		obj[prop] = val;
 		if (prop === "__value" && val != null) {
+			obj["changedOn"] = new Date().toISOString();
 			this.question.valueChanged(this.question.cloneValue, {
 				rowIndex: this.row,
 				colIndex: this.col

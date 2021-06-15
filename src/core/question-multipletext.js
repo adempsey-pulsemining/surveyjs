@@ -35,8 +35,9 @@ export class MultipleText extends Question {
 
   setMetadata(items) {
     for (let item of items) {
-      this.getItem(item.name).changedBy = item.changedBy;
-      this.getItem(item.name).changedOn = item.changedOn;
+      let _item = this.getItem(item.name);
+      _item.changedBy = item.changedBy || "";
+      _item.changedOn = item.changedOn || "";
     }
   }
 
@@ -62,6 +63,8 @@ export class MultipleText extends Question {
     for (let item of this.items) {
       if (val[item.name]) {
         item.value = val[item.name];
+      } else {
+        item.value = "";
       }
     }
   }
@@ -124,6 +127,7 @@ class MultipleTextItem extends Base {
   }
 
   set value(val) {
+    this.changedOn = new Date().toISOString();
     this.__value = val;
     this.question.valueChanged(this.question.value, {
       name: this.name
