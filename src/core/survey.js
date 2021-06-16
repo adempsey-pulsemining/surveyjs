@@ -39,6 +39,7 @@ export class Survey extends Base {
     this.__data = {};
     this.completed = false;
     this.showResultsPage = true;
+    this.loadingPage = false;
   }
 
   __getSurveyProxy() {
@@ -207,21 +208,27 @@ export class Survey extends Base {
   }
 
   changePage(index) {
-    let currentPageIndex = this.proxy.currentPageIndex;
-    for (let i = this.proxy.currentPageIndex; i < index; ++i) {
-      this.doTriggers(this, this.visiblePages[i], this.data);
-      if (this.visiblePages[i].hasErrors()) {
-        this.proxy.currentPageIndex = i;
-        this.showErrors();
-        return;
-      }
-    }
-    this.proxy.currentPageIndex = index;
-    this.pageChanged(currentPageIndex, index);
+    if (this.loadingPage) return;
+    this.loadingPage = true;
     setTimeout(() => {
-      let n = document.querySelector(".sv_page_container");
-      if (n) n.scrollTo(0, 0);
-    }, 1);
+      let currentPageIndex = this.proxy.currentPageIndex;
+      for (let i = this.proxy.currentPageIndex; i < index; ++i) {
+        this.doTriggers(this, this.visiblePages[i], this.data);
+        if (this.visiblePages[i].hasErrors()) {
+          this.proxy.currentPageIndex = i;
+          this.showErrors();
+          this.loadingPage = false;
+          return;
+        }
+      }
+      this.proxy.currentPageIndex = index;
+      this.pageChanged(currentPageIndex, index);
+      setTimeout(() => {
+        this.loadingPage = false;
+        let n = document.querySelector(".sv_page_container");
+        if (n) n.scrollTo(0, 0);
+      }, 1);
+    }, 1)
   }
 
   nextPage() {

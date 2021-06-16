@@ -60,6 +60,7 @@
     overflow-y: scroll;
     flex: 1 1 auto;
     border-bottom: thin solid lightgrey;
+    position: relative;
   }
 
   .sv_main .sv_body {

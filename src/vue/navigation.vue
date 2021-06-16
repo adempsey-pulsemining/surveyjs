@@ -8,6 +8,7 @@
                   next-text="Next"
                   prev-text="Prev"
                   @input="pageChanged"
+                  @page-click="pageClicked"
                   :total-rows="totalPages"
                   :per-page="1">
       <template v-slot:page="{ page, active, index }">
@@ -46,10 +47,6 @@
         },
         set(val) {
           this.survey.changePage(val - 1);
-          if (this.showErrors) {
-            this.survey.showErrors();
-            this.showErrors = false;
-          }
         }
       },
       totalPages() {
@@ -57,11 +54,21 @@
       }
     },
     methods: {
-      pageChanged(e) {
-        if (!this.survey.canGoToPage(e - 1)) {
+      pageClicked(e, pageNumber) {
+        let selectedPage = pageNumber - 1;
+        let currentPage = this.survey.currentPageIndex;
+        if (selectedPage > currentPage && !this.survey.canContinue()) {
+          e.preventDefault();
+        } else if (selectedPage > currentPage && !this.survey.canGoToPage(selectedPage)) {
           this.$refs["pagination"].currentPage = this.survey.getFirstPageWithErrors() + 1;
-          this.showErrors = true;
+          e.preventDefault();
         }
+      },
+      pageChanged(e) {
+        // if (!this.survey.canGoToPage(e - 1)) {
+        //   this.$refs["pagination"].currentPage = this.survey.getFirstPageWithErrors() + 1;
+        //   this.showErrors = true;
+        // }
       },
       getPageTitle(index) {
         let page = this.survey.visiblePages[index];
@@ -83,9 +90,10 @@
 
   .sv_nav .flex-fill {
     flex: 1 1 0 !important;
+    overflow: hidden;
   }
 
-  .sv_nav .page-item {
+  .sv_nav .page-link {
     overflow: hidden;
   }
 

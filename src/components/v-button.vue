@@ -1,5 +1,5 @@
 <template>
-  <b-button :style="buttonStyle" :variant="variant" @click="clicked">
+  <b-button :disabled="disabled" :style="buttonStyle" :variant="variant" @click="clicked">
     <font-awesome-icon v-if="!positionRight && icon" :icon="icon" :size="size" style="margin-right: 5px" />
     <slot></slot>
     <font-awesome-icon v-if="positionRight && icon" :icon="icon" :size="size" style="margin-left: 5px" />
@@ -13,10 +13,17 @@
     name: "v-button",
     components: { BButton },
     props: {
-      size: { type: String, default: "8x" },
+      size: {
+        type: String,
+        default: "8x"
+      },
       icon: String,
       variant: String,
-      position: String
+      position: String,
+      disabled: {
+        type: Boolean,
+        default: false
+      }
     },
     computed: {
       buttonStyle() {
@@ -30,6 +37,6 @@
       clicked(event) {
         this.$emit("click", event);
       }
-		}
+    }
   }
 </script>
