@@ -34,6 +34,9 @@ export class Element extends Base {
 
   constructor(object, properties) {
     super(object, properties || metaData.getProperties("element"));
+    if (this.visibleIf) {
+      this.visible = false;
+    }
   }
 
   isReadOnly() {
