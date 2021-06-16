@@ -20,7 +20,7 @@
     "@vue/cli-service": "^4.1.2",
     "babel-loader": "^8.0.6",
     "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.2.0",
+    "bootstrap-vue": "^2.21.2",
     "css-loader": "^3.2.1",
     "fibers": "^4.0.2",
     "file-loader": "^5.0.2",
