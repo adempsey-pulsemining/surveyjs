@@ -58,6 +58,7 @@
   import SurveyRating from "./question-rating.vue";
   import SurveyFile from "./question-file.vue";
   import SurveyExpression from "./question-expression.vue";
+  import SurveyImagepicker from "./question-imagepicker.vue";
   import { BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue/src/components/dropdown";
   import VButton from "../components/v-button.vue";
   import { BFormTextarea } from "bootstrap-vue/src/components/form-textarea";
@@ -79,6 +80,7 @@
       SurveyRating,
       SurveyFile,
       SurveyExpression,
+      SurveyImagepicker,
       BDropdown, BDropdownItem, BDropdownItemButton, BModal,
       VButton, BFormTextarea
     },
