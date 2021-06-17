@@ -33,6 +33,7 @@
     },
     methods: {
       selectImage(e, index) {
+        if (this.question.isReadOnly()) return;
         let choice = this.question.choices[index];
         this.selectedIndex = index;
         this.question.value = typeof choice === "string" ? choice : choice.value;
