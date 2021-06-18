@@ -1222,7 +1222,6 @@ export class Question extends SurveyElement
 JsonObject.metaData.addClass("question", [
   "!name",
   "!questionId",
-  { name: "titleColour", layout: "row" },
   { name: "visible:boolean", default: true },
   { name: "useDisplayValuesInTitle:boolean", default: true, layout: "row" },
   "visibleIf:condition",
