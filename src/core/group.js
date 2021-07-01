@@ -42,6 +42,13 @@ export class Group extends Element {
   }
 
   __addQuestion(question) {
+    if (question.type) {
+      if (question.type.startsWith("radio")) {
+        question.type = "radio";
+      } else if (question.type.startsWith("matrix")) {
+        question.type = "matrix";
+      }
+    }
     let myClass = metaData.getClassName(question.type);
     if (!metaData.hasClass(question.type)) return;
     let newQuestion = new window.Survey[myClass](question);
