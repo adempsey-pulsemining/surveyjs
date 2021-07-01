@@ -1,10 +1,15 @@
 <template>
   <div class="sv_q_radio">
     <b-form-radio-group v-model="question.value"
-													 :stacked="!question.inline"
-                           size="lg"
-                           :style="styleObject">
-      <b-form-radio v-for="(item) in choices" :value="item.name" :disabled="question.isReadOnly() && item.name != question.value">{{item.title}}</b-form-radio>
+                        :stacked="!question.inline"
+                        size="lg"
+                        :style="styleObject">
+      <b-form-radio
+              v-for="(item) in choices"
+              :value="item.name"
+              :disabled="question.isReadOnly() && item.name != question.value">
+        {{item.title}}
+      </b-form-radio>
     </b-form-radio-group>
   </div>
 </template>
@@ -23,10 +28,9 @@
     },
     computed: {
       styleObject() {
-        if (this.question.inline) {
+        if (this.question.inline || this.question.colCount <= 0) {
           return;
         }
-        if (this.question.colCount <= 0) return;
         return {
           display: "grid",
           gridTemplateColumns: `repeat(${this.question.colCount}, minmax(100px, 1fr))`,

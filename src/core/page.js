@@ -98,6 +98,13 @@ export class Page extends Base {
   }
 
   __addElement(element) {
+    if (element.type) {
+      if (element.type.startsWith("radio")) {
+        element.type = "radio";
+      } else if (element.type.startsWith("matrix")) {
+        element.type = "matrix";
+      }
+    }
     let myClass = metaData.getClassName(element.type);
     // skip elements which are not defined in the metadata
     if (!metaData.hasClass(element.type)) {

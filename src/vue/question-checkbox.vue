@@ -3,37 +3,36 @@
     <b-form-checkbox-group v-model="value"
                            :options="choices"
                            value-field="name"
-													 text-field="title"
+                           text-field="title"
                            size="lg"
                            :stacked="!question.inline"
                            :style="styleObject"
-													 :disabled="question.isReadOnly()">
+                           :disabled="question.isReadOnly()">
     </b-form-checkbox-group>
   </div>
 </template>
 
 <script>
-	import { BFormCheckboxGroup } from "bootstrap-vue/src/components/form-checkbox";
-	import QuestionMixin from "./mixins/question";
+  import { BFormCheckboxGroup } from "bootstrap-vue/src/components/form-checkbox";
+  import QuestionMixin from "./mixins/question";
 
   export default Vue.extend({
-		mixins: [QuestionMixin],
-		name: "survey-checkbox",
+    mixins: [QuestionMixin],
+    name: "survey-checkbox",
     components: {
       BFormCheckboxGroup
     },
     computed: {
-		  value: {
+      value: {
         set(val) { this.question.value = val || [] },
         get() { return this.question.value || [] }
       },
       styleObject() {
-		    if (this.question.inline) {
-		      return;
+        if (this.question.inline || this.question.colCount <= 0) {
+          return;
         }
-		    if (this.question.colCount <= 0) return;
-		    return {
-		      display: "grid",
+        return {
+          display: "grid",
           gridTemplateColumns: `repeat(${this.question.colCount}, minmax(100px, 1fr))`,
           gridGap: "1rem"
         }
