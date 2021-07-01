@@ -218,5 +218,6 @@
     font-size: .75rem;
     display: flex;
     flex-direction: row;
+    min-height: 1.2rem;
   }
 </style>
